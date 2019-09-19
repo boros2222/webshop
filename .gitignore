@@ -1,0 +1,4 @@
+backend/btwsbe/target
+backend/btwsbe/.idea
+backend/btwsbe/btwsbe.iml
+backend/wildfly*
