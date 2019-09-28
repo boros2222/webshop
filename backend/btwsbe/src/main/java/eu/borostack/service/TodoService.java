@@ -1,35 +1,31 @@
 package eu.borostack.service;
 
+import eu.borostack.dao.TodoDao;
 import eu.borostack.entity.Todo;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Transactional
 public class TodoService {
 
-    @PersistenceContext
-    EntityManager entityManager;
+    @Inject
+    TodoDao todoDao;
 
     public Todo createTodo (Todo todo) {
-        entityManager.persist(todo);
-
-        return todo;
+        return todoDao.create(todo);
     }
 
     public Todo updateTodo (Todo todo) {
-        entityManager.merge(todo);
-
-        return todo;
+        return todoDao.update(todo);
     }
 
     public Todo findTodoById(Long id) {
-        return entityManager.find(Todo.class, id);
+        return todoDao.findById(id);
     }
 
     public List<Todo> getTodos() {
-        return entityManager.createQuery("SELECT t from Todo t", Todo.class).getResultList();
+        return todoDao.findAll();
     }
 }
