@@ -1,0 +1,9 @@
+
+.bar {
+    width: 100%;
+}
+
+.spacing-top-bottom {
+    padding-top: 2em;
+    padding-bottom: 2em;
+}

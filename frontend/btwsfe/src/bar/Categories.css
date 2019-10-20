@@ -1,0 +1,12 @@
+
+.flex-break {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 8em;
+}
+
+.category-element {
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}

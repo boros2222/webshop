@@ -1,0 +1,107 @@
+
+html body {
+  height: 100%;
+  background-color: #ffffff;
+}
+
+/* Primary color */
+.primary-color {
+  background-color: #ffffff;
+  color: #03a9f4;
+}
+
+a:link, a:visited, a:active, p,
+.primary-color > a:link,
+.primary-color > a:visited,
+.primary-color > a:active,
+.primary-color > button,
+.primary-color > input,
+.primary-color > p {
+  color: #03a9f4;
+}
+
+a:hover, button:hover,
+.primary-color > a:hover,
+.primary-color > button:hover {
+  color: #007ac1;
+}
+
+/* Secondary color */
+.secondary-color {
+  background-color: #03a9f4;
+  color: #ffffff;
+}
+
+.secondary-color > a:link,
+.secondary-color > a:visited,
+.secondary-color > a:active,
+.secondary-color > button,
+.secondary-color > input,
+.secondary-color > p {
+  color: #ffffff;
+}
+
+.secondary-color > a:hover,
+.secondary-color > button:hover {
+  color: #c4c4c4;
+}
+
+/* Secondary darker color */
+.secondary-darker-color {
+  background-color: #007ac1;
+  color: #ffffff;
+}
+
+.secondary-darker-color > a:link,
+.secondary-darker-color > a:visited,
+.secondary-darker-color > a:active,
+.secondary-darker-color > button,
+.secondary-darker-color > input,
+.secondary-darker-color > p {
+  color: #ffffff;
+}
+
+.secondary-darker-color > a:hover,
+.secondary-darker-color > button:hover {
+  color: #c4c4c4;
+}
+
+/* Others */
+a, a:link, a:visited, a:hover, a:active, button {
+  font-size: 1.1em;
+  text-decoration: none;
+}
+
+button {
+  background-color: transparent;
+}
+
+button, input {
+  outline: none;
+  border: 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+li {
+  list-style: none;
+}
+
+p {
+  margin: 0;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  padding-left: 15%;
+  padding-right: 15%;
+}

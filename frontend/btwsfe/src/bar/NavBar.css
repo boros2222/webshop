@@ -1,0 +1,44 @@
+
+.navlinks {
+    padding-top: 1.3em;
+}
+
+.navlinks > a, .navlinks > button {
+    text-transform: uppercase;
+    font-size: 1.3em;
+    letter-spacing: 0.1em;
+    padding: 0;
+    padding-bottom: 1em;
+    margin-right: 2em;
+    margin-bottom: 0.1em;
+    border-bottom: 4px solid #007ac1;
+}
+
+.navlinks > a:hover, .navlinks > button:hover {
+    border-bottom: 4px solid #03a9f4;
+}
+
+.navlinks > :last-child::after {
+    content: '';
+}
+
+a.navbar-button, button.navbar-button,
+a.navbar-button:hover, button.navbar-button:hover {
+    color: white;
+}
+
+.dropdown {
+    border-radius: 0 0 1em 1em;
+}
+
+.dropdown-element {
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.shadows {
+    position: relative;
+    -webkit-box-shadow: 0px 11px 20px -12px rgba(0,0,0,1);
+    -moz-box-shadow: 0px 11px 20px -12px rgba(0,0,0,1);
+    box-shadow: 0px 11px 20px -12px rgba(0,0,0,1);
+}
