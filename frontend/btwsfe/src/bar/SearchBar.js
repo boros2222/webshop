@@ -1,15 +1,9 @@
 import React from 'react';
-import { Link } from "react-router-dom";
 import './SearchBar.css';
 
 import "primeicons/primeicons.css";
 
 class SearchBar extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
-
 
     render() {
         return (

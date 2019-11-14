@@ -17,7 +17,7 @@ class ProductDetails extends Component {
     }
 
     componentDidMount() {
-        axios.get(`${constants.backendUrl}/product/${this.props.id}`).then(res => {
+        axios.get(`${constants.BACKEND_URL}/product/${this.props.id}`).then(res => {
             res.data.description = res.data.description.split("\\n");
             this.setState({
                 product: res.data

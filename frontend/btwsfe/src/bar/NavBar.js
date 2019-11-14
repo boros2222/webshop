@@ -1,19 +1,19 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import './NavBar.css';
 
 import LoginPanel from './LoginPanel';
 import Categories from './Categories';
 
-import { slideInDown } from 'react-animations';
+import {slideInDown} from 'react-animations';
 import Radium, {StyleRoot} from 'radium';
- 
+
 const styles = {
     slideInDown: {
     animation: 'x 1s',
     animationName: Radium.keyframes(slideInDown, 'slideInDown')
   }
-}
+};
  
 class NavBar extends React.Component {
 
@@ -24,11 +24,9 @@ class NavBar extends React.Component {
             showDropdown: false,
             dropdownElement: <span></span>
         };
-
-        this.toggleDropdown = this.toggleDropdown.bind(this);
     }
 
-    toggleDropdown(element) {
+    toggleDropdown = (element) => {
         if(this.state.dropdownElement.type === element.type) {
             this.setState({
                 showDropdown: false,
@@ -40,7 +38,7 @@ class NavBar extends React.Component {
                 dropdownElement: element
             });
         }
-    }
+    };
 
     render() {
         let dropdown;

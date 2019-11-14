@@ -14,7 +14,7 @@ class Products extends Component {
     }
 
     componentDidMount() {
-        axios.get(`${constants.backendUrl}/product/list`).then(res => {
+        axios.get(`${constants.BACKEND_URL}/product/list`).then(res => {
             this.setState({
                 products: res.data
             });

@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
-import { Link } from "react-router-dom";
-import axios from 'axios';
-import constants from '../Constants';
+import React, {Component} from 'react';
+import {Link} from "react-router-dom";
 import './LoginPanel.css';
 
 class LoginPanel extends Component {

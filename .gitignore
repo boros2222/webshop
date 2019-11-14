@@ -5,6 +5,7 @@
 backend/btwsbe/target
 backend/btwsbe/.idea
 backend/btwsbe/btwsbe.iml
+
 # Wildfly server
 backend/wildfly-17.0.1.Final/*
 !backend/wildfly-17.0.1.Final/standalone
@@ -13,7 +14,13 @@ backend/wildfly-17.0.1.Final/standalone/*
 backend/wildfly-17.0.1.Final/standalone/configuration/*
 !backend/wildfly-17.0.1.Final/standalone/configuration/standalone.xml
 
+
 ### Frontend
+
+## Webstorm
+frontend/btwsfe/.idea
+frontend/btwsfe/btwsfe.iml
+
 ## ReactJS
 frontend/btwsfe/.DS_*
 frontend/btwsfe/*.log
