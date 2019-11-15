@@ -42,7 +42,7 @@ public class TodoRest {
     @Path("list")
     @GET
     public List<Todo> getTodos() {
-        return todoService.getTodos();
+        return todoService.findTodos();
     }
 
     @Path("status")

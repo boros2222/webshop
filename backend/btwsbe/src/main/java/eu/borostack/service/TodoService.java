@@ -11,13 +11,13 @@ import java.util.List;
 public class TodoService {
 
     @Inject
-    TodoDao todoDao;
+    private TodoDao todoDao;
 
-    public Todo createTodo (Todo todo) {
+    public Todo createTodo(Todo todo) {
         return todoDao.create(todo);
     }
 
-    public Todo updateTodo (Todo todo) {
+    public Todo updateTodo(Todo todo) {
         return todoDao.update(todo);
     }
 
@@ -25,7 +25,7 @@ public class TodoService {
         return todoDao.findById(id);
     }
 
-    public List<Todo> getTodos() {
+    public List<Todo> findTodos() {
         return todoDao.findAll();
     }
 }

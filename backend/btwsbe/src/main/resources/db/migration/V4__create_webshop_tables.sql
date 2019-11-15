@@ -1,37 +1,38 @@
 create sequence s_address;
 create table address (
     id integer,
-    postal_code integer not null,
-    country varchar(255) not null,
+    postal_code varchar(255) not null,
+    city varchar(255) not null,
     street varchar(255) not null,
     house_number varchar(255) not null,
 
     constraint address_pk primary key (id)
 );
 
-create sequence s_password;
-create table password (
-    id integer,
-    hash text not null,
-    salt varchar(255) not null,
-
-    constraint password_pk primary key (id)
-);
-
 create sequence s_user_account;
 create table user_account (
     id integer,
-    username varchar(255) not null,
-    password_id integer not null,
-    email varchar(255) not null,
+    email varchar(255) not null unique,
+    hash text not null,
+    salt varchar(255) not null,
+    name varchar(255) not null,
     registration_date date,
     invoice_address_id integer,
     shipping_address_id integer,
 
     constraint user_account_pk primary key (id),
-    constraint user_account_fk_1 foreign key (password_id) references password (id),
-    constraint user_account_fk_2 foreign key (invoice_address_id) references address (id),
-    constraint user_account_fk_3 foreign key (shipping_address_id) references address (id)
+    constraint user_account_fk_1 foreign key (invoice_address_id) references address (id),
+    constraint user_account_fk_2 foreign key (shipping_address_id) references address (id)
+);
+
+create sequence s_user_role;
+create table user_role (
+    id integer,
+    user_account_id integer not null,
+    role varchar(255) not null,
+
+    constraint user_role_pk primary key (id),
+    constraint user_role_fk foreign key (user_account_id) references user_account (id)
 );
 
 create sequence s_order_details;

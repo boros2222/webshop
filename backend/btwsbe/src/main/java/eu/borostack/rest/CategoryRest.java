@@ -1,23 +1,16 @@
 package eu.borostack.rest;
 
-import com.google.common.primitives.Bytes;
-import com.querydsl.core.util.ArrayUtils;
-import eu.borostack.config.AppConfig;
-import eu.borostack.dao.CategoryDao;
-import eu.borostack.entity.Category;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
+import eu.borostack.service.CategoryService;
 
-import javax.crypto.SecretKey;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("category")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -25,7 +18,7 @@ import java.util.stream.Collectors;
 public class CategoryRest {
 
     @Inject
-    CategoryDao categoryDao;
+    CategoryService categoryService;
 
     @Path("list")
     @GET
@@ -79,7 +72,7 @@ public class CategoryRest {
 
         NewCookie newCookie = new NewCookie("tokika", token);*/
 
-        return Response.ok(categoryDao.findAll()).build();
+        return Response.ok(categoryService.findCategories()).build();
     }
 
 }

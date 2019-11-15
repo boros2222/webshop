@@ -1,7 +1,7 @@
 package eu.borostack.rest;
 
-import eu.borostack.dao.ProductDao;
 import eu.borostack.entity.Product;
+import eu.borostack.service.ProductService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -14,18 +14,18 @@ import java.util.List;
 public class ProductRest {
 
     @Inject
-    ProductDao productDao;
+    ProductService productService;
 
     @Path("list")
     @GET
     public List<Product> getAllProducts() {
-        return productDao.findAll();
+        return productService.findProducts();
     }
 
     @Path("{id}")
     @GET
     public Product getProduct(@PathParam("id") Long id) {
-        return productDao.findById(id);
+        return productService.findProductById(id);
     }
 
 }
