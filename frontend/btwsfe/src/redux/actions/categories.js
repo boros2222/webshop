@@ -30,6 +30,7 @@ export function fetchCategories() {
             }).catch(error => {
                 dispatch({
                     type: FETCH_CATEGORIES_FAILURE,
+                    data: error.response.data,
                     error: error
                 });
             });

@@ -1,5 +1,6 @@
 package eu.borostack.rest;
 
+import eu.borostack.annotation.WithoutAuth;
 import eu.borostack.entity.UserAccount;
 import eu.borostack.service.UserAccountService;
 
@@ -21,8 +22,15 @@ public class UserAccountRest {
 
     @Path("register")
     @POST
-    public Response registerUser(UserAccount userAccount) {
+    @WithoutAuth
+    public Response register(UserAccount userAccount) {
         return userAccountService.registerUser(userAccount);
     }
 
+    @Path("login")
+    @POST
+    @WithoutAuth
+    public Response login(UserAccount userAccount) {
+        return userAccountService.loginUser(userAccount);
+    }
 }

@@ -1,16 +1,18 @@
 package eu.borostack.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.json.bind.annotation.JsonbDateFormat;
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "user_account")
 public class UserAccount {
@@ -32,6 +34,7 @@ public class UserAccount {
 
     @Column(name = "email")
     @NotEmpty(message = "Email címet kötelező megadni!")
+    @Email(message = "Email formátumot kell megadni!")
     private String email;
 
     @Column(name = "registration_date")

@@ -512,9 +512,4 @@
             <remote-destination host="localhost" port="25"/>
         </outbound-socket-binding>
     </socket-binding-group>
-    <deployments>
-        <deployment name="btwsbe.war" runtime-name="btwsbe.war">
-            <fs-archive path="/media/data/webshop/backend/btwsbe/target/btwsbe.war"/>
-        </deployment>
-    </deployments>
 </server>

@@ -32,6 +32,7 @@ function categoriesReducer(state = INITIAL_STATE, action) {
         case FETCH_CATEGORIES_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
+                data: action.data,
                 error: action.error
             });
 

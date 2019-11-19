@@ -1,7 +1,6 @@
 package eu.borostack.service;
 
 import eu.borostack.dao.ProductDao;
-import eu.borostack.dao.ProductDao;
 import eu.borostack.entity.Product;
 
 import javax.inject.Inject;

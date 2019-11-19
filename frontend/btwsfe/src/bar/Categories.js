@@ -14,7 +14,7 @@ class Categories extends React.Component {
         const { categories } = this.props;
         if (categories.error !== undefined) {
             return (
-                <p>Hiba történt</p>
+                <p>{categories.data.message}</p>
             )
         } else if (categories.isFetching === true) {
             return (
