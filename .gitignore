@@ -7,16 +7,10 @@ backend/btwsbe/.idea
 backend/btwsbe/btwsbe.iml
 
 # Wildfly server
-backend/wildfly-17.0.1.Final/*
-!backend/wildfly-17.0.1.Final/standalone
-backend/wildfly-17.0.1.Final/standalone/*
-!backend/wildfly-17.0.1.Final/standalone/configuration
-backend/wildfly-17.0.1.Final/standalone/configuration/*
-!backend/wildfly-17.0.1.Final/standalone/configuration/standalone.xml
+backend/wildfly*
 
 
 ### Frontend
-
 ## Webstorm
 frontend/btwsfe/.idea
 frontend/btwsfe/btwsfe.iml
@@ -114,9 +108,6 @@ frontend/btwsfe/.next
 
 # nuxt.js build output
 frontend/btwsfe/.nuxt
-
-# react / gatsby 
-frontend/btwsfe/public/
 
 # vuepress build output
 frontend/btwsfe/.vuepress/dist
