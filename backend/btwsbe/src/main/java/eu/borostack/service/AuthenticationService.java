@@ -2,27 +2,28 @@ package eu.borostack.service;
 
 import eu.borostack.config.AppConfig;
 import eu.borostack.dao.UserAccountDao;
-import eu.borostack.entity.ResponseJson;
+import eu.borostack.entity.Role;
 import eu.borostack.entity.UserAccount;
+import eu.borostack.entity.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.crypto.SecretKey;
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class AuthenticationService {
-
     private final String AUTH_COOKIE_NAME = "auth";
     private final SecretKey JWT_KEY = Keys.hmacShaKeyFor(AppConfig.getJwtKey());
 
@@ -32,21 +33,47 @@ public class AuthenticationService {
     @Inject
     private UserAccountDao userAccountDao;
 
-    public Response authenticate(UserAccount userAccount) {
-        return Response.ok(new ResponseJson("Sikeres bejelentkezés!", true))
-                .cookie(generateJwtToken(userAccount)).build();
+    public NewCookie authenticate(UserAccount loginUser, UserAccount existingUser) {
+        if (BCrypt.checkpw(loginUser.getPassword(), existingUser.getHash())) {
+            return generateJwtToken(existingUser);
+        } else {
+            return null;
+        }
     }
 
-    public NewCookie authorize() {
-        Cookie[] cookies = request.getCookies();
-        Cookie authCookie = null;
-        if(cookies != null) {
-            authCookie = Arrays.stream(cookies)
-                    .filter(cookie -> AUTH_COOKIE_NAME.equals(cookie.getName()))
-                    .findAny().orElse(null);
+    public NewCookie authorize(List<Role> roles, Long userAccountId) {
+        boolean hasPermission = false;
+
+        UserAccount loggedInUser = checkLoggedInUser();
+        if (loggedInUser != null)  {
+            hasPermission = true;
+            if (roles != null && !roles.isEmpty()) {
+                hasPermission = loggedInUser.getUserRoles().stream()
+                        .map(UserRole::getRole)
+                        .distinct()
+                        .anyMatch(roles::contains);
+            }
+            if (userAccountId != null) {
+                hasPermission = hasPermission && loggedInUser.getId().equals(userAccountId);
+            }
         }
 
-        NewCookie newAuthCookie = null;
+        if (hasPermission) {
+            return generateJwtToken(loggedInUser);
+        } else {
+            return null;
+        }
+    }
+
+    public UserAccount checkLoggedInUser() {
+        Cookie[] cookies = request.getCookies();
+        Cookie authCookie = null;
+        if (cookies != null) {
+            authCookie = Arrays.stream(cookies)
+                    .filter(cookie -> AUTH_COOKIE_NAME.equals(cookie.getName()))
+                    .findFirst().orElse(null);
+        }
+
         if (authCookie != null) {
             Jws<Claims> jws = decodeJwtToken(authCookie.getValue());
 
@@ -54,12 +81,13 @@ public class AuthenticationService {
                 Integer id = (Integer) jws.getBody().get("id");
                 String email = (String) jws.getBody().get("email");
                 UserAccount userAccount = userAccountDao.findByEmail(email);
-                if(userAccount.getId().equals(id.longValue())) {
-                    newAuthCookie = generateJwtToken(userAccount);
+                if(userAccount != null && userAccount.getId().equals(id.longValue())) {
+                    return userAccount;
                 }
             }
         }
-        return newAuthCookie;
+
+        return null;
     }
 
     private Jws<Claims> decodeJwtToken(final String token) {

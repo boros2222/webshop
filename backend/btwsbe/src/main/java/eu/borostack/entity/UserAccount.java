@@ -50,7 +50,7 @@ public class UserAccount {
     @Valid
     private Address shippingAddress;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="userAccount")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="userAccount")
     private List<UserRole> userRoles;
 
     @Transient

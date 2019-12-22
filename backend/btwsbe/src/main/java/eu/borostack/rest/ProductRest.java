@@ -1,12 +1,14 @@
 package eu.borostack.rest;
 
-import eu.borostack.entity.Product;
+import eu.borostack.annotation.LoggedIn;
+import eu.borostack.entity.Role;
 import eu.borostack.service.ProductService;
+import eu.borostack.util.ResponseFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
+import javax.ws.rs.core.Response;
 
 @Path("product")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -18,14 +20,14 @@ public class ProductRest {
 
     @Path("list")
     @GET
-    public List<Product> getAllProducts() {
-        return productService.findProducts();
+    public Response getAllProducts() {
+        return ResponseFactory.createResponse(productService.findProducts());
     }
 
     @Path("{id}")
     @GET
-    public Product getProduct(@PathParam("id") Long id) {
-        return productService.findProductById(id);
+    @LoggedIn(roles = {Role.USER})
+    public Response getProduct(@PathParam("id") Long id) {
+        return ResponseFactory.createResponse(productService.findProductById(id));
     }
-
 }

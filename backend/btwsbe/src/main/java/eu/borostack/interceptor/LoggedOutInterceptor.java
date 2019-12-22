@@ -1,34 +1,31 @@
 package eu.borostack.interceptor;
 
-import eu.borostack.annotation.WithoutAuth;
-import eu.borostack.entity.ResponseJson;
+import eu.borostack.annotation.LoggedOut;
 import eu.borostack.service.AuthenticationService;
+import eu.borostack.util.ResponseFactory;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
 
-@WithoutAuth
+@LoggedOut
 @Interceptor
-public class WithoutAuthInterceptor {
+public class LoggedOutInterceptor {
 
     @Inject
     private AuthenticationService authenticationService;
 
-    @WithoutAuth
+    @LoggedOut
     @AroundInvoke
     public Object noAuthorization(InvocationContext context) throws Exception {
-        final NewCookie newAuthCookie = authenticationService.authorize();
+        final NewCookie newAuthCookie = authenticationService.authorize(null, null);
 
         if (newAuthCookie == null) {
             return context.proceed();
         } else {
-            return Response.ok(new ResponseJson("Ez a funkció nem használható bejelentkezve!", true))
-                    .status(400)
-                    .build();
+            return ResponseFactory.createMessageResponse("Ez a funkció nem használható bejelentkezve!", true, 400);
         }
     }
 }

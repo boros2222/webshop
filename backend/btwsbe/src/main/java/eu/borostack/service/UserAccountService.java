@@ -1,16 +1,17 @@
 package eu.borostack.service;
 
-import eu.borostack.Util;
 import eu.borostack.dao.UserAccountDao;
-import eu.borostack.entity.ResponseJson;
 import eu.borostack.entity.Role;
 import eu.borostack.entity.UserAccount;
 import eu.borostack.entity.UserRole;
+import eu.borostack.util.ResponseFactory;
+import eu.borostack.util.ValidationUtil;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Set;
@@ -27,20 +28,28 @@ public class UserAccountService {
     @Inject
     private AuthenticationService authenticationService;
 
-    public Response loginUser(final UserAccount userAccount) {
-        Response response = validateUser(userAccount);
+    public Response getCurrentUser() {
+        UserAccount currentUser = authenticationService.checkLoggedInUser();
+        if (currentUser != null) {
+            return ResponseFactory.createResponse(currentUser);
+        } else {
+            return ResponseFactory.createMessageResponse("Nincs felhasználó bejelentkezve!", true, 400);
+        }
+    }
+
+    public Response loginUser(final UserAccount loginUser) {
+        Response response = validateUser(loginUser);
 
         if (response == null) {
-            UserAccount existingUserAccount = userAccountDao.findByEmail(userAccount.getEmail());
-            if (existingUserAccount == null) {
-                response = Response.ok(new ResponseJson("A felhasználó nem létezik!", true))
-                        .status(400).build();
+            UserAccount existingUser = userAccountDao.findByEmail(loginUser.getEmail());
+            if (existingUser == null) {
+                response = ResponseFactory.createMessageResponse("A felhasználó nem létezik!", true, 400);
             } else {
-                if (BCrypt.checkpw(userAccount.getPassword(), existingUserAccount.getHash())) {
-                    response = authenticationService.authenticate(existingUserAccount);
+                NewCookie authCookie = authenticationService.authenticate(loginUser, existingUser);
+                if (authCookie != null) {
+                    response = ResponseFactory.createMessageResponse("Sikeres bejelentkezés!", false, authCookie);
                 } else {
-                    response = Response.ok(new ResponseJson("Hibás jelszó!", true))
-                            .status(400).build();
+                    response = ResponseFactory.createMessageResponse("Hibás jelszó!", true, 400);
                 }
             }
         }
@@ -51,15 +60,16 @@ public class UserAccountService {
         Response response = validateUser(userAccount);
 
         if (response == null) {
-            UserAccount existingUserAccount = userAccountDao.findByEmail(userAccount.getEmail());
-            if (existingUserAccount != null) {
-                response = Response.ok(new ResponseJson("A felhasználó már létezik!", true))
-                        .status(400).build();
+            UserAccount existingUser = userAccountDao.findByEmail(userAccount.getEmail());
+            if (existingUser != null) {
+                response = ResponseFactory.createMessageResponse("A felhasználó már létezik!", true, 400);
             }
             else {
-                UserAccount savedUserAccount = createUser(userAccount);
-                if (savedUserAccount != null) {
-                    response = Response.ok(new ResponseJson("Sikeres regisztráció!", false)).build();
+                UserAccount savedUser = createUser(userAccount);
+                if (savedUser != null) {
+                    response = ResponseFactory.createMessageResponse("Sikeres regisztráció!", false);
+                } else {
+                    response = ResponseFactory.createMessageResponse("Sikertelen regisztráció!", true, 500);
                 }
             }
         }
@@ -68,11 +78,14 @@ public class UserAccountService {
 
     private Response validateUser(final UserAccount userAccount) {
         Response response = null;
-        Set<ConstraintViolation<UserAccount>> fails = Util.validate(userAccount);
-        if(!fails.isEmpty()) {
-            String message = fails.iterator().next().getMessage();
-            response = Response.ok(new ResponseJson(message, true))
-                    .status(400).build();
+        if (userAccount != null) {
+            Set<ConstraintViolation<UserAccount>> fails = ValidationUtil.validate(userAccount);
+            if(!fails.isEmpty()) {
+                String message = fails.iterator().next().getMessage();
+                response = ResponseFactory.createMessageResponse(message, true, 400);
+            }
+        } else {
+            response = ResponseFactory.createMessageResponse("Nincs felhasználó megadva!", true, 400);
         }
         return response;
     }

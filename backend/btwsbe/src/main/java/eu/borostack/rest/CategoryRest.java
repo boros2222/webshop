@@ -1,6 +1,7 @@
 package eu.borostack.rest;
 
 import eu.borostack.service.CategoryService;
+import eu.borostack.util.ResponseFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -23,7 +24,6 @@ public class CategoryRest {
     @Path("list")
     @GET
     public Response getAllCategories(@Context HttpHeaders httpHeaders) {
-        return Response.ok(categoryService.findCategories()).build();
+        return ResponseFactory.createResponse(categoryService.findCategories());
     }
-
 }

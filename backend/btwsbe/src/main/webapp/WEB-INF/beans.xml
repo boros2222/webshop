@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/beans_2_0.xsd"
        bean-discovery-mode="all" version="2.0">
     <interceptors>
-        <class>eu.borostack.interceptor.WithAuthInterceptor</class>
-        <class>eu.borostack.interceptor.WithoutAuthInterceptor</class>
+        <class>eu.borostack.interceptor.LoggedInInterceptor</class>
+        <class>eu.borostack.interceptor.LoggedOutInterceptor</class>
     </interceptors>
 </beans>
