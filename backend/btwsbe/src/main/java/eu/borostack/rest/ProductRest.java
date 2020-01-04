@@ -26,7 +26,7 @@ public class ProductRest {
 
     @Path("{id}")
     @GET
-    @LoggedIn(roles = {Role.USER})
+    //@LoggedIn(roles = {Role.USER})
     public Response getProduct(@PathParam("id") Long id) {
         return ResponseFactory.createResponse(productService.findProductById(id));
     }

@@ -1,45 +1,54 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-
-import constants from '../Constants';
+import React, {Component} from 'react';
+import {fetchToStore} from "../redux/actions/generic";
+import {PRODUCT_DETAILS} from "../redux/constants/namespaces";
+import {connect} from "react-redux";
 
 class ProductDetails extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            product: {
-                name: "",
-                description: [],
-                price: 0
-            }
-        }
-    }
-
     componentDidMount() {
-        axios.get(`${constants.BACKEND_URL}/product/${this.props.id}`).then(res => {
-            res.data.description = res.data.description.split("\\n");
-            this.setState({
-                product: res.data
-            });
-            
-        });
+        this.props.getProduct(this.props.id);
     }
 
     render() {
-        return (
-            <React.Fragment>
-                <h1>{this.state.product.name}</h1>
-                {
-                    this.state.product.description.map(desc => {
-                        return <p>{desc}</p>
-                    })
-                }
-                <p>{this.state.product.price}</p>
-            </React.Fragment>
-        )
+        const { productDetails } = this.props;
+        if (productDetails.error !== undefined) {
+            return (
+                <p>{productDetails.data.message}</p>
+            )
+        } else if (productDetails.isFetching === true) {
+            return (
+                <p>Betöltés alatt...</p>
+            )
+        } else if (productDetails.fetchedAlready === true) {
+            const product = productDetails.data;
+            return (
+                <React.Fragment>
+                    <h1>{product.name}</h1>
+                    {
+                        product.description.split("\\n").map(desc => {
+                            return <p>{desc}</p>
+                        })
+                    }
+                    <p>{product.price}</p>
+                </React.Fragment>
+            )
+        } else {
+            return null;
+        }
     }
 
 }
 
-export default ProductDetails;
+const mapDispatchToProps = dispatch => {
+    return {
+        getProduct: (productId) => {
+            dispatch(fetchToStore(PRODUCT_DETAILS, `/product/${productId}`, false))
+        }
+    };
+};
+const mapStateToProps = state => {
+    return {
+        productDetails: state[PRODUCT_DETAILS]
+    };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ProductDetails);

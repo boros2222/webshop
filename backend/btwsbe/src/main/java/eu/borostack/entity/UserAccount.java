@@ -1,5 +1,6 @@
 package eu.borostack.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,9 +27,11 @@ public class UserAccount {
     @NotEmpty(message = "Nevet kötelező megadni!")
     private String name;
 
+    @JsonIgnore
     @Column(name = "hash")
     private String hash;
 
+    @JsonIgnore
     @Column(name = "salt")
     private String salt;
 

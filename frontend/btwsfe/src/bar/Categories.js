@@ -1,8 +1,9 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
-import {fetchCategories} from "../redux/actions/categories";
 import './Categories.css';
+import {fetchToStore} from "../redux/actions/generic";
+import {CATEGORY} from "../redux/constants/namespaces";
 
 class Categories extends React.Component {
 
@@ -18,9 +19,9 @@ class Categories extends React.Component {
             )
         } else if (categories.isFetching === true) {
             return (
-                <p>Betöltés alatt</p>
+                <p>Betöltés alatt...</p>
             )
-        } else {
+        } else if (categories.fetchedAlready === true) {
             return (
                 <div className="flex-break">
                     {
@@ -34,18 +35,22 @@ class Categories extends React.Component {
                     }
                 </div>
             )
+        } else {
+            return null;
         }
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        getCategories: () => {dispatch(fetchCategories())}
+        getCategories: () => {
+            dispatch(fetchToStore(CATEGORY, "/category/list", true))
+        }
     };
 };
 const mapStateToProps = state => {
     return {
-        categories: state.categories
+        categories: state[CATEGORY]
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Categories);

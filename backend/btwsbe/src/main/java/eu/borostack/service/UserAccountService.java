@@ -33,7 +33,7 @@ public class UserAccountService {
         if (currentUser != null) {
             return ResponseFactory.createResponse(currentUser);
         } else {
-            return ResponseFactory.createMessageResponse("Nincs felhasználó bejelentkezve!", true, 400);
+            return ResponseFactory.createMessageResponse("Nincs felhasználó bejelentkezve!", true, 401);
         }
     }
 

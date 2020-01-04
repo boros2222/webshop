@@ -7,6 +7,8 @@ import Categories from './Categories';
 
 import {slideInDown} from 'react-animations';
 import Radium, {StyleRoot} from 'radium';
+import {CURRENT_USER} from "../redux/constants/namespaces";
+import {connect} from "react-redux";
 
 const styles = {
     slideInDown: {
@@ -22,7 +24,7 @@ class NavBar extends React.Component {
 
         this.state = {
             showDropdown: false,
-            dropdownElement: <span></span>
+            dropdownElement: <span/>
         };
     }
 
@@ -30,7 +32,7 @@ class NavBar extends React.Component {
         if(this.state.dropdownElement.type === element.type) {
             this.setState({
                 showDropdown: false,
-                dropdownElement: <span></span>
+                dropdownElement: <span/>
             });
         } else {
             this.setState({
@@ -42,7 +44,6 @@ class NavBar extends React.Component {
 
     render() {
         let dropdown;
-
         if (this.state.showDropdown === true) {
             dropdown = (
                 <StyleRoot>
@@ -53,13 +54,18 @@ class NavBar extends React.Component {
             );
         }
 
+        let loginLabel = "Bejelentkezés";
+        if (this.props.user.error === undefined && this.props.user.data !== undefined) {
+            loginLabel = "Profilom";
+        }
+
         return (
             <React.Fragment>
 
             <div className={"navlinks container secondary-darker-color " + (this.state.showDropdown ? "": "shadows")}>
                 <Link className="navbar-button" to={"/"}>Termékek</Link>
                 <button className="navbar-button" onClick={() => this.toggleDropdown(<Categories />)}>Kategóriák</button>
-                <button className="navbar-button" onClick={() => this.toggleDropdown(<LoginPanel />)}>Bejelentkezés</button>
+                <button className="navbar-button" onClick={() => this.toggleDropdown(<LoginPanel />)}>{loginLabel}</button>
                 <Link className="navbar-button" to={"/"}>Kosár</Link>
             </div>
 
@@ -72,4 +78,10 @@ class NavBar extends React.Component {
     }
 }
 
-export default NavBar;
+const mapDispatchToProps = dispatch => ({
+});
+
+const mapStateToProps = state => ({
+    user: state[CURRENT_USER]
+});
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

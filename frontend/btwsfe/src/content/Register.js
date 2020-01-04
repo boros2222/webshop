@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
-import {fetchToStore} from "../redux/actions/generic";
-import {PRODUCT} from "../redux/constants/namespaces";
+import {sendToBackend} from "../redux/actions/generic";
+import {AUTHENTICATION} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 
-class Products extends Component {
+class Register extends Component {
 
     componentDidMount() {
         this.props.getProducts();
@@ -41,16 +41,10 @@ class Products extends Component {
 
 }
 
-const mapDispatchToProps = dispatch => {
-    return {
-        getProducts: () => {
-            dispatch(fetchToStore(PRODUCT, "/product/list", false))
-        }
-    };
-};
-const mapStateToProps = state => {
-    return {
-        products: state[PRODUCT]
-    };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Products);
+const mapDispatchToProps = dispatch => ({
+    register: (user) => dispatch(sendToBackend(AUTHENTICATION, "/user/register", user))
+});
+const mapStateToProps = state => ({
+    auth: state[AUTHENTICATION]
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

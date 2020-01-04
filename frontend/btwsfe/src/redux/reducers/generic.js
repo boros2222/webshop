@@ -1,27 +1,21 @@
-
-import {
-    ADD_CATEGORY,
-    FETCH_CATEGORIES_FAILURE,
-    FETCH_CATEGORIES_IN_PROGRESS,
-    FETCH_CATEGORIES_SUCCESS
-} from "../constants/action-types";
+import {REQUEST_FAILURE, REQUEST_IN_PROGRESS, REQUEST_SUCCESS, RESET} from "../constants/action-types";
 
 const INITIAL_STATE = {
-    data: [],
+    data: undefined,
     fetchedAlready: false,
-    isFetching: false,
+    isFetching: undefined,
     error: undefined
 };
 
-function categoriesReducer(state = INITIAL_STATE, action) {
+const genericReducer = (namespace) => (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case FETCH_CATEGORIES_IN_PROGRESS:
+        case `${namespace}/${REQUEST_IN_PROGRESS}`:
             return Object.assign({}, state, {
                 isFetching: true,
                 error: undefined
             });
 
-        case FETCH_CATEGORIES_SUCCESS:
+        case `${namespace}/${REQUEST_SUCCESS}`:
             return Object.assign({}, state, {
                 isFetching: false,
                 error: undefined,
@@ -29,21 +23,24 @@ function categoriesReducer(state = INITIAL_STATE, action) {
                 data: action.data
             });
 
-        case FETCH_CATEGORIES_FAILURE:
+        case `${namespace}/${REQUEST_FAILURE}`:
             return Object.assign({}, state, {
                 isFetching: false,
                 data: action.data,
                 error: action.error
             });
 
-        case ADD_CATEGORY:
+        case `${namespace}/${RESET}`:
             return Object.assign({}, state, {
-                data: state.data.concat(action.payload)
+                data: undefined,
+                fetchedAlready: false,
+                isFetching: undefined,
+                error: undefined
             });
 
         default:
             return state;
     }
-}
+};
 
-export default categoriesReducer;
+export default genericReducer;
