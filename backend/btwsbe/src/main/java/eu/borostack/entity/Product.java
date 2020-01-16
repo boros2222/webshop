@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,5 +34,8 @@ public class Product {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @NotEmpty(message = "Product category must be set")
     private Category category;
+
+    @OneToMany(mappedBy="product", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Picture> pictures = new ArrayList<>();
 
 }

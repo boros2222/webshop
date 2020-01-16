@@ -1,5 +1,5 @@
-export const CATEGORY = "category";
-export const PRODUCT = "product";
-export const PRODUCT_DETAILS = "productDetails";
-export const AUTHENTICATION = "authentication";
-export const CURRENT_USER = "currentUser";
+export const CATEGORY = "CATEGORY";
+export const PRODUCT = "PRODUCT";
+export const PRODUCT_DETAILS = "PRODUCT_DETAILS";
+export const RESPONSE_MESSAGE = "RESPONSE_MESSAGE";
+export const CURRENT_USER = "CURRENT_USER";

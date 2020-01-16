@@ -43,12 +43,12 @@ public class UserAccount {
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "invoice_address_id", referencedColumnName = "id")
     @Valid
     private Address invoiceAddress;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
     @Valid
     private Address shippingAddress;

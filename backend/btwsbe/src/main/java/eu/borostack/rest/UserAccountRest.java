@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 public class UserAccountRest {
 
     @Inject
-    UserAccountService userAccountService;
+    private UserAccountService userAccountService;
 
     @Path("register")
     @POST

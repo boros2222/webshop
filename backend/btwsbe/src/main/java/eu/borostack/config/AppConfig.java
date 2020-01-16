@@ -2,10 +2,12 @@ package eu.borostack.config;
 
 import com.google.common.primitives.Bytes;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
 public class AppConfig {
 
     private static byte[] jwtKey = null;

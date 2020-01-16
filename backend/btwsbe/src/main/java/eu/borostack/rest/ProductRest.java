@@ -1,7 +1,6 @@
 package eu.borostack.rest;
 
-import eu.borostack.annotation.LoggedIn;
-import eu.borostack.entity.Role;
+import eu.borostack.dao.ProductDao;
 import eu.borostack.service.ProductService;
 import eu.borostack.util.ResponseFactory;
 
@@ -16,7 +15,7 @@ import javax.ws.rs.core.Response;
 public class ProductRest {
 
     @Inject
-    ProductService productService;
+    private ProductService productService;
 
     @Path("list")
     @GET

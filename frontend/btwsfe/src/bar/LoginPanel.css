@@ -3,5 +3,33 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    align-items: center
+    align-items: center;
+}
+
+.login-panel p, .login-panel input {
+    font-size: 1.1em;
+    margin-bottom: 0.3em;
+    margin-top: 0.3em;
+}
+
+.login-panel input {
+    width: 13em;
+}
+
+.login-button i {
+    font-size: 1.2em;
+    margin-left: 0.3em;
+}
+
+.login-button {
+    font-size: 1.3em;
+    margin-left: 0.5em;
+    margin-right: 3em;
+}
+
+.login-input {
+    display: grid;
+    grid-template-columns: 8em 17em;
+    grid-template-rows: 50% 50%;
+    align-items: center;
 }

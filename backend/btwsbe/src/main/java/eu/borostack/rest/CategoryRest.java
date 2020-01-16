@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
 public class CategoryRest {
 
     @Inject
-    CategoryService categoryService;
+    private CategoryService categoryService;
 
     @Path("list")
     @GET

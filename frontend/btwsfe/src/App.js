@@ -1,9 +1,8 @@
 import React from 'react';
-import {BrowserRouter as Router} from "react-router-dom";
-import Route from "react-router-dom/es/Route";
+import {BrowserRouter as Router, Route} from "react-router-dom";
 import './App.css';
 
-import MainLayout from './layouts/MainLayout';
+import MainLayout from './layout/MainLayout';
 import Products from './content/Products';
 import ProductDetails from './content/ProductDetails';
 import {fetchToStore} from "./redux/actions/generic";
