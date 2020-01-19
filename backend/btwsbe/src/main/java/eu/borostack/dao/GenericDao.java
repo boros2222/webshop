@@ -19,19 +19,15 @@ public abstract class GenericDao<K, E> {
 
     public E create(E entity) {
         entityManager.persist(entity);
-
         return entity;
     }
 
     public E update(E entity) {
-        entityManager.merge(entity);
-
-        return entity;
+        return entityManager.merge(entity);
     }
 
     public E remove(E entity) {
         entityManager.remove(entity);
-
         return entity;
     }
 

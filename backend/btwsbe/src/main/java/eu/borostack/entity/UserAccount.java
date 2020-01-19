@@ -9,8 +9,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -54,7 +54,7 @@ public class UserAccount {
     private Address shippingAddress;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="userAccount")
-    private List<UserRole> userRoles;
+    private Set<UserRole> userRoles;
 
     @Transient
     @NotEmpty(message = "Jelszót kötelező megadni!")
@@ -65,9 +65,9 @@ public class UserAccount {
         setRegistrationDate(LocalDateTime.now());
     }
 
-    public List<UserRole> getUserRoles() {
+    public Set<UserRole> getUserRoles() {
         if (userRoles == null) {
-            userRoles = new ArrayList<>();
+            userRoles = new HashSet<>();
         }
         return userRoles;
     }
