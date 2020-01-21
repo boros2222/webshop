@@ -13,19 +13,19 @@ public class ProductService {
     @Inject
     private ProductDao productDao;
 
-    public Product createProduct(Product product) {
+    public Product create(Product product) {
         return productDao.create(product);
     }
 
-    public Product updateProduct(Product product) {
+    public Product update(Product product) {
         return productDao.update(product);
     }
 
-    public Product findProductById(Long id) {
+    public Product findById(Long id) {
         return productDao.findById(id);
     }
 
-    public List<Product> findProducts() {
+    public List<Product> findAll() {
         return productDao.findAll();
     }
 }

@@ -115,20 +115,20 @@ public class UserAccountService {
     }
 
     private UserAccount createAddresses(final UserAccount userAccount) {
-        userAccount.setInvoiceAddress(addressService.createAddress(userAccount.getInvoiceAddress()));
-        userAccount.setShippingAddress(addressService.createAddress(userAccount.getShippingAddress()));
+        userAccount.setInvoiceAddress(addressService.create(userAccount.getInvoiceAddress()));
+        userAccount.setShippingAddress(addressService.create(userAccount.getShippingAddress()));
         return userAccount;
     }
 
-    public UserAccount updateUser(UserAccount userAccount) {
+    public UserAccount update(UserAccount userAccount) {
         return userAccountDao.update(userAccount);
     }
 
-    public UserAccount findUserById(Long id) {
+    public UserAccount findById(Long id) {
         return userAccountDao.findById(id);
     }
 
-    public List<UserAccount> findUsers() {
+    public List<UserAccount> findAll() {
         return userAccountDao.findAll();
     }
 }

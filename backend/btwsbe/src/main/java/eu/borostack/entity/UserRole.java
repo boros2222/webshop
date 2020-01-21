@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "user_role")
-public class UserRole {
+public class UserRole extends GenericEntity {
 
     @Id
     @SequenceGenerator(name = "s_user_role", sequenceName = "s_user_role", allocationSize = 1)

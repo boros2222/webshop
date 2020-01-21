@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "order_details")
-public class OrderDetails implements Serializable {
+public class OrderDetails extends GenericEntity implements Serializable {
 
     @Id
     @SequenceGenerator(name = "s_order_details", sequenceName = "s_order_details", allocationSize = 1)

@@ -57,11 +57,11 @@ public class ResponseFactory {
 
     @Getter
     @Setter
-    public static class MessageResponse {
+    private static class MessageResponse {
         private String message;
         private boolean error;
 
-        public MessageResponse(String message, boolean error) {
+        private MessageResponse(String message, boolean error) {
             this.message = message;
             this.error = error;
         }

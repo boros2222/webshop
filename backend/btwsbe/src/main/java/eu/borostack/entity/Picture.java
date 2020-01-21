@@ -1,6 +1,5 @@
 package eu.borostack.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,23 +9,17 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "picture")
-public class Picture {
+public class Picture extends GenericEntity {
 
-    @EmbeddedId
-    @JsonIgnore
-    private PictureId id = new PictureId();
+    @Id
+    @SequenceGenerator(name = "s_picture", sequenceName = "s_picture", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "s_picture")
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
-    @MapsId("productId")
-    @JsonIgnore
+    @JoinColumn(name = "product_id", nullable = false, referencedColumnName = "id")
     private Product product;
 
-    public void setPath(String path) {
-        id.setPath(path);
-    }
-
-    public String getPath() {
-        return id.getPath();
-    }
+    @Column(name = "path", nullable = false)
+    private String path;
 }

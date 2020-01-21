@@ -1,20 +1,34 @@
 package eu.borostack.dao;
 
+import eu.borostack.entity.GenericEntity;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Transactional
-public abstract class GenericDao<K, E> {
+public abstract class GenericDao<K, E extends GenericEntity> {
 
-    protected Class<E> entityClass;
+    private Class<E> entityClass;
 
     @PersistenceContext
     protected EntityManager entityManager;
 
     protected GenericDao(Class<E> entityClass) {
         this.entityClass = entityClass;
+    }
+
+    public void flush() {
+        entityManager.flush();
+    }
+
+    public E save(E entity) {
+        if (entity.isNew()) {
+            return create(entity);
+        } else {
+            return update(entity);
+        }
     }
 
     public E create(E entity) {
@@ -26,9 +40,8 @@ public abstract class GenericDao<K, E> {
         return entityManager.merge(entity);
     }
 
-    public E remove(E entity) {
+    public void remove(E entity) {
         entityManager.remove(entity);
-        return entity;
     }
 
     public E findById(K id) {

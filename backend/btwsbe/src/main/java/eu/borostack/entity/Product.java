@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "product")
-public class Product {
+public class Product extends GenericEntity {
 
     @Id
     @SequenceGenerator(name = "s_category", sequenceName = "s_category", allocationSize = 1)

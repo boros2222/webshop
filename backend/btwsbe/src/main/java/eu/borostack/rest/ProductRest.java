@@ -1,6 +1,5 @@
 package eu.borostack.rest;
 
-import eu.borostack.dao.ProductDao;
 import eu.borostack.service.ProductService;
 import eu.borostack.util.ResponseFactory;
 
@@ -20,13 +19,13 @@ public class ProductRest {
     @Path("list")
     @GET
     public Response getAllProducts() {
-        return ResponseFactory.createResponse(productService.findProducts());
+        return ResponseFactory.createResponse(productService.findAll());
     }
 
     @Path("{id}")
     @GET
     //@LoggedIn(roles = {Role.USER})
     public Response getProduct(@PathParam("id") Long id) {
-        return ResponseFactory.createResponse(productService.findProductById(id));
+        return ResponseFactory.createResponse(productService.findById(id));
     }
 }

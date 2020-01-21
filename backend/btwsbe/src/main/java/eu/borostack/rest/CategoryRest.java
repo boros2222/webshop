@@ -24,6 +24,6 @@ public class CategoryRest {
     @Path("list")
     @GET
     public Response getAllCategories(@Context HttpHeaders httpHeaders) {
-        return ResponseFactory.createResponse(categoryService.findCategories());
+        return ResponseFactory.createResponse(categoryService.findAll());
     }
 }

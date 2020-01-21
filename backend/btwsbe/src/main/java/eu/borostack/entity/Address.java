@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 @Entity
 @Table(name = "address")
-public class Address {
+public class Address extends GenericEntity {
 
     @Id
     @SequenceGenerator(name = "s_address", sequenceName = "s_address", allocationSize = 1)

@@ -13,19 +13,19 @@ public class CategoryService {
     @Inject
     private CategoryDao categoryDao;
 
-    public Category createCategory(Category category) {
+    public Category create(Category category) {
         return categoryDao.create(category);
     }
 
-    public Category updateCategory(Category category) {
+    public Category update(Category category) {
         return categoryDao.update(category);
     }
 
-    public Category findCategoryById(Long id) {
+    public Category findById(Long id) {
         return categoryDao.findById(id);
     }
 
-    public List<Category> findCategories() {
+    public List<Category> findAll() {
         return categoryDao.findAll();
     }
 }

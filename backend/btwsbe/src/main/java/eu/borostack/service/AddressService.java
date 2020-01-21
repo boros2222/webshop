@@ -13,7 +13,15 @@ public class AddressService {
     @Inject
     private AddressDao addressDao;
 
-    public Address createAddress(Address address) {
+    public Address save(Address address) {
+        if (address.isNew()) {
+            return create(address);
+        } else {
+            return update(address);
+        }
+    }
+
+    public Address create(Address address) {
         Address savedAddress = null;
         if (address != null) {
             savedAddress = addressDao.findByAddress(address);
@@ -24,15 +32,15 @@ public class AddressService {
         return savedAddress;
     }
 
-    public Address updateAddress(Address address) {
+    public Address update(Address address) {
         return addressDao.update(address);
     }
 
-    public Address findAddressById(Long id) {
+    public Address findById(Long id) {
         return addressDao.findById(id);
     }
 
-    public List<Address> findAddresses() {
+    public List<Address> findAll() {
         return addressDao.findAll();
     }
 }

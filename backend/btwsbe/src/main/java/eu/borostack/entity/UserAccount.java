@@ -16,7 +16,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "user_account")
-public class UserAccount {
+public class UserAccount extends GenericEntity {
 
     @Id
     @SequenceGenerator(name = "s_user_account", sequenceName = "s_user_account", allocationSize = 1)
@@ -54,7 +54,7 @@ public class UserAccount {
     private Address shippingAddress;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="userAccount")
-    private Set<UserRole> userRoles;
+    private Set<UserRole> userRoles = new HashSet<>();
 
     @Transient
     @NotEmpty(message = "Jelszót kötelező megadni!")
@@ -65,10 +65,4 @@ public class UserAccount {
         setRegistrationDate(LocalDateTime.now());
     }
 
-    public Set<UserRole> getUserRoles() {
-        if (userRoles == null) {
-            userRoles = new HashSet<>();
-        }
-        return userRoles;
-    }
 }
