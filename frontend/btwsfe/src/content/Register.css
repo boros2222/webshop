@@ -1,0 +1,10 @@
+
+.register-panel input {
+    margin-bottom: 1em;
+    width: 30em;
+}
+
+.register-panel input[type="checkbox"] {
+    width: inherit;
+    margin-left: 1em;
+}

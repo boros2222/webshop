@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import './LoginPanel.css';
-import {fetchToStore, removeCookie, sendToBackend} from "../redux/actions/generic";
 import {RESPONSE_MESSAGE, CURRENT_USER} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import constants from "../Constants";
 import {RESET} from "../redux/constants/action-types";
+import {fetchToStore, sendToBackend} from "../redux/actions/request";
+import {removeCookie} from "../redux/actions/cookie";
 
 class LoginPanel extends Component {
 
@@ -44,8 +45,6 @@ class LoginPanel extends Component {
         let message = undefined;
         if (response.error !== undefined) {
             message = response.data.message;
-        } else if (response.isFetching === true) {
-            message = "Belépés...";
         } else if (response.fetchedAlready === true) {
             message = response.data.message;
         }
@@ -79,6 +78,8 @@ class LoginPanel extends Component {
                             <Link className="block-link" to={"/forgot-password"}>Elfelejtett jelszó</Link>
                         </div>
                     </form>
+
+                    { response.isFetching === true ? <i className="pi pi-spin pi-spinner" style={{'fontSize': '2.5em'}}/> : null }
                     <p>{message}</p>
                 </div>
             )
@@ -93,8 +94,9 @@ const mapDispatchToProps = dispatch => ({
             type: `${RESPONSE_MESSAGE}/${RESET}`
         });
     })),
-    logout: () => removeCookie(constants.AUTH_COOKIE_NAME, () => {
-        dispatch(fetchToStore(CURRENT_USER, "/user/current", false));
+    logout: () => removeCookie(constants.AUTH_COOKIE_NAME, {
+        path: constants.API_PATH,
+        callback: () => dispatch(fetchToStore(CURRENT_USER, "/user/current", false))
     }),
     reset: () => dispatch({
         type: `${RESPONSE_MESSAGE}/${RESET}`

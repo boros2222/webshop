@@ -9,6 +9,7 @@ import {slideInDown} from 'react-animations';
 import Radium, {StyleRoot} from 'radium';
 import {CURRENT_USER} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
+import Cart from "./Cart";
 
 const styles = {
     slideInDown: {
@@ -66,7 +67,7 @@ class NavBar extends React.Component {
                 <Link className="navbar-button" to={"/"}>Termékek</Link>
                 <button className="navbar-button" onClick={() => this.toggleDropdown(<Categories />)}>Kategóriák</button>
                 <button className="navbar-button" onClick={() => this.toggleDropdown(<LoginPanel />)}>{loginLabel}</button>
-                <Link className="navbar-button" to={"/"}>Kosár</Link>
+                <button className="navbar-button" onClick={() => this.toggleDropdown(<Cart />)}>Kosár</button>
             </div>
 
             <div className={"dropdown container secondary-darker-color " + (this.state.showDropdown ? "shadows": "")}>

@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {Link} from "react-router-dom";
-import {fetchToStore} from "../redux/actions/generic";
-import {PRODUCT} from "../redux/constants/namespaces";
+import {PRODUCTS} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
+import Product from "../component/Product";
+import {fetchToStore} from "../redux/actions/request";
 
 class Products extends Component {
 
@@ -18,21 +18,15 @@ class Products extends Component {
             )
         } else if (products.isFetching === true) {
             return (
-                <p>Betöltés alatt...</p>
+                <i className="pi pi-spin pi-spinner" style={{'fontSize': '2.5em'}}/>
             )
         } else if (products.fetchedAlready === true) {
             return (
-                <ul>
-                    {
-                        products.data.map(product => {
-                            return (
-                                <li key={product.id}>
-                                    <Link to={"/product/" + product.id}>{product.name}</Link>
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
+                products.data.map(product => {
+                    return (
+                        <Product key={product.id} product={product} />
+                    )
+                })
             )
         } else {
             return null;
@@ -44,13 +38,13 @@ class Products extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         getProducts: () => {
-            dispatch(fetchToStore(PRODUCT, "/product/list", false))
+            dispatch(fetchToStore(PRODUCTS, "/product/list", false))
         }
     };
 };
 const mapStateToProps = state => {
     return {
-        products: state[PRODUCT]
+        products: state[PRODUCTS]
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Products);

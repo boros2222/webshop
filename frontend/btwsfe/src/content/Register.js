@@ -1,8 +1,10 @@
 import React, {Component, Fragment} from 'react';
-import {sendToBackend} from "../redux/actions/generic";
 import {RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import Address from "../component/Address";
+import "./Register.css";
+import {RESET} from "../redux/constants/action-types";
+import {sendToBackend} from "../redux/actions/request";
 
 class Register extends Component {
 
@@ -30,6 +32,10 @@ class Register extends Component {
             passwordAgain: "",
             message: ""
         }
+    }
+
+    componentDidMount() {
+        this.props.reset();
     }
 
     handleInvoiceAddressChange = (event) => {
@@ -118,7 +124,7 @@ class Register extends Component {
         }
 
         return (
-            <div className="primary-color">
+            <div className="primary-color register-panel">
                 <form className="primary-color" onSubmit={this.handleRegister}>
                     <div className="primary-color">
                         <p className="required">Teljes név:</p>
@@ -145,7 +151,10 @@ class Register extends Component {
                        <Address address={this.state.user.invoiceAddress}
                                 handleInputChange={this.handleInvoiceAddressChange}/>
 
-                        <p>
+                        <p style={{
+                            marginTop: "2em",
+                            fontWeight: "bold"
+                        }}>
                             Szállítási cím megegyezik a számlázási címmel:
                             <input name="shippingIsSame" type="checkbox"
                                    checked={this.state.shippingIsSame}
@@ -167,7 +176,10 @@ class Register extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-    register: (user) => dispatch(sendToBackend(RESPONSE_MESSAGE, "/user/register", user))
+    register: (user) => dispatch(sendToBackend(RESPONSE_MESSAGE, "/user/register", user)),
+    reset: () => dispatch({
+        type: `${RESPONSE_MESSAGE}/${RESET}`
+    })
 });
 const mapStateToProps = state => ({
     response: state[RESPONSE_MESSAGE]

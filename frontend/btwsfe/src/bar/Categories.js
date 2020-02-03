@@ -2,8 +2,8 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import './Categories.css';
-import {fetchToStore} from "../redux/actions/generic";
 import {CATEGORY} from "../redux/constants/namespaces";
+import {fetchToStore} from "../redux/actions/request";
 
 class Categories extends React.Component {
 
@@ -19,7 +19,7 @@ class Categories extends React.Component {
             )
         } else if (categories.isFetching === true) {
             return (
-                <p>Betöltés alatt...</p>
+                <i className="pi pi-spin pi-spinner" style={{'fontSize': '2.5em'}}/>
             )
         } else if (categories.fetchedAlready === true) {
             return (
@@ -27,8 +27,8 @@ class Categories extends React.Component {
                     {
                         categories.data.map(category => {
                             return (
-                                <div className="category-element secondary-darker-color">
-                                    <Link to={`/category/${category.id}`} key={category.id}>{category.name}</Link>
+                                <div key={category.id} className="category-element secondary-darker-color">
+                                    <Link to={`/category/${category.id}`}>{category.name}</Link>
                                 </div>
                             );
                         })

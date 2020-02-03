@@ -1,6 +1,7 @@
 package eu.borostack.dao;
 
 import eu.borostack.entity.GenericEntity;
+import org.hibernate.Session;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

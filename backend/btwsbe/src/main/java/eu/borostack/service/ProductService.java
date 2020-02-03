@@ -6,6 +6,7 @@ import eu.borostack.entity.Product;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 public class ProductService {
@@ -27,5 +28,9 @@ public class ProductService {
 
     public List<Product> findAll() {
         return productDao.findAll();
+    }
+
+    public List<Product> findByIdList(List<Integer> idList) {
+        return productDao.findByIdList(idList.stream().map(Integer::longValue).collect(Collectors.toList()));
     }
 }

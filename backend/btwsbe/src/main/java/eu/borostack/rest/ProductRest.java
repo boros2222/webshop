@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("product")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -27,5 +28,11 @@ public class ProductRest {
     //@LoggedIn(roles = {Role.USER})
     public Response getProduct(@PathParam("id") Long id) {
         return ResponseFactory.createResponse(productService.findById(id));
+    }
+
+    @Path("byidlist")
+    @POST
+    public Response getProduct(List<Integer> productIds) {
+        return ResponseFactory.createResponse(productService.findByIdList(productIds));
     }
 }

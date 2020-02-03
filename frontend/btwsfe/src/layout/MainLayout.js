@@ -14,8 +14,8 @@ class MainLayout extends React.Component {
                     <Header />
                 </div>
 
-                <div className="container">
-                    <div className="bar spacing-top-bottom primary-color">
+                <div className="content-container spacing-top-bottom primary-color">
+                    <div className="bar primary-color flex-center">
                         {this.props.content}
                     </div>
                 </div>

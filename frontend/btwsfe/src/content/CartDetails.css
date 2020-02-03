@@ -1,0 +1,17 @@
+
+.elements-apart {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cart-product {
+    border-bottom: 1px solid #e8e8e8;
+    font-size: 1.2em;
+    padding-bottom: 0.8em;
+    padding-top: 0.8em;
+}
+
+.cart-product:last-of-type {
+    border-bottom: 0;
+    border-top: 2px solid #03a9f4;
+}

@@ -8,7 +8,7 @@ class Footer extends React.Component {
             <React.Fragment>
 
             <div className="footer-bar">
-                Az alkalmazás JavaEE és ReactJS technológiákat használ!
+                Az alkalmazás JavaEE és ReactJS technológiákat használ.
             </div>
 
             </React.Fragment>

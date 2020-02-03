@@ -25,6 +25,7 @@
     font-size: 1.3em;
     margin-left: 0.5em;
     margin-right: 3em;
+    flex-direction: row;
 }
 
 .login-input {

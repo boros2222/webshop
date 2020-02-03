@@ -1,7 +1,7 @@
 
 html body {
   height: 100%;
-  background-color: #ffffff;
+  background-color: #e8e8e8;
 }
 
 /* Primary color */
@@ -37,14 +37,20 @@ a:hover, button:hover,
 }
 
 button.custom-button,
-.primary-color > button.custom-button {
+a.custom-button,
+.primary-color > button.custom-button,
+.primary-color > a.custom-button {
+  color: #03a9f4;
   border: 2px solid #03a9f4;
   border-radius: 1em;
   padding: 0.2em 0.6em;
 }
 
 button.custom-button:hover,
-.primary-color > button.custom-button:hover {
+a.custom-button:hover,
+.primary-color > button.custom-button:hover,
+.primary-color > a.custom-button:hover {
+  color: #007ac1;
   border: 2px solid #007ac1;
   border-radius: 1em;
   padding: 0.2em 0.6em;
@@ -80,13 +86,17 @@ button.custom-button:hover,
   color: #c4c4c4;
 }
 
-.secondary-color > button.custom-button {
+.secondary-color > button.custom-button,
+.secondary-color > a.custom-button {
+  color: #ffffff;
   border: 2px solid #ffffff;
   border-radius: 1em;
   padding: 0.2em 0.6em;
 }
 
-.secondary-color > button.custom-button:hover {
+.secondary-color > button.custom-button:hover,
+.secondary-color > a.custom-button:hover {
+  color: #c4c4c4;
   border: 2px solid #c4c4c4;
   border-radius: 1em;
   padding: 0.2em 0.6em;
@@ -122,13 +132,17 @@ button.custom-button:hover,
   color: #c4c4c4;
 }
 
-.secondary-darker-color > button.custom-button {
+.secondary-darker-color > button.custom-button,
+.secondary-darker-color > a.custom-button {
+  color: #ffffff;
   border: 2px solid #ffffff;
   border-radius: 1em;
   padding: 0.2em 0.6em;
 }
 
-.secondary-darker-color > button.custom-button:hover {
+.secondary-darker-color > button.custom-button:hover,
+.secondary-darker-color > a.custom-button:hover {
+  color: #c4c4c4;
   border: 2px solid #c4c4c4;
   border-radius: 1em;
   padding: 0.2em 0.6em;
@@ -180,9 +194,33 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .container {
   padding-left: 15em;
   padding-right: 15em;
+}
+
+.content-container {
+  margin-left: 20em;
+  margin-right: 20em;
+  padding: 3em;
+  border-radius: 2em;
+}
+
+.max-width {
+  width: 100%;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.navbar-font-size {
+  font-size: 1.1em;
+}
+
+.pull-right {
+  float: right;
 }

@@ -1,13 +1,8 @@
 
-const constants = {
-    BACKEND_URL: "http://localhost:5080/btwsbe/api",
-    AUTH_COOKIE_NAME: "auth"
-};
-
-// const cookies = new Cookies();
-// cookies.set('asd', 'huhu', {
-//     secure: false,
-//     path: "/"
-// });
+const constants = {};
+constants.API_PATH = "/btwsbe/api";
+constants.BACKEND_URL = `http://localhost:5080${constants.API_PATH}`;
+constants.AUTH_COOKIE_NAME = "auth";
+constants.CART_COOKIE_NAME = "cart";
 
 export default constants;

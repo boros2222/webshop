@@ -1,4 +1,4 @@
-import {REQUEST_FAILURE, REQUEST_IN_PROGRESS, REQUEST_SUCCESS, RESET} from "../constants/action-types";
+import {REQUEST_FAILURE, REQUEST_IN_PROGRESS, REQUEST_SUCCESS, RESET, SET_DATA} from "../constants/action-types";
 
 const INITIAL_STATE = {
     data: undefined,
@@ -36,6 +36,11 @@ const genericReducer = (namespace) => (state = INITIAL_STATE, action) => {
                 fetchedAlready: false,
                 isFetching: undefined,
                 error: undefined
+            });
+
+        case `${namespace}/${SET_DATA}`:
+            return Object.assign({}, state, {
+                data: action.data,
             });
 
         default:

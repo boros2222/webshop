@@ -1,5 +1,6 @@
 export const CATEGORY = "CATEGORY";
-export const PRODUCT = "PRODUCT";
+export const PRODUCTS = "PRODUCT";
 export const PRODUCT_DETAILS = "PRODUCT_DETAILS";
 export const RESPONSE_MESSAGE = "RESPONSE_MESSAGE";
 export const CURRENT_USER = "CURRENT_USER";
+export const CART_STORAGE = "CART_STORAGE";
