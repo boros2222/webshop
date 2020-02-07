@@ -22,4 +22,14 @@ public class ProductDao extends GenericDao<Long, Product> {
                 .where(product.id.in(idList))
                 .fetch();
     }
+
+    public List<Product> findByOffsetAndLimit(Long offset, Long limit) {
+        QProduct product = QProduct.product;
+        return new JPAQuery<Product>(entityManager)
+                .select(product)
+                .from(product)
+                .offset(offset)
+                .limit(limit)
+                .fetch();
+    }
 }

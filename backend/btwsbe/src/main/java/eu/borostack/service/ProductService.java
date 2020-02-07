@@ -33,4 +33,8 @@ public class ProductService {
     public List<Product> findByIdList(List<Integer> idList) {
         return productDao.findByIdList(idList.stream().map(Integer::longValue).collect(Collectors.toList()));
     }
+
+    public List<Product> findByOffsetAndLimit(Long offset, Long limit) {
+        return productDao.findByOffsetAndLimit(offset, limit);
+    }
 }
