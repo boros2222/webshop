@@ -15,7 +15,7 @@ class Cart extends Component {
                 </div>
             );
         } else {
-            const priceSum = cart.map(product => product.price).reduce((a, b) => a + b, 0);
+            const priceSum = cart.map(cartProduct => cartProduct.product.price * cartProduct.quantity).reduce((a, b) => a + b, 0);
             return (
                 <div className="secondary-darker-color">
                     <p className="navbar-font-size" style={{marginBottom: "1em"}}>

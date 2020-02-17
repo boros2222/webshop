@@ -12,6 +12,7 @@ import constants from "./Constants";
 import CartDetails from "./content/CartDetails";
 import {fetchToStore} from "./redux/actions/request";
 import {getFromStorage} from "./redux/actions/storage";
+import Order from "./content/Order";
 
 class App extends React.Component {
 
@@ -46,6 +47,12 @@ class App extends React.Component {
                            <MainLayout content = {<CartDetails />} {...props} />
                        }
                 />
+
+                <Route exact path = {["/order"]}
+                       render = { (props) =>
+                           <MainLayout content = {<Order />} {...props} />
+                       }
+                />
             </Router>
         )
     }
@@ -53,7 +60,7 @@ class App extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
     getCurrentUser: () => dispatch(fetchToStore(CURRENT_USER, "/user/current", false)),
-    getCart: () => dispatch(getFromStorage(CART_STORAGE, constants.CART_COOKIE_NAME))
+    getCart: () => dispatch(getFromStorage(CART_STORAGE, constants.CART_STORAGE_NAME))
 });
 
 const mapStateToProps = state => ({

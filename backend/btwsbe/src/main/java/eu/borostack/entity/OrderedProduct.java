@@ -1,5 +1,6 @@
 package eu.borostack.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,7 @@ public class OrderedProduct extends GenericEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "s_ordered_product")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "order_details_id", nullable = false, referencedColumnName = "id")
     private OrderDetails orderDetails;

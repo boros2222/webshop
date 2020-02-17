@@ -26,11 +26,14 @@ class ProductDetails extends Component {
                 cart = cart.slice();
             }
 
-            if (cart.findIndex(x => x.id === product.id) === -1) {
+            if (cart.findIndex(x => x.product.id === product.id) === -1) {
                 const cartProduct = {
-                    id: product.id,
-                    name: product.name,
-                    price: product.price
+                    product: {
+                        id: product.id,
+                        name: product.name,
+                        price: product.price
+                    },
+                    quantity: 1
                 };
                 cart.push(cartProduct);
                 this.props.setCart(cart);
@@ -78,8 +81,8 @@ const mapDispatchToProps = dispatch => {
         getProduct: (productId) => {
             dispatch(fetchToStore(PRODUCT_DETAILS, `/product/${productId}`, false))
         },
-        setCart: (data) => saveToStorage(constants.CART_COOKIE_NAME, data, {
-            callback: () => dispatch(getFromStorage(CART_STORAGE, constants.CART_COOKIE_NAME))
+        setCart: (data) => saveToStorage(constants.CART_STORAGE_NAME, data, {
+            callback: () => dispatch(getFromStorage(CART_STORAGE, constants.CART_STORAGE_NAME))
         }),
     };
 };

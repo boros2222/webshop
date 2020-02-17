@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,6 +29,9 @@ public class OrderDetails extends GenericEntity implements Serializable {
 
     @Column(name = "order_date")
     private LocalDateTime orderDate;
+
+    @Transient
+    private List<OrderedProduct> orderedProducts;
 
     @PrePersist
     private void init() {

@@ -77,12 +77,22 @@ class Register extends Component {
     handleRegister = (event) => {
         event.preventDefault();
         if (this.validateUser()) {
-            const user = this.state.user;
+            const user = {...this.state.user};
             if (this.state.shippingIsSame) {
                 user.shippingAddress = user.invoiceAddress;
             }
+            if (this.addressIsEmpty(user.shippingAddress)) {
+                user.shippingAddress = null;
+            }
+            if (this.addressIsEmpty(user.invoiceAddress)) {
+                user.invoiceAddress = null;
+            }
             this.props.register(user);
         }
+    };
+
+    addressIsEmpty = (address) => {
+        return address.postalCode === "" && address.city === "" && address.street === "" && address.houseNumber === "";
     };
 
     validateUser = () => {

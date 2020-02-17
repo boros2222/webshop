@@ -95,7 +95,7 @@ const mapDispatchToProps = dispatch => ({
         });
     })),
     logout: () => removeCookie(constants.AUTH_COOKIE_NAME, {
-        path: constants.API_PATH,
+        path: `${constants.API_PATH}/`,
         callback: () => dispatch(fetchToStore(CURRENT_USER, "/user/current", false))
     }),
     reset: () => dispatch({

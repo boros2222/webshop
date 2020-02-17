@@ -1,11 +1,11 @@
 package eu.borostack.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
@@ -16,6 +16,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "user_account")
+@JsonIgnoreProperties(value={ "password"}, allowSetters= true)
 public class UserAccount extends GenericEntity {
 
     @Id
@@ -45,15 +46,13 @@ public class UserAccount extends GenericEntity {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "invoice_address_id", referencedColumnName = "id")
-    @Valid
     private Address invoiceAddress;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
-    @Valid
     private Address shippingAddress;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="userAccount")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userAccount")
     private Set<UserRole> userRoles = new HashSet<>();
 
     @Transient

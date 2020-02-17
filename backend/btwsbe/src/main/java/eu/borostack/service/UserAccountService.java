@@ -115,8 +115,12 @@ public class UserAccountService {
     }
 
     private UserAccount createAddresses(final UserAccount userAccount) {
-        userAccount.setInvoiceAddress(addressService.create(userAccount.getInvoiceAddress()));
-        userAccount.setShippingAddress(addressService.create(userAccount.getShippingAddress()));
+        if (userAccount.getInvoiceAddress() != null) {
+            userAccount.setInvoiceAddress(addressService.create(userAccount.getInvoiceAddress()));
+        }
+        if (userAccount.getShippingAddress() != null) {
+            userAccount.setShippingAddress(addressService.create(userAccount.getShippingAddress()));
+        }
         return userAccount;
     }
 
