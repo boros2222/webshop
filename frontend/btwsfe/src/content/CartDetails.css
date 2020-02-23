@@ -13,5 +13,5 @@
 
 .cart-product:last-of-type {
     border-bottom: 0;
-    border-top: 2px solid #03a9f4;
+    border-top: 2px solid var(--light-color);
 }

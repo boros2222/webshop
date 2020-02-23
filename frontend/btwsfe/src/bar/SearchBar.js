@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {Redirect} from "react-router-dom";
 import './SearchBar.css';
 import "primeicons/primeicons.css";
@@ -13,6 +13,15 @@ class SearchBar extends React.Component {
         }
     }
 
+    componentDidMount() {
+        if (this.props.searchTerm) {
+            this.setState({
+                search: this.props.searchTerm,
+                toSearch: false
+            });
+        }
+    }
+
     handleSubmit = (event) => {
         event.preventDefault();
         if (this.state.search.length > 0) {
@@ -23,21 +32,26 @@ class SearchBar extends React.Component {
     };
 
     render() {
+        let redirect = null;
         if (this.state.toSearch === true) {
             const url = `/search/${this.state.search}`;
-            return <Redirect to={url} />
+            redirect = <Redirect to={url} />;
         }
 
         return (
-            <div className="flex-center secondary-color search-bar">
-                <form className="search secondary-color" onSubmit={this.handleSubmit}>
-                    <input className="search-input" type="text" name="search" placeholder="Keresés a termékek között..."
-                           value={this.state.search} onChange={(e) => this.setState({search: e.target.value})}/>
-                    <button className="search-button">
-                        <i className="pi pi-search"/>
-                    </button>
-                </form>
-            </div>
+            <Fragment>
+                <div className="flex-center secondary-color search-bar">
+                    <form className="search secondary-color" onSubmit={this.handleSubmit}>
+                        <input className="search-input" type="text" name="search" placeholder="Keresés a termékek között..."
+                               value={this.state.search} onChange={(e) => this.setState({search: e.target.value})}/>
+                        <button className="search-button">
+                            <i className="pi pi-search"/>
+                        </button>
+                    </form>
+                </div>
+
+                {redirect}
+            </Fragment>
         )
     }
 }

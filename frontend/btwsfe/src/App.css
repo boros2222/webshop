@@ -1,4 +1,25 @@
 
+:root {
+  --lightest-color: #ffffff;
+  --light-color: #03a9f4;
+  --dark-color: #007ac1;
+
+  --primary-color-first: var(--lightest-color);
+  --primary-color-second: var(--light-color);
+  --primary-color-placeholder: var(--dark-color);
+  --primary-color-hover: var(--dark-color);
+
+  --secondary-color-first: var(--light-color);
+  --secondary-color-second: var(--lightest-color);
+  --secondary-color-placeholder: #888888;
+  --secondary-color-hover: #c4c4c4;
+
+  --secondary-darker-color-first: var(--dark-color);
+  --secondary-darker-color-second: var(--lightest-color);
+  --secondary-darker-color-placeholder: #888888;
+  --secondary-darker-color-hover: #c4c4c4;
+}
+
 html body {
   height: 100%;
   background-color: #e8e8e8;
@@ -6,19 +27,19 @@ html body {
 
 /* Primary color */
 .primary-color {
-  background-color: #ffffff;
-  color: #03a9f4;
+  background-color: var(--primary-color-first);
+  color: var(--primary-color-second);
 }
 
 .primary-color > input {
-  background-color: #03a9f4;
-  color: #ffffff;
+  background-color: var(--primary-color-second);
+  color: var(--primary-color-first);
   padding: 0.3em 0.8em;
   border-radius: 0.75em;
 }
 
 .primary-color > input::placeholder {
-  color: #0071ca;
+  color: var(--primary-color-placeholder);
 }
 
 a:link, a:visited, a:active, p,
@@ -27,21 +48,21 @@ a:link, a:visited, a:active, p,
 .primary-color > a:active,
 .primary-color > button,
 .primary-color > p {
-  color: #03a9f4;
+  color: var(--primary-color-second);
 }
 
 a:hover, button:hover,
 .primary-color > a:hover,
 .primary-color > button:hover {
-  color: #007ac1;
+  color: var(--primary-color-hover);
 }
 
 button.custom-button,
 a.custom-button,
 .primary-color > button.custom-button,
 .primary-color > a.custom-button {
-  color: #03a9f4;
-  border: 2px solid #03a9f4;
+  color: var(--primary-color-second);
+  border: 2px solid var(--primary-color-second);
   border-radius: 1em;
   padding: 0.2em 0.6em;
 }
@@ -50,27 +71,49 @@ button.custom-button:hover,
 a.custom-button:hover,
 .primary-color > button.custom-button:hover,
 .primary-color > a.custom-button:hover {
-  color: #007ac1;
-  border: 2px solid #007ac1;
+  color: var(--primary-color-hover);
+  border: 2px solid var(--primary-color-hover);
+  border-radius: 1em;
+  padding: 0.2em 0.6em;
+}
+
+button.custom-button-inverse,
+a.custom-button-inverse,
+.primary-color > button.custom-button-inverse,
+.primary-color > a.custom-button-inverse {
+  color: var(--primary-color-first);
+  background-color: var(--primary-color-second);
+  border: 2px solid var(--primary-color-second);
+  border-radius: 1em;
+  padding: 0.2em 0.6em;
+}
+
+button.custom-button-inverse:hover,
+a.custom-button-inverse:hover,
+.primary-color > button.custom-button-inverse:hover,
+.primary-color > a.custom-button-inverse:hover {
+  color: var(--primary-color-first);
+  background-color: var(--primary-color-hover);
+  border: 2px solid var(--primary-color-hover);
   border-radius: 1em;
   padding: 0.2em 0.6em;
 }
 
 /* Secondary color */
 .secondary-color {
-  background-color: #03a9f4;
-  color: #ffffff;
+  background-color: var(--secondary-color-first);
+  color: var(--secondary-color-second);
 }
 
 .secondary-color > input {
-  color: #03a9f4;
-  background-color: #ffffff;
+  color: var(--secondary-color-first);
+  background-color: var(--secondary-color-second);
   padding: 0.3em 0.8em;
   border-radius: 0.75em;
 }
 
 .secondary-darker-color > input::placeholder {
-  color: #888888;
+  color: var(--secondary-color-placeholder);
 }
 
 .secondary-color > a:link,
@@ -78,45 +121,45 @@ a.custom-button:hover,
 .secondary-color > a:active,
 .secondary-color > button,
 .secondary-color > p {
-  color: #ffffff;
+  color: var(--secondary-color-second);
 }
 
 .secondary-color > a:hover,
 .secondary-color > button:hover {
-  color: #c4c4c4;
+  color: var(--secondary-color-hover);
 }
 
 .secondary-color > button.custom-button,
 .secondary-color > a.custom-button {
-  color: #ffffff;
-  border: 2px solid #ffffff;
+  color: var(--secondary-color-second);
+  border: 2px solid var(--secondary-color-second);
   border-radius: 1em;
   padding: 0.2em 0.6em;
 }
 
 .secondary-color > button.custom-button:hover,
 .secondary-color > a.custom-button:hover {
-  color: #c4c4c4;
-  border: 2px solid #c4c4c4;
+  color: var(--secondary-color-hover);
+  border: 2px solid var(--secondary-color-hover);
   border-radius: 1em;
   padding: 0.2em 0.6em;
 }
 
 /* Secondary darker color */
 .secondary-darker-color {
-  background-color: #007ac1;
-  color: #ffffff;
+  background-color: var(--secondary-darker-color-first);
+  color: var(--secondary-darker-color-second);
 }
 
 .secondary-darker-color > input {
-  color: #007ac1;
-  background-color: #ffffff;
+  color: var(--secondary-darker-color-first);
+  background-color: var(--secondary-darker-color-second);
   padding: 0.3em 0.8em;
   border-radius: 0.75em;
 }
 
 .secondary-darker-color > input::placeholder {
-  color: #888888;
+  color: var(--secondary-darker-color-placeholder);
 }
 
 .secondary-darker-color > a:link,
@@ -124,26 +167,26 @@ a.custom-button:hover,
 .secondary-darker-color > a:active,
 .secondary-darker-color > button,
 .secondary-darker-color > p {
-  color: #ffffff;
+  color: var(--secondary-darker-color-second);
 }
 
 .secondary-darker-color > a:hover,
 .secondary-darker-color > button:hover {
-  color: #c4c4c4;
+  color: var(--secondary-darker-color-hover);
 }
 
 .secondary-darker-color > button.custom-button,
 .secondary-darker-color > a.custom-button {
-  color: #ffffff;
-  border: 2px solid #ffffff;
+  color: var(--secondary-darker-color-second);
+  border: 2px solid var(--secondary-darker-color-second);
   border-radius: 1em;
   padding: 0.2em 0.6em;
 }
 
 .secondary-darker-color > button.custom-button:hover,
 .secondary-darker-color > a.custom-button:hover {
-  color: #c4c4c4;
-  border: 2px solid #c4c4c4;
+  color: var(--secondary-darker-color-hover);
+  border: 2px solid var(--secondary-darker-color-hover);
   border-radius: 1em;
   padding: 0.2em 0.6em;
 }
@@ -221,6 +264,34 @@ p {
   font-size: 1.1em;
 }
 
+div.button-row {
+  width: 100%;
+  padding-top: 1.5em;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
 .pull-right {
   float: right;
+}
+
+.space-left {
+  margin-left: 1em;
+}
+
+.space-right {
+  margin-right: 1em;
+}
+
+.space-top {
+  margin-top: 1em;
+}
+
+.space-bottom {
+  margin-bottom: 1em;
+}
+
+/* Primereact */
+body .p-datascroller .p-datascroller-content {
+  border: 0 !important;
 }

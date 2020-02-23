@@ -14,20 +14,35 @@ public class ProductDao extends GenericDao<Long, Product> {
         super(Product.class);
     }
 
-    public List<Product> findByIdList(List<Long> idList) {
+    public List<Product> findAllWithOffsetAndLimit(Long offset, Long limit) {
         QProduct product = QProduct.product;
         return new JPAQuery<Product>(entityManager)
                 .select(product)
                 .from(product)
-                .where(product.id.in(idList))
+                .offset(offset)
+                .limit(limit)
                 .fetch();
     }
 
-    public List<Product> findByOffsetAndLimit(Long offset, Long limit) {
+    public List<Product> findAllBySearchWithOffsetAndLimit(String searchTerm, Long offset, Long limit) {
         QProduct product = QProduct.product;
         return new JPAQuery<Product>(entityManager)
                 .select(product)
                 .from(product)
+                .where(product.name.containsIgnoreCase(searchTerm)
+                        .or(product.description.containsIgnoreCase(searchTerm))
+                        .or(product.category.name.containsIgnoreCase(searchTerm)))
+                .offset(offset)
+                .limit(limit)
+                .fetch();
+    }
+
+    public List<Product> findAllByCategoryIdWithOffsetAndLimit(Long categoryId, Long offset, Long limit) {
+        QProduct product = QProduct.product;
+        return new JPAQuery<Product>(entityManager)
+                .select(product)
+                .from(product)
+                .where(product.category.id.eq(categoryId))
                 .offset(offset)
                 .limit(limit)
                 .fetch();

@@ -43,6 +43,13 @@ class NavBar extends React.Component {
         }
     };
 
+    closeDropdown = () => {
+        this.setState({
+            showDropdown: false,
+            dropdownElement: <span/>
+        });
+    };
+
     render() {
         let dropdown;
         if (this.state.showDropdown === true) {
@@ -65,9 +72,9 @@ class NavBar extends React.Component {
 
             <div className={"navlinks container secondary-darker-color " + (this.state.showDropdown ? "": "shadows")}>
                 <Link className="navbar-button" to={"/"}>Termékek</Link>
-                <button className="navbar-button" onClick={() => this.toggleDropdown(<Categories />)}>Kategóriák</button>
-                <button className="navbar-button" onClick={() => this.toggleDropdown(<LoginPanel />)}>{loginLabel}</button>
-                <button className="navbar-button" onClick={() => this.toggleDropdown(<Cart />)}>Kosár</button>
+                <button className="navbar-button" onClick={() => this.toggleDropdown(<Categories closeDropdown = {this.closeDropdown} />)}>Kategóriák</button>
+                <button className="navbar-button" onClick={() => this.toggleDropdown(<LoginPanel closeDropdown = {this.closeDropdown} />)}>{loginLabel}</button>
+                <button className="navbar-button" onClick={() => this.toggleDropdown(<Cart closeDropdown = {this.closeDropdown} />)}>Kosár</button>
             </div>
 
             <div className={"dropdown container secondary-darker-color " + (this.state.showDropdown ? "shadows": "")}>

@@ -11,7 +11,7 @@ class MainLayout extends React.Component {
         return (
             <React.Fragment>
                 <div className="bar">
-                    <Header />
+                    <Header searchTerm = {this.props.match.params.searchTerm}/>
                 </div>
 
                 <div className="content-container spacing-top-bottom primary-color">

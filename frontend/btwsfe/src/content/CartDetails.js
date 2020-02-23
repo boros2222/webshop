@@ -4,9 +4,6 @@ import {connect} from "react-redux";
 import constants from "../Constants";
 import {Growl} from "primereact/growl";
 import "./CartDetails.css";
-import "primereact/resources/themes/nova-light/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
 import {getFromStorage, saveToStorage} from "../redux/actions/storage";
 import {Link, Redirect} from "react-router-dom";
 
@@ -97,12 +94,12 @@ class CartDetails extends Component {
                                         <span>{product.name}</span>
                                     </Link>
                                     <span>
-                                        <button className="custom-button" style={{fontSize: "0.8em", marginRight: "1.5em"}}
+                                        <button className="custom-button" style={{fontSize: "0.8em", marginRight: "1em"}}
                                                 onClick={() => this.decreaseQuantity(cartProduct)}>
                                             -
                                         </button>
-                                        <span>{quantity} db</span>
-                                        <button className="custom-button" style={{fontSize: "0.8em", marginRight: "1.5em"}}
+                                        <span style={{marginRight: "1em"}}>{quantity} db</span>
+                                        <button className="custom-button" style={{fontSize: "0.8em", marginRight: "2em"}}
                                                 onClick={() => this.increaseQuantity(cartProduct)}>
                                             +
                                         </button>

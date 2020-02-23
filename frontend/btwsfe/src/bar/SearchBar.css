@@ -16,11 +16,11 @@ input.search-input {
 }
 
 button.search-button {
-    color: #03a9f4;
+    color: var(--light-color);
     font-size: 1.5em;
     border: 0;
 }
 
 button.search-button:hover {
-    color: #007ac1;
+    color: var(--dark-color);
 }

@@ -4,9 +4,6 @@ import {connect} from "react-redux";
 import constants from "../Constants";
 import {Growl} from "primereact/growl";
 import "./CartDetails.css";
-import "primereact/resources/themes/nova-light/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
 import {getFromStorage, removeFromStorage} from "../redux/actions/storage";
 import {Link} from "react-router-dom";
 import {sendToBackend} from "../redux/actions/request";
@@ -99,14 +96,16 @@ class Order extends Component {
                             Lorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasd
                         </AccordionTab>
                     </Accordion>
-                    <button className="custom-button"
-                            onClick={this.previousTab}>
-                        Vissza
-                    </button>
-                    <button className="custom-button"
-                            onClick={this.nextTab}>
-                        Tovább
-                    </button>
+                    <div className="button-row">
+                        <button className="custom-button"
+                                onClick={this.previousTab}>
+                            Vissza
+                        </button>
+                        <button className="custom-button-inverse pull-right"
+                                onClick={this.nextTab}>
+                            Tovább
+                        </button>
+                    </div>
                 </Fragment>
             );
         }

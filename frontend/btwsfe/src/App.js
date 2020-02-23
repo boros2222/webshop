@@ -14,6 +14,12 @@ import {fetchToStore} from "./redux/actions/request";
 import {getFromStorage} from "./redux/actions/storage";
 import Order from "./content/Order";
 
+import "primereact/resources/themes/nova-light/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import SearchResult from "./content/SearchResult";
+import CategoryProducts from "./content/CategoryProducts";
+
 class App extends React.Component {
 
     componentDidMount() {
@@ -51,6 +57,18 @@ class App extends React.Component {
                 <Route exact path = {["/order"]}
                        render = { (props) =>
                            <MainLayout content = {<Order />} {...props} />
+                       }
+                />
+
+                <Route exact path = "/search/:searchTerm"
+                       render = { (props) =>
+                           <MainLayout content = {<SearchResult key = {props.match.params.searchTerm} searchTerm = {props.match.params.searchTerm} />} {...props} />
+                       }
+                />
+
+                <Route exact path = "/category/:id"
+                       render = { (props) =>
+                           <MainLayout content = {<CategoryProducts key = {props.match.params.id} categoryId = {props.match.params.id} />} {...props} />
                        }
                 />
             </Router>

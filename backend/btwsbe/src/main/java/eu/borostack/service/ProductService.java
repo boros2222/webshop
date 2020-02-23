@@ -6,7 +6,6 @@ import eu.borostack.entity.Product;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional
 public class ProductService {
@@ -30,11 +29,15 @@ public class ProductService {
         return productDao.findAll();
     }
 
-    public List<Product> findByIdList(List<Integer> idList) {
-        return productDao.findByIdList(idList.stream().map(Integer::longValue).collect(Collectors.toList()));
+    public List<Product> findAllWithOffsetAndLimit(Long offset, Long limit) {
+        return productDao.findAllWithOffsetAndLimit(offset, limit);
     }
 
-    public List<Product> findByOffsetAndLimit(Long offset, Long limit) {
-        return productDao.findByOffsetAndLimit(offset, limit);
+    public List<Product> findAllBySearchWithOffsetAndLimit(String searchTerm, Long offset, Long limit) {
+        return productDao.findAllBySearchWithOffsetAndLimit(searchTerm, offset, limit);
+    }
+
+    public List<Product> findAllByCategoryIdWithOffsetAndLimit(Long categoryId, Long offset, Long limit) {
+        return productDao.findAllByCategoryIdWithOffsetAndLimit(categoryId, offset, limit);
     }
 }

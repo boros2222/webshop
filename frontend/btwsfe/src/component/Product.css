@@ -16,7 +16,7 @@
 }
 
 .product-card .product-image {
-    background-color: #03a9f4;
+    background-color: var(--light-color);
     width: 100%;
 }
 

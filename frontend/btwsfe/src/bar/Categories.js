@@ -28,7 +28,7 @@ class Categories extends React.Component {
                         categories.data.map(category => {
                             return (
                                 <div key={category.id} className="category-element secondary-darker-color">
-                                    <Link to={`/category/${category.id}`}>{category.name}</Link>
+                                    <Link onClick={() => this.props.closeDropdown()} to={`/category/${category.id}`}>{category.name}</Link>
                                 </div>
                             );
                         })

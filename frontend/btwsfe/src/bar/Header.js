@@ -10,7 +10,7 @@ class Header extends React.Component {
         return (
             <React.Fragment>
 
-            <SearchBar />
+            <SearchBar key = {this.props.searchTerm} searchTerm = {this.props.searchTerm} />
             <NavBar />
 
             </React.Fragment>

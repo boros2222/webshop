@@ -3,9 +3,6 @@ import {CART_STORAGE, PRODUCT_DETAILS} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import constants from "../Constants";
 import {Growl} from 'primereact/growl';
-import "primereact/resources/themes/nova-light/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
 import {fetchToStore} from "../redux/actions/request";
 import {getFromStorage, saveToStorage} from "../redux/actions/storage";
 
