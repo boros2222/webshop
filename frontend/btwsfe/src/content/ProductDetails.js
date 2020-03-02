@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {CART_STORAGE, PRODUCT_DETAILS} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import constants from "../Constants";
@@ -6,17 +6,18 @@ import {Growl} from 'primereact/growl';
 import {fetchToStore} from "../redux/actions/request";
 import {getFromStorage, saveToStorage} from "../redux/actions/storage";
 
-class ProductDetails extends Component {
+function ProductDetails(props) {
 
-    componentDidMount() {
-        this.props.getProduct(this.props.id);
-    }
+    const [growl, setGrowl] = useState(undefined);
 
-    addToCart = () => {
-        const product = this.props.productDetails.data;
+    const { loadProduct } = props;
+    useEffect(() => loadProduct(props.id), [loadProduct, props.id]);
+
+    const addToCart = () => {
+        const product = props.productDetailsStore.data;
 
         if (product !== undefined) {
-            let cart = this.props.cart.data;
+            let cart = props.cartStore.data;
             if (cart === null || cart === undefined) {
                 cart = [];
             } else {
@@ -33,60 +34,49 @@ class ProductDetails extends Component {
                     quantity: 1
                 };
                 cart.push(cartProduct);
-                this.props.setCart(cart);
-                this.growl.show({severity: "success", summary: "Kosár", detail: "Termék hozzáadva a kosárhoz!"});
+                props.setCartStore(cart);
+                growl.show({severity: "success", summary: "Kosár", detail: "Termék hozzáadva a kosárhoz!"});
             } else {
-                this.growl.show({severity: "info", summary: "Kosár", detail: "A termék már szerepel a kosárban!"});
+                growl.show({severity: "info", summary: "Kosár", detail: "A termék már szerepel a kosárban!"});
             }
         }
     };
 
-    render() {
-        const { productDetails } = this.props;
-        if (productDetails.error !== undefined) {
-            return (
-                <p>{productDetails.data.message}</p>
-            )
-        } else if (productDetails.isFetching === true) {
-            return (
-                <i className="pi pi-spin pi-spinner" style={{'fontSize': '2.5em'}}/>
-            )
-        } else if (productDetails.fetchedAlready === true) {
-            const product = productDetails.data;
-            return (
-                <React.Fragment>
-                    <Growl ref={(el) => this.growl = el} />
-                    <h1>{product.name}</h1>
-                    {
-                        product.description.split("\\n").map(desc => {
-                            return <p>{desc}</p>
-                        })
-                    }
-                    <p>{product.price}</p>
-                    <button onClick={this.addToCart} className="custom-button">Hozzáadás a kosárhoz</button>
-                </React.Fragment>
-            )
-        } else {
-            return null;
-        }
+    const { productDetailsStore } = props;
+    if (productDetailsStore.error !== undefined) {
+        return <p>{productDetailsStore.data.message}</p>
+    } else if (productDetailsStore.isFetching === true || productDetailsStore.data === undefined) {
+        return <i className="pi pi-spin pi-spinner" style={{'fontSize': '2.5em'}}/>
     }
 
+    const product = productDetailsStore.data;
+    return (
+        <>
+            <Growl ref={(el) => setGrowl(el)} />
+            <h1>{product.name}</h1>
+            {product.description.split("\\n").map(desc => {
+                return <p>{desc}</p>
+            })}
+            <p>{product.price}</p>
+            <button onClick={addToCart} className="custom-button">Hozzáadás a kosárhoz</button>
+        </>
+    )
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        getProduct: (productId) => {
+        loadProduct: (productId) => {
             dispatch(fetchToStore(PRODUCT_DETAILS, `/product/${productId}`, false))
         },
-        setCart: (data) => saveToStorage(constants.CART_STORAGE_NAME, data, {
+        setCartStore: (data) => saveToStorage(constants.CART_STORAGE_NAME, data, {
             callback: () => dispatch(getFromStorage(CART_STORAGE, constants.CART_STORAGE_NAME))
         }),
     };
 };
 const mapStateToProps = state => {
     return {
-        productDetails: state[PRODUCT_DETAILS],
-        cart: state[CART_STORAGE]
+        productDetailsStore: state[PRODUCT_DETAILS],
+        cartStore: state[CART_STORAGE]
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ProductDetails);

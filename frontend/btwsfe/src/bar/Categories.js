@@ -1,56 +1,45 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import './Categories.css';
 import {CATEGORY} from "../redux/constants/namespaces";
 import {fetchToStore} from "../redux/actions/request";
 
-class Categories extends React.Component {
+function Categories(props) {
 
-    componentDidMount() {
-        this.props.getCategories();
+    const { loadCategories } = props;
+    useEffect(() => loadCategories(), [loadCategories]);
+
+    const { categoriesStore } = props;
+    if (categoriesStore.error !== undefined) {
+        return <p>{categoriesStore.data.message}</p>
+    } else if (categoriesStore.isFetching === true || categoriesStore.data === undefined) {
+        return <i className="pi pi-spin pi-spinner" style={{'fontSize': '2.5em'}}/>
     }
 
-    render() {
-        const { categories } = this.props;
-        if (categories.error !== undefined) {
-            return (
-                <p>{categories.data.message}</p>
-            )
-        } else if (categories.isFetching === true) {
-            return (
-                <i className="pi pi-spin pi-spinner" style={{'fontSize': '2.5em'}}/>
-            )
-        } else if (categories.fetchedAlready === true) {
-            return (
-                <div className="flex-break">
-                    {
-                        categories.data.map(category => {
-                            return (
-                                <div key={category.id} className="category-element secondary-darker-color">
-                                    <Link onClick={() => this.props.closeDropdown()} to={`/category/${category.id}`}>{category.name}</Link>
-                                </div>
-                            );
-                        })
-                    }
-                </div>
-            )
-        } else {
-            return null;
-        }
-    }
+    return (
+        <div className="container">
+            <div className="row">
+                {
+                    categoriesStore.data.map(category => {
+                        return (
+                            <div key={category.id} className="col-12 col-lg-4 category-element secondary-darker-color">
+                                <Link onClick={() => props.closeDropdown()} to={`/category/${category.id}`}>{category.name}</Link>
+                            </div>
+                        );
+                    })
+                }
+            </div>
+        </div>
+    )
 }
 
-const mapDispatchToProps = dispatch => {
-    return {
-        getCategories: () => {
-            dispatch(fetchToStore(CATEGORY, "/category/list", true))
-        }
-    };
-};
-const mapStateToProps = state => {
-    return {
-        categories: state[CATEGORY]
-    };
-};
+const mapDispatchToProps = (dispatch) => ({
+    loadCategories: () => {
+        dispatch(fetchToStore(CATEGORY, "/category/list", true))
+    }
+});
+const mapStateToProps = (state) => ({
+    categoriesStore: state[CATEGORY]
+});
 export default connect(mapStateToProps, mapDispatchToProps)(Categories);

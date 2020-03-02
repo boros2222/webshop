@@ -1,32 +1,29 @@
-import React, {Component, Fragment} from 'react';
+import React from 'react';
 
-class Address extends Component {
+function Address({ address, addressName, register }) {
+    return (
+        <div className="row primary-color">
+            <p className="col-12 col-lg-6">Irányítószám:</p>
+            <input className="col-12 col-lg-6" type="text" name={`${addressName}.postalCode`}
+                   defaultValue={address && address.postalCode ? address.postalCode : ""}
+                   ref={register}/>
 
-    render() {
-        return (
-            <Fragment>
-                <p>Irányítószám:</p>
-                <input type="text" name="postalCode"
-                       value={this.props.address.postalCode}
-                       onChange={this.props.handleInputChange}/>
+            <p className="col-12 col-lg-6">Város:</p>
+            <input className="col-12 col-lg-6" type="text" name={`${addressName}.city`}
+                   defaultValue={address && address.city ? address.city : ""}
+                   ref={register}/>
 
-                <p>Város:</p>
-                <input type="text" name="city"
-                       value={this.props.address.city}
-                       onChange={this.props.handleInputChange}/>
+            <p className="col-12 col-lg-6">Utca:</p>
+            <input className="col-12 col-lg-6" type="text" name={`${addressName}.street`}
+                   defaultValue={address && address.street ? address.street : ""}
+                   ref={register}/>
 
-                <p>Utca:</p>
-                <input type="text" name="street"
-                       value={this.props.address.street}
-                       onChange={this.props.handleInputChange}/>
-
-                <p>Házszám:</p>
-                <input type="text" name="houseNumber"
-                       value={this.props.address.houseNumber}
-                       onChange={this.props.handleInputChange}/>
-            </Fragment>
-        )
-    }
+            <p className="col-12 col-lg-6">Házszám:</p>
+            <input className="col-12 col-lg-6" type="text" name={`${addressName}.houseNumber`}
+                   defaultValue={address && address.houseNumber ? address.houseNumber : ""}
+                   ref={register}/>
+        </div>
+    )
 }
 
 export default Address;

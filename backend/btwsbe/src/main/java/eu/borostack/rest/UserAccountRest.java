@@ -1,5 +1,7 @@
 package eu.borostack.rest;
 
+import eu.borostack.annotation.CheckUserId;
+import eu.borostack.annotation.LoggedIn;
 import eu.borostack.annotation.LoggedOut;
 import eu.borostack.entity.UserAccount;
 import eu.borostack.service.UserAccountService;
@@ -29,6 +31,20 @@ public class UserAccountRest {
     @LoggedOut
     public Response login(UserAccount userAccount) {
         return userAccountService.loginUser(userAccount);
+    }
+
+    @Path("delete/{id}")
+    @POST
+    @LoggedIn
+    public Response delete(@CheckUserId @PathParam("id") Long userAccountId, UserAccount userAccount) {
+        return userAccountService.deleteUser(userAccountId, userAccount);
+    }
+
+    @Path("update/{id}")
+    @POST
+    @LoggedIn
+    public Response update(@CheckUserId @PathParam("id") Long userAccountId, UserAccount userAccount) {
+        return userAccountService.updateUser(userAccountId, userAccount);
     }
 
     @Path("current")

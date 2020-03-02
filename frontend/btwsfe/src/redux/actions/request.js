@@ -3,7 +3,7 @@ import axios from "axios";
 import store from "../store";
 import constants from "../../Constants";
 
-export function fetchToStore(namespace, path, cacheNeeded) {
+export function fetchToStore(namespace, path, cacheNeeded, callback = undefined) {
     const currentState = store.getState()[namespace];
 
     if (currentState.fetchedAlready === false || !cacheNeeded === true) {
@@ -21,6 +21,9 @@ export function fetchToStore(namespace, path, cacheNeeded) {
                     type: `${namespace}/${REQUEST_SUCCESS}`,
                     data: response.data
                 });
+                if (callback !== undefined) {
+                    callback();
+                }
             }).catch(error => {
                 let data = { message: "Váratlan hiba történt!" };
                 if (error.response !== undefined) {

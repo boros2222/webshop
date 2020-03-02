@@ -11,13 +11,12 @@
 
 input.search-input {
     border: 0;
-    width: 30em;
-    font-size: 1.5em;
+    font-size: 130%;
 }
 
 button.search-button {
     color: var(--light-color);
-    font-size: 1.5em;
+    font-size: 120%;
     border: 0;
 }
 

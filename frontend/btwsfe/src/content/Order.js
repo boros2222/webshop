@@ -2,13 +2,12 @@ import React, {Component, Fragment} from 'react';
 import {CART_STORAGE, CURRENT_USER, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import constants from "../Constants";
-import {Growl} from "primereact/growl";
 import "./CartDetails.css";
 import {getFromStorage, removeFromStorage} from "../redux/actions/storage";
 import {Link} from "react-router-dom";
 import {sendToBackend} from "../redux/actions/request";
 import {RESET} from "../redux/constants/action-types";
-import {Accordion,AccordionTab} from 'primereact/accordion';
+import {Accordion, AccordionTab} from 'primereact/accordion';
 
 class Order extends Component {
 

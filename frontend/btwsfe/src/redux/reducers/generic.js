@@ -12,7 +12,8 @@ const genericReducer = (namespace) => (state = INITIAL_STATE, action) => {
         case `${namespace}/${REQUEST_IN_PROGRESS}`:
             return Object.assign({}, state, {
                 isFetching: true,
-                error: undefined
+                error: undefined,
+                data: undefined
             });
 
         case `${namespace}/${REQUEST_SUCCESS}`:

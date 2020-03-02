@@ -1,15 +1,16 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Link} from "react-router-dom";
 import "./Product.css";
 
-class Product extends Component {
-
-    render() {
-        const product = this.props.product;
-        return (
-            <div className="product-card">
-                <div className="product-image"/>
-                <div className="product-text">
+function Product(props) {
+    const { product } = props;
+    return (
+        <div className="container-fluid product-card">
+            <div className="row">
+                <div className="col-sm-12 col-lg-3 product-picture">
+                    <img className="max-width" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80" alt=""/>
+                </div>
+                <div className="col-sm-12 col-lg-7 product-text">
                     <Link to={"/product/" + product.id}>
                         <span className="product-title">{product.name}</span>
                     </Link>
@@ -18,12 +19,12 @@ class Product extends Component {
                     </div>
                     <div style={{marginTop: "1em"}}>Kategória: {product.category.name}</div>
                 </div>
-                <div className="product-price">
+                <div className="col-sm-12 col-lg-2 product-price text-right">
                     {product.price.toLocaleString()} Ft
                 </div>
             </div>
-        )
-    }
+        </div>
+    )
 }
 
 export default Product;

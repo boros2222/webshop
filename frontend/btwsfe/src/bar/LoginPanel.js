@@ -1,93 +1,96 @@
-import React, {Component} from 'react';
+import React, {useEffect} from 'react';
 import {Link} from "react-router-dom";
 import './LoginPanel.css';
-import {RESPONSE_MESSAGE, CURRENT_USER} from "../redux/constants/namespaces";
+import {CURRENT_USER, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import constants from "../Constants";
 import {RESET} from "../redux/constants/action-types";
 import {fetchToStore, sendToBackend} from "../redux/actions/request";
 import {removeCookie} from "../redux/actions/cookie";
+import {useForm} from "react-hook-form";
 
-class LoginPanel extends Component {
+function LoginPanel(props) {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: {
-                name: " ",
-                email: "",
-                password: "",
-            }
-        }
-    }
+    const {register, handleSubmit, errors} = useForm();
 
-    componentDidMount() {
-        this.props.reset();
-    }
+    const { reset } = props;
+    useEffect(() => {
+        reset();
+    }, [reset]);
 
-    handleInputChange = (event) => {
-        const user = this.state.user;
-        const value = event.target.value;
-        const field = event.target.name;
-        user[field] = value;
-        this.setState({
-            user: user
-        });
+    const onSubmit = (user) => {
+        user.name = " ";
+        props.login(user);
     };
 
-    handleLogin = (event) => {
-        event.preventDefault();
-        this.props.login(this.state.user);
-    };
+    const { responseStore, userStore } = props;
+    let message = undefined;
+    if (responseStore.error !== undefined) {
+        message = responseStore.data.message;
+    } else if (responseStore.fetchedAlready === true) {
+        message = responseStore.data.message;
+    }
 
-    render() {
-        const { response, user } = this.props;
-        let message = undefined;
-        if (response.error !== undefined) {
-            message = response.data.message;
-        } else if (response.fetchedAlready === true) {
-            message = response.data.message;
-        }
-
-        if (user.error === undefined && user.data !== undefined) {
-            return (
-                <div className="secondary-darker-color">
-                    <span>Bejelentkezett felhasználó: {user.data.email}</span>
-                    <button className="custom-button" onClick={() => this.props.logout()}>Kijelentkezés</button>
+    if (userStore.error === undefined && userStore.data !== undefined) {
+        return (
+            <div className="container-fluid secondary-darker-color">
+                <div className="row">
+                    <div className="col-12">Bejelentkezett felhasználó: {userStore.data.email}</div>
+                    <div className="col-12 col-lg-3 secondary-darker-color">
+                        <Link className="custom-button" style={{textAlign: "center"}} to={"/settings"}>Adataim módosítása</Link>
+                    </div>
+                    <div className="col-12 col-lg-3 secondary-darker-color">
+                        <button className="custom-button" onClick={() => props.logout()}>Kijelentkezés</button>
+                    </div>
                 </div>
-            )
-        } else {
-            return (
-                <div className="secondary-darker-color">
-                    <form className="login-panel secondary-darker-color" onSubmit={this.handleLogin}>
-                        <div className="login-input secondary-darker-color">
-                            <p>Email cím:</p>
-                            <input type="email" name="email" required={true}
-                                   value={this.state.user.email}
-                                   onChange={this.handleInputChange}/>
-                            <p>Jelszó:</p>
-                            <input type="password" name="password" required={true}
-                                   value={this.state.user.password}
-                                   onChange={this.handleInputChange}/>
-                        </div>
-                        <button className="login-button custom-button flex-center">
-                            Belépés <i className="pi pi-chevron-circle-right"/>
-                        </button>
-                        <div className="secondary-darker-color">
-                            <Link className="block-link" to={"/register"}>Regisztráció</Link>
-                            <Link className="block-link" to={"/forgot-password"}>Elfelejtett jelszó</Link>
+            </div>
+        )
+    } else {
+        return (
+            <div className="container secondary-darker-color">
+                <div className="row">
+                    <form className="container-fluid secondary-darker-color" onSubmit={handleSubmit(onSubmit)}>
+                        <div className="row secondary-darker-color">
+                            <div className="col-12 col-lg-5 secondary-darker-color">
+                                <div className="row secondary-darker-color" style={{marginBottom: "0.5em"}}>
+                                    <p className="col-12 col-lg-4">Email cím:</p>
+                                    <input className="col-12 col-lg-8" type="email" name="email"
+                                           ref={register({required: "Email cím megadása kötelező"})}/>
+                                    <p className="col-12 error-message-secondary">{errors.email && errors.email.message}</p>
+                                </div>
+                                <div className="row secondary-darker-color">
+                                    <p className="col-12 col-lg-4">Jelszó:</p>
+                                    <input className="col-12 col-lg-8" type="password" name="password"
+                                           ref={register({required: "Jelszó megadása kötelező", minLength: {value: 8, message: "A jelszónak legalább 8 karakternek kell lenni"}})}/>
+                                    <p className="col-12 error-message-secondary">{errors.password && errors.password.message}</p>
+                                </div>
+                            </div>
+                            <div className="col-12 col-lg-3 secondary-darker-color flex-center">
+                                <button className="login-button custom-button flex-center">
+                                    Belépés <i className="pi pi-chevron-circle-right"/>
+                                </button>
+                            </div>
+
+                            <div className="col-12 col-lg-3 secondary-darker-color">
+                                <Link className="block-link" to={"/register"}>Regisztráció</Link>
+                                <Link className="block-link" to={"/forgot-password"}>Elfelejtett jelszó</Link>
+                            </div>
+
+                            <div className="col-12 secondary-darker-color">
+                                { responseStore.isFetching === true ? <i className="pi pi-spin pi-spinner" style={{fontSize: "2.5em"}}/> : null }
+                            </div>
+                            <div className="col-12 space-top secondary-darker-color">
+                                <p className="error-message-secondary">{message}</p>
+                            </div>
                         </div>
                     </form>
-
-                    { response.isFetching === true ? <i className="pi pi-spin pi-spinner" style={{'fontSize': '2.5em'}}/> : null }
-                    <p>{message}</p>
                 </div>
-            )
-        }
+            </div>
+        )
     }
 }
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     login: (user) => dispatch(sendToBackend(RESPONSE_MESSAGE, "/user/login", user, () => {
         dispatch(fetchToStore(CURRENT_USER, "/user/current", false));
         dispatch({
@@ -103,8 +106,8 @@ const mapDispatchToProps = dispatch => ({
     })
 });
 
-const mapStateToProps = state => ({
-    response: state[RESPONSE_MESSAGE],
-    user: state[CURRENT_USER]
+const mapStateToProps = (state) => ({
+    responseStore: state[RESPONSE_MESSAGE],
+    userStore: state[CURRENT_USER]
 });
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPanel);

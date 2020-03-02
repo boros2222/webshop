@@ -25,6 +25,10 @@ html body {
   background-color: #e8e8e8;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 /* Primary color */
 .primary-color {
   background-color: var(--primary-color-first);
@@ -207,7 +211,7 @@ button {
 }
 
 button, input {
-  outline: none;
+  outline: none !important;
   border: 0;
 }
 
@@ -226,11 +230,32 @@ p {
 }
 
 .required::after {
-  color: red;
+  color: #df0000;
   content: "*";
   font-weight: bold;
   margin-left: 0.3em;
   font-size: 1em;
+}
+
+p.error-message {
+  color: #df0000;
+  margin-bottom: 1em;
+}
+
+p.error-message-secondary {
+  color: rgb(235, 230, 0);
+  margin-top: 0.3em;
+  margin-bottom: 0.7em;
+}
+
+button.red-button {
+  color: #df0000;
+  border-color: #df0000;
+}
+
+button.red-button:hover {
+  color: #800000;
+  border-color: #800000;
 }
 
 .flex-center {
@@ -240,20 +265,17 @@ p {
   flex-direction: column;
 }
 
-.container {
-  padding-left: 15em;
-  padding-right: 15em;
-}
-
 .content-container {
-  margin-left: 20em;
-  margin-right: 20em;
   padding: 3em;
   border-radius: 2em;
 }
 
 .max-width {
   width: 100%;
+}
+
+.max-height {
+  height: 100%;
 }
 
 .bold {
@@ -275,23 +297,39 @@ div.button-row {
   float: right;
 }
 
+.text-right {
+  text-align: right;
+}
+
 .space-left {
-  margin-left: 1em;
+  margin-left: 0.6em;
 }
 
 .space-right {
-  margin-right: 1em;
+  margin-right: 0.6em;
 }
 
 .space-top {
-  margin-top: 1em;
+  margin-top: 0.6em;
 }
 
 .space-bottom {
-  margin-bottom: 1em;
+  margin-bottom: 0.6em;
 }
 
 /* Primereact */
 body .p-datascroller .p-datascroller-content {
   border: 0 !important;
+}
+
+div.p-dialog.p-component {
+  border-radius: 2em !important;
+}
+
+div.p-dialog-titlebar {
+  border-radius: 2em 2em 0 0 !important;
+}
+
+div.p-dialog-footer {
+  border-radius: 0 0 2em 2em !important;
 }

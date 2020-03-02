@@ -44,11 +44,11 @@ public class UserAccount extends GenericEntity {
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "invoice_address_id", referencedColumnName = "id")
     private Address invoiceAddress;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
     private Address shippingAddress;
 
@@ -56,7 +56,6 @@ public class UserAccount extends GenericEntity {
     private Set<UserRole> userRoles = new HashSet<>();
 
     @Transient
-    @NotEmpty(message = "Jelszót kötelező megadni!")
     private String password;
 
     @PrePersist

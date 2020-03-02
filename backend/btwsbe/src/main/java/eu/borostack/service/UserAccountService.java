@@ -84,6 +84,9 @@ public class UserAccountService {
                 String message = fails.iterator().next().getMessage();
                 response = ResponseFactory.createMessageResponse(message, true, 400);
             }
+            if (userAccount.getPassword() == null || userAccount.getPassword().isBlank()) {
+                response = ResponseFactory.createMessageResponse("Jelszót kötelező megadni!", true, 400);
+            }
         } else {
             response = ResponseFactory.createMessageResponse("Nincs felhasználó megadva!", true, 400);
         }
@@ -115,13 +118,42 @@ public class UserAccountService {
     }
 
     private UserAccount createAddresses(final UserAccount userAccount) {
-        if (userAccount.getInvoiceAddress() != null) {
-            userAccount.setInvoiceAddress(addressService.create(userAccount.getInvoiceAddress()));
+        return updateAddresses(userAccount, userAccount);
+    }
+
+    private UserAccount updateAddresses(final UserAccount userAccount, final UserAccount updatedUserAccount) {
+        if (updatedUserAccount.getInvoiceAddress() != null && !updatedUserAccount.getInvoiceAddress().isEmpty()) {
+            userAccount.setInvoiceAddress(addressService.create(updatedUserAccount.getInvoiceAddress()));
         }
-        if (userAccount.getShippingAddress() != null) {
-            userAccount.setShippingAddress(addressService.create(userAccount.getShippingAddress()));
+        if (updatedUserAccount.getShippingAddress() != null && !updatedUserAccount.getShippingAddress().isEmpty()) {
+            userAccount.setShippingAddress(addressService.create(updatedUserAccount.getShippingAddress()));
         }
         return userAccount;
+    }
+
+    public Response deleteUser(Long userAccountId, UserAccount userAccount) {
+        if (userAccountId.equals(userAccount.getId())) {
+            userAccountDao.removeById(userAccountId);
+            return ResponseFactory.createMessageResponse("Felhasználó sikeresen törölve!", false);
+        } else {
+            return ResponseFactory.createMessageResponse("Felhasználó törlése sikertelen!", true, 400);
+        }
+    }
+
+    public Response updateUser(Long userAccountId, UserAccount updatedUserAccount) {
+        if (userAccountId.equals(updatedUserAccount.getId())) {
+            final UserAccount userAccount = userAccountDao.findById(userAccountId);
+            if (updatedUserAccount.getPassword() != null && !updatedUserAccount.getPassword().isBlank()) {
+                userAccount.setPassword(updatedUserAccount.getPassword());
+                createHash(userAccount);
+            }
+            updateAddresses(userAccount, updatedUserAccount);
+            userAccount.setName(updatedUserAccount.getName());
+            userAccountDao.save(userAccount);
+            return ResponseFactory.createMessageResponse("Felhasználó sikeresen módosítva!", false);
+        } else {
+            return ResponseFactory.createMessageResponse("Felhasználó módosítása sikertelen!", true, 400);
+        }
     }
 
     public UserAccount update(UserAccount userAccount) {

@@ -44,6 +44,10 @@ public abstract class GenericDao<K, E extends GenericEntity> {
         entityManager.remove(entity);
     }
 
+    public void removeById(K id) {
+        remove(findById(id));
+    }
+
     public E findById(K id) {
         return entityManager.find(entityClass, id);
     }

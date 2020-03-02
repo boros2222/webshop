@@ -5,13 +5,16 @@
 }
 
 .cart-product {
-    border-bottom: 1px solid #e8e8e8;
     font-size: 1.2em;
-    padding-bottom: 0.8em;
-    padding-top: 0.8em;
+    border-bottom: 1px solid #a1a1a1;
 }
 
-.cart-product:last-of-type {
-    border-bottom: 0;
-    border-top: 2px solid var(--light-color);
+div.cart-product:nth-last-of-type(2) {
+    border-bottom: 2px solid var(--light-color);
+}
+
+.sum-product {
+    font-size: 1.2em;
+    margin-bottom: 1em;
+    padding-top: 1em;
 }

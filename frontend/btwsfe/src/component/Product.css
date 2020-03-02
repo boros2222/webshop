@@ -1,10 +1,7 @@
 
-.product-card {
-    width: 100%;
+div.product-card {
     padding: 2em;
-    border-bottom: 1px solid #e8e8e8;
-    display: grid;
-    grid-template-columns: 20% 60% 20%;
+    border-bottom: 1px solid #e4e4e4 !important;
 }
 
 .product-card:last-of-type {
@@ -13,11 +10,6 @@
 
 .product-card .product-title {
     font-size: 1.6em;
-}
-
-.product-card .product-image {
-    background-color: var(--light-color);
-    width: 100%;
 }
 
 .product-card .product-price {

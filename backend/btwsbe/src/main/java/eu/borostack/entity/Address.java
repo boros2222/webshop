@@ -32,4 +32,11 @@ public class Address extends GenericEntity {
     @Column(name = "house_number")
     @NotEmpty(message = "Házszámot kötelező megadni!")
     private String houseNumber;
+
+    @Transient
+    public boolean isEmpty() {
+        return (postalCode == null && city == null && street == null && houseNumber == null) ||
+                (postalCode != null && postalCode.isBlank() && city != null && city.isBlank() &&
+                        street != null && street.isBlank() && houseNumber != null && houseNumber.isBlank());
+    }
 }
