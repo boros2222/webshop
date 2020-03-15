@@ -20,6 +20,7 @@ import Order from "./content/Order";
 import SearchResult from "./content/SearchResult";
 import CategoryProducts from "./content/CategoryProducts";
 import UserSettings from "./content/UserSettings";
+import UserOrders from "./content/UserOrders";
 
 function App(props) {
 
@@ -75,6 +76,12 @@ function App(props) {
             <Route exact path = {["/settings"]} render = {(props) =>
                 <MainLayout content = {
                     <UserSettings />
+                } {...props} />
+            }/>
+
+            <Route exact path = {["/orders"]} render = {(props) =>
+                <MainLayout content = {
+                    <UserOrders />
                 } {...props} />
             }/>
         </Router>

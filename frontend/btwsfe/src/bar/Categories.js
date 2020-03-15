@@ -5,12 +5,10 @@ import './Categories.css';
 import {CATEGORY} from "../redux/constants/namespaces";
 import {fetchToStore} from "../redux/actions/request";
 
-function Categories(props) {
+function Categories({loadCategories, categoriesStore, closeDropdown}) {
 
-    const { loadCategories } = props;
     useEffect(() => loadCategories(), [loadCategories]);
 
-    const { categoriesStore } = props;
     if (categoriesStore.error !== undefined) {
         return <p>{categoriesStore.data.message}</p>
     } else if (categoriesStore.isFetching === true || categoriesStore.data === undefined) {
@@ -24,7 +22,7 @@ function Categories(props) {
                     categoriesStore.data.map(category => {
                         return (
                             <div key={category.id} className="col-12 col-lg-4 category-element secondary-darker-color">
-                                <Link onClick={() => props.closeDropdown()} to={`/category/${category.id}`}>{category.name}</Link>
+                                <Link onClick={() => closeDropdown()} to={`/category/${category.id}`}>{category.name}</Link>
                             </div>
                         );
                     })

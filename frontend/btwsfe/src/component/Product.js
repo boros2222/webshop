@@ -2,8 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import "./Product.css";
 
-function Product(props) {
-    const { product } = props;
+function Product({product}) {
     return (
         <div className="container-fluid product-card">
             <div className="row">

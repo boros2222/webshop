@@ -26,7 +26,7 @@ html body {
 }
 
 * {
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
 
 /* Primary color */
@@ -215,6 +215,11 @@ button, input {
   border: 0;
 }
 
+input[disabled] {
+  background-color: rgba(3, 169, 244, 0.83);
+  color: #f0f0f0;
+}
+
 ul {
   list-style-type: none;
   padding: 0;
@@ -332,4 +337,8 @@ div.p-dialog-titlebar {
 
 div.p-dialog-footer {
   border-radius: 0 0 2em 2em !important;
+}
+
+div.p-accordion-content {
+  border: 0 !important;
 }

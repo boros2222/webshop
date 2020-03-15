@@ -40,11 +40,14 @@ create table order_details (
     id integer,
     user_account_id integer not null,
     shipping_address_id integer not null,
+    invoice_address_id integer not null,
+    invoice_name varchar(255) not null,
     order_date date not null,
 
     constraint order_pk primary key (id),
     constraint order_fk_1 foreign key (user_account_id) references user_account(id),
-    constraint order_fk_2 foreign key (shipping_address_id) references address(id)
+    constraint order_fk_2 foreign key (shipping_address_id) references address(id),
+    constraint order_fk_3 foreign key (invoice_address_id) references address(id)
 );
 
 create sequence s_category;

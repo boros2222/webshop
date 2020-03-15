@@ -28,4 +28,9 @@ public class OrderedProduct extends GenericEntity {
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+
+    @Transient
+    public boolean isValid() {
+        return product != null && product.getId() != null && quantity != null;
+    }
 }

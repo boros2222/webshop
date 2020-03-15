@@ -14,16 +14,8 @@ public class AddressService {
     private AddressDao addressDao;
 
     public Address save(Address address) {
-        if (address.isNew()) {
-            return create(address);
-        } else {
-            return update(address);
-        }
-    }
-
-    public Address create(Address address) {
         Address savedAddress = null;
-        if (address != null) {
+        if (address != null && address.isValid()) {
             savedAddress = addressDao.findByAddress(address);
             if (savedAddress == null) {
                 savedAddress = addressDao.create(address);

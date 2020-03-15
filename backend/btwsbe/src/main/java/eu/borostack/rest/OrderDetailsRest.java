@@ -1,5 +1,6 @@
 package eu.borostack.rest;
 
+import eu.borostack.annotation.CheckUserId;
 import eu.borostack.annotation.LoggedIn;
 import eu.borostack.entity.OrderDetails;
 import eu.borostack.entity.UserAccount;
@@ -7,10 +8,7 @@ import eu.borostack.service.OrderDetailsService;
 import eu.borostack.util.ResponseFactory;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -27,6 +25,13 @@ public class OrderDetailsRest {
     @LoggedIn
     public Response placeOrder(OrderDetails order) {
         return orderDetailsService.placeOrder(order);
+    }
+
+    @Path("list/{userAccountId}")
+    @GET
+    @LoggedIn
+    public Response getOrders(@CheckUserId @PathParam("userAccountId") Long userAccountId) {
+        return ResponseFactory.createResponse(orderDetailsService.getOrdersByUserAccountId(userAccountId));
     }
 
 }

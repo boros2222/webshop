@@ -121,13 +121,9 @@ public class UserAccountService {
         return updateAddresses(userAccount, userAccount);
     }
 
-    private UserAccount updateAddresses(final UserAccount userAccount, final UserAccount updatedUserAccount) {
-        if (updatedUserAccount.getInvoiceAddress() != null && !updatedUserAccount.getInvoiceAddress().isEmpty()) {
-            userAccount.setInvoiceAddress(addressService.create(updatedUserAccount.getInvoiceAddress()));
-        }
-        if (updatedUserAccount.getShippingAddress() != null && !updatedUserAccount.getShippingAddress().isEmpty()) {
-            userAccount.setShippingAddress(addressService.create(updatedUserAccount.getShippingAddress()));
-        }
+    private UserAccount updateAddresses(final UserAccount updatedUserAccount, final UserAccount userAccount) {
+        userAccount.setInvoiceAddress(addressService.save(updatedUserAccount.getInvoiceAddress()));
+        userAccount.setShippingAddress(addressService.save(updatedUserAccount.getShippingAddress()));
         return userAccount;
     }
 
@@ -142,13 +138,22 @@ public class UserAccountService {
 
     public Response updateUser(Long userAccountId, UserAccount updatedUserAccount) {
         if (userAccountId.equals(updatedUserAccount.getId())) {
+            if (updatedUserAccount.getInvoiceAddress() != null && !updatedUserAccount.getInvoiceAddress().isValid()) {
+                return ResponseFactory.createMessageResponse("Számlázási cím nem teljes!", true, 400);
+            }
+            if (updatedUserAccount.getShippingAddress() != null && !updatedUserAccount.getShippingAddress().isValid()) {
+                return ResponseFactory.createMessageResponse("Szállítási cím nem teljes!", true, 400);
+            }
+
             final UserAccount userAccount = userAccountDao.findById(userAccountId);
             if (updatedUserAccount.getPassword() != null && !updatedUserAccount.getPassword().isBlank()) {
                 userAccount.setPassword(updatedUserAccount.getPassword());
                 createHash(userAccount);
             }
-            updateAddresses(userAccount, updatedUserAccount);
-            userAccount.setName(updatedUserAccount.getName());
+            updateAddresses(updatedUserAccount, userAccount);
+            if (updatedUserAccount.getName() != null) {
+                userAccount.setName(updatedUserAccount.getName());
+            }
             userAccountDao.save(userAccount);
             return ResponseFactory.createMessageResponse("Felhasználó sikeresen módosítva!", false);
         } else {

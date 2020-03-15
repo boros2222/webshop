@@ -34,9 +34,10 @@ public class Address extends GenericEntity {
     private String houseNumber;
 
     @Transient
-    public boolean isEmpty() {
-        return (postalCode == null && city == null && street == null && houseNumber == null) ||
-                (postalCode != null && postalCode.isBlank() && city != null && city.isBlank() &&
-                        street != null && street.isBlank() && houseNumber != null && houseNumber.isBlank());
+    public boolean isValid() {
+        return postalCode != null && !postalCode.isBlank()
+                && city != null && !city.isBlank()
+                && street != null && !street.isBlank()
+                && houseNumber != null && !houseNumber.isBlank();
     }
 }

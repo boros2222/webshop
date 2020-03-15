@@ -27,6 +27,13 @@ public class OrderDetails extends GenericEntity implements Serializable {
     @JoinColumn(name = "shipping_address_id", nullable = false)
     private Address shippingAddress;
 
+    @ManyToOne
+    @JoinColumn(name = "invoice_address_id", nullable = false)
+    private Address invoiceAddress;
+
+    @Column(name = "invoice_name")
+    private String invoiceName;
+
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 

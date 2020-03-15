@@ -40,6 +40,9 @@ function LoginPanel(props) {
                         <Link className="custom-button" style={{textAlign: "center"}} to={"/settings"}>Adataim módosítása</Link>
                     </div>
                     <div className="col-12 col-lg-3 secondary-darker-color">
+                        <Link className="custom-button" style={{textAlign: "center"}} to={"/orders"}>Rendeléseim</Link>
+                    </div>
+                    <div className="col-12 col-lg-3 secondary-darker-color">
                         <button className="custom-button" onClick={() => props.logout()}>Kijelentkezés</button>
                     </div>
                 </div>

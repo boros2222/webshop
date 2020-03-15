@@ -3,4 +3,6 @@ export const PRODUCTS = "PRODUCT";
 export const PRODUCT_DETAILS = "PRODUCT_DETAILS";
 export const RESPONSE_MESSAGE = "RESPONSE_MESSAGE";
 export const CURRENT_USER = "CURRENT_USER";
+export const USER_ORDERS = "USER_ORDERS";
+export const UPLOAD_RESPONSE = "UPLOAD_RESPONSE";
 export const CART_STORAGE = "CART_STORAGE";

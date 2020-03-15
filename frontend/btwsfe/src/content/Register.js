@@ -32,7 +32,7 @@ function Register({reset, register, userStore, responseStore}) {
         <div className="container-fluid">
             <p className="bold" style={{fontSize: "1.5em"}}>Regisztráció</p>
             <UserForm onSubmit={onSubmit} buttonLabel="Regisztráció"/>
-            <div className="col-12 space-top primary-color">
+            <div className="space-top primary-color">
                 <p className="bold">{message}</p>
             </div>
         </div>

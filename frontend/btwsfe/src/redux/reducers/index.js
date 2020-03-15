@@ -6,7 +6,9 @@ import {
     CURRENT_USER,
     PRODUCT_DETAILS,
     PRODUCTS,
-    RESPONSE_MESSAGE
+    RESPONSE_MESSAGE,
+    UPLOAD_RESPONSE,
+    USER_ORDERS
 } from "../constants/namespaces";
 
 const rootReducer = combineReducers({
@@ -15,7 +17,9 @@ const rootReducer = combineReducers({
     [PRODUCT_DETAILS]: genericReducer(PRODUCT_DETAILS),
     [RESPONSE_MESSAGE]: genericReducer(RESPONSE_MESSAGE),
     [CURRENT_USER]: genericReducer(CURRENT_USER),
-    [CART_STORAGE]: genericReducer(CART_STORAGE),
+    [USER_ORDERS]: genericReducer(USER_ORDERS),
+    [UPLOAD_RESPONSE]: genericReducer(UPLOAD_RESPONSE),
+    [CART_STORAGE]: genericReducer(CART_STORAGE)
 });
 
 export default rootReducer;

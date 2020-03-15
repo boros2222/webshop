@@ -1,129 +1,186 @@
-import React, {Component, Fragment} from 'react';
+import React, {useState} from 'react';
 import {CART_STORAGE, CURRENT_USER, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import constants from "../Constants";
-import "./CartDetails.css";
 import {getFromStorage, removeFromStorage} from "../redux/actions/storage";
 import {Link} from "react-router-dom";
 import {sendToBackend} from "../redux/actions/request";
-import {RESET} from "../redux/constants/action-types";
 import {Accordion, AccordionTab} from 'primereact/accordion';
+import {useForm} from "react-hook-form";
+import Address from "../component/Address";
+import "./Order.css";
 
-class Order extends Component {
+function Order({cartStore, userStore, responseStore, placeOrder}) {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            activeIndex: 0,
-            order: {
-                userAccount: {
-                    id: undefined
-                },
-                shippingAddress: {
-                    postalCode: "",
-                    city: "",
-                    street: "",
-                    houseNumber: ""
-                },
-                orderedProducts: []
+    const PRODUCTS_TAB = 0;
+    const PERSONAL_INFO_TAB = 1;
+    const SHIPPING_ADDRESS_TAB = 2;
+
+    const [activeIndex, setActiveIndex] = useState(PRODUCTS_TAB);
+    const {register, handleSubmit, errors, triggerValidation} = useForm();
+
+    const submitOrder = (order) => {
+        order.userAccount = {id: userStore.data.id};
+        order.orderedProducts =  [...cartStore.data];
+        placeOrder(order);
+        console.log(order);
+    };
+
+    const previousTab = () => {
+        if (activeIndex > PRODUCTS_TAB) {
+            setActiveIndex(activeIndex - 1);
+        }
+    };
+
+    const nextTab = () => {
+        validateOnNextTab().then(valid => {
+            if (valid && activeIndex < SHIPPING_ADDRESS_TAB) {
+                setActiveIndex(activeIndex + 1);
             }
+        })
+    };
+
+    const validateOnNextTab = async () => {
+        if (activeIndex === PERSONAL_INFO_TAB) {
+            return await triggerValidation("invoiceName") &&
+                await triggerValidation("invoiceAddress.postalCode") &&
+                await triggerValidation("invoiceAddress.city") &&
+                await triggerValidation("invoiceAddress.street") &&
+                await triggerValidation("invoiceAddress.houseNumber");
         }
+        return true;
+    };
+
+    if (userStore.error !== undefined) {
+        return <p>Előbb jelentkezz be!</p>
     }
 
-    previousTab = () => {
-        const currentIndex = this.state.activeIndex;
-        if (currentIndex > 0) {
-            this.setState({
-                activeIndex: currentIndex - 1
-            });
-        }
-    };
+    let message = undefined;
+    if (responseStore.error !== undefined) {
+        message = responseStore.data.message;
+    } else if (responseStore.isFetching === true) {
+        message = <i className="pi pi-spin pi-spinner" style={{fontSize: "2.5em"}}/>;
+    } else if (responseStore.fetchedAlready === true) {
+        message = responseStore.data.message;
+    }
 
-    nextTab = () => {
-        const currentIndex = this.state.activeIndex;
-        if (currentIndex < 2) {
-            this.setState({
-                activeIndex: currentIndex + 1
-            });
-        }
-    };
-
-    render() {
-        let cart = this.props.cart.data;
-        if (cart === null || cart === undefined || cart.length === 0) {
-            return (
-                <div>
-                    <p>A kosár üres!</p>
+    const cart = cartStore.data;
+    if (cart === null || cart === undefined || cart.length === 0) {
+        return (
+            <div>
+                <div className="space-top primary-color">
+                    <p className="bold">{message}</p>
                 </div>
-            );
-        } else {
-            const priceSum = cart.map(cartProduct => cartProduct.product.price * cartProduct.quantity).reduce((a, b) => a + b, 0);
-            return (
-                <Fragment>
-                    <Accordion activeIndex={this.state.activeIndex}
-                               onTabChange={(e) => this.setState({activeIndex: e.index})}>
-                        <AccordionTab header="Megrendelendő termékek" disabled={true}>
-
-                            <div className="max-width">
-                                {cart.map(cartProduct => {
-                                    let product = cartProduct.product;
-                                    let quantity = cartProduct.quantity;
-                                    return (
-                                        <div key={product.id} className="cart-product elements-apart max-width">
-                                            <Link to={"/product/" + product.id}>
-                                                <span>{product.name}</span>
-                                            </Link>
-                                        <span>
-                                            <span>{quantity} db</span>
-                                            <span>{(product.price * quantity).toLocaleString()} Ft</span>
-                                        </span>
-                                        </div>
-                                    );
-                                })}
-
-                                <div className="cart-product elements-apart max-width">
-                                    <span className="bold">Összesen</span>
-                                    <span className="bold">{priceSum.toLocaleString()} Ft</span>
-                                </div>
-                            </div>
-
-                        </AccordionTab>
-                        <AccordionTab header="Személyes adatok" disabled={true}>
-                            Lorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasd
-                        </AccordionTab>
-                        <AccordionTab header="Fizetési opciók" disabled={true}>
-                            Lorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasdLorem ipsum asddda das das asdasdasd
-                        </AccordionTab>
-                    </Accordion>
-                    <div className="button-row">
-                        <button className="custom-button"
-                                onClick={this.previousTab}>
-                            Vissza
-                        </button>
-                        <button className="custom-button-inverse pull-right"
-                                onClick={this.nextTab}>
-                            Tovább
-                        </button>
-                    </div>
-                </Fragment>
-            );
-        }
+                <p>A kosár üres!</p>
+            </div>
+        );
     }
+
+    const user = userStore.data;
+    const priceSum = cart.map(cartProduct => cartProduct.product.price * cartProduct.quantity).reduce((a, b) => a + b, 0);
+    return (
+        <form className="order-page" onSubmit={(event) => event.preventDefault()}>
+            <Accordion activeIndex={activeIndex}
+                       onTabChange={(event) => setActiveIndex(event.index)}>
+                <AccordionTab header="Megrendelendő termékek" disabled={true}>
+
+                    <div className="primary-color max-width">
+                        {cart.map(cartProduct => {
+                            let product = cartProduct.product;
+                            let quantity = cartProduct.quantity;
+                            return (
+                                <div key={product.id} className="row cart-product">
+                                    <Link className="col-12 col-lg-8 space-bottom space-top" to={"/product/" + product.id}>
+                                        <span>{product.name}</span>
+                                    </Link>
+                                    <div className="col-6 col-lg-2 space-bottom space-top">{quantity} db</div>
+                                    <div className="col-6 col-lg-2 space-bottom space-top text-right">
+                                        {(product.price * quantity).toLocaleString()} Ft
+                                    </div>
+                                </div>
+                            );
+                        })}
+
+                        <div className="cart-product elements-apart max-width">
+                            <span className="bold">Összesen</span>
+                            <span className="bold">{priceSum.toLocaleString()} Ft</span>
+                        </div>
+                    </div>
+
+                </AccordionTab>
+                <AccordionTab header="Személyes adatok" disabled={true}>
+
+                    <div className="row">
+                        <div className="col-12 col-lg-6 primary-color">
+                            <p className="col-12 col-lg-6 d-inline-block required" style={{paddingLeft: "0"}}>Számlázási név:</p>
+                            <input className="col-12 col-lg-6" type="text" name="invoiceName"
+                                   defaultValue={user && user.name ? user.name : ""}
+                                   ref={register({required: true})}/>
+                            {errors.invoiceName && errors.invoiceName.type === 'required' && <p className="col-12 error-message">Számlázási név megadása kötelező</p>}
+                        </div>
+
+
+                        <div className="col-12 col-lg-6 primary-color">
+                            <p className={"col-12 col-lg-6 d-inline-block"} style={{paddingLeft: "0"}}>Email cím:</p>
+                            <input className="col-12 col-lg-6" type="text" name="email"
+                                   defaultValue={user && user.email ? user.email : ""} disabled={true}/>
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col-12 col-lg-6 space-left space-right">
+                            <p className="bold space-top" style={{fontSize: "1.1em"}}>Számlázási cím:</p>
+                            <Address addressName="invoiceAddress" register={register} errors={errors} required={true}
+                                     address={user && user.invoiceAddress ? user.invoiceAddress : ""}/>
+                        </div>
+                    </div>
+                </AccordionTab>
+                <AccordionTab header="Szállítási cím" disabled={true}>
+                    <div className="row">
+                        <div className="col-12 col-lg-6 space-left space-right">
+                            <p className="bold space-top" style={{fontSize: "1.1em"}}>Szállítási cím:</p>
+                            <Address addressName="shippingAddress" register={register} errors={errors} required={true}
+                                     address={user && user.shippingAddress ? user.shippingAddress : ""}/>
+                        </div>
+                    </div>
+                </AccordionTab>
+            </Accordion>
+            <div className="button-row">
+                <button type="button" className="custom-button"
+                        onClick={previousTab}>
+                    Vissza
+                </button>
+                {activeIndex === 2 ?
+                    <button type="submit" className="custom-button-inverse pull-right"
+                            onClick={handleSubmit(submitOrder)}>
+                        Megrendelés
+                    </button>
+                    :
+                    <button type="button" className="custom-button-inverse pull-right"
+                            onClick={nextTab}>
+                        Tovább
+                    </button>
+                }
+            </div>
+            <div className="col-12 space-top primary-color">
+                <p className="bold">{message}</p>
+            </div>
+        </form>
+    );
 }
 
-const mapDispatchToProps = dispatch => ({
-    emptyCart: () => removeFromStorage(constants.CART_STORAGE_NAME, {
+const mapDispatchToProps = dispatch => {
+    const emptyCart = () => removeFromStorage(constants.CART_STORAGE_NAME, {
         callback: () => dispatch(getFromStorage(CART_STORAGE, constants.CART_STORAGE_NAME))
-    }),
-    placeOrder: (order) => dispatch(sendToBackend(RESPONSE_MESSAGE, "/order/new", order)),
-    reset: () => dispatch({
-        type: `${RESPONSE_MESSAGE}/${RESET}`
-    })
-});
+    });
+    return {
+        placeOrder: (order) => dispatch(sendToBackend(RESPONSE_MESSAGE, "/order/new", order, emptyCart))
+    }
+};
 
 const mapStateToProps = state => ({
-    cart: state[CART_STORAGE],
-    user: state[CURRENT_USER],
-    response: state[RESPONSE_MESSAGE]
+    cartStore: state[CART_STORAGE],
+    userStore: state[CURRENT_USER],
+    responseStore: state[RESPONSE_MESSAGE]
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Order);
