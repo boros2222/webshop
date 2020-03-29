@@ -4,7 +4,11 @@ const INITIAL_STATE = {
     data: undefined,
     fetchedAlready: false,
     isFetching: undefined,
-    error: undefined
+    error: undefined,
+
+    isReady() {
+        return this.error === undefined && this.data !== undefined;
+    }
 };
 
 const genericReducer = (namespace) => (state = INITIAL_STATE, action) => {

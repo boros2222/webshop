@@ -36,8 +36,8 @@ public class UserAccountRest {
     @Path("delete/{id}")
     @POST
     @LoggedIn
-    public Response delete(@CheckUserId @PathParam("id") Long userAccountId, UserAccount userAccount) {
-        return userAccountService.deleteUser(userAccountId, userAccount);
+    public Response delete(@CheckUserId @PathParam("id") Long userAccountId) {
+        return userAccountService.deleteUser(userAccountId);
     }
 
     @Path("update/{id}")

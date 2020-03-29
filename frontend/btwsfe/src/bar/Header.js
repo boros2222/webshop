@@ -4,10 +4,10 @@ import '../App.css';
 import SearchBar from './SearchBar';
 import NavBar from './NavBar';
 
-function Header(props) {
+function Header({searchTerm}) {
     return (
         <>
-            <SearchBar key = {props.searchTerm} searchTerm = {props.searchTerm} />
+            <SearchBar key = {searchTerm} searchTerm = {searchTerm} />
             <NavBar />
         </>
     )

@@ -20,8 +20,7 @@ function UserSettings({reset, updateUser, deleteUser, userStore, responseStore})
     };
 
     const onConfirm = () => {
-        const user = {id: userStore.data.id};
-        deleteUser(user);
+        deleteUser(userStore.data.id);
     };
 
     if (userStore.error !== undefined) {
@@ -64,7 +63,7 @@ const mapDispatchToProps = dispatch => {
         updateUser: (user) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/user/update/${user.id}`, user, () => {
             dispatch(fetchToStore(CURRENT_USER, "/user/current", false))
         })),
-        deleteUser: (user) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/user/delete/${user.id}`, user, logout)),
+        deleteUser: (userId) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/user/delete/${userId}`, undefined, logout)),
         reset: () => dispatch({
             type: `${RESPONSE_MESSAGE}/${RESET}`
         })

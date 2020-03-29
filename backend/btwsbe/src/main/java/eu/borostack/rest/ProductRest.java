@@ -1,5 +1,6 @@
 package eu.borostack.rest;
 
+import eu.borostack.entity.SortOrder;
 import eu.borostack.service.ProductService;
 import eu.borostack.util.ResponseFactory;
 
@@ -28,21 +29,32 @@ public class ProductRest {
         return ResponseFactory.createResponse(productService.findById(id));
     }
 
-    @Path("{offset}/{limit}")
+    @Path("{offset}/{limit}/{sort}")
     @GET
-    public Response getProduct(@PathParam("offset") Long offset, @PathParam("limit") Long limit) {
-        return ResponseFactory.createResponse(productService.findAllWithOffsetAndLimit(offset, limit));
+    public Response getProduct(@PathParam("offset") Long offset,
+                               @PathParam("limit") Long limit,
+                               @PathParam("sort") String sort) {
+        return ResponseFactory.createResponse(productService.findAllWithOffsetAndLimit(
+                offset, limit, SortOrder.getByString(sort)));
     }
 
-    @Path("{search}/{offset}/{limit}")
+    @Path("{search}/{offset}/{limit}/{sort}")
     @GET
-    public Response getProduct(@PathParam("search") String searchTerm, @PathParam("offset") Long offset, @PathParam("limit") Long limit) {
-        return ResponseFactory.createResponse(productService.findAllBySearchWithOffsetAndLimit(searchTerm, offset, limit));
+    public Response getProduct(@PathParam("search") String searchTerm,
+                               @PathParam("offset") Long offset,
+                               @PathParam("limit") Long limit,
+                               @PathParam("sort") String sort) {
+        return ResponseFactory.createResponse(productService.findAllBySearchWithOffsetAndLimit(
+                searchTerm, offset, limit, SortOrder.getByString(sort)));
     }
 
-    @Path("/category/{categoryId}/{offset}/{limit}")
+    @Path("/category/{categoryId}/{offset}/{limit}/{sort}")
     @GET
-    public Response getProduct(@PathParam("categoryId") Long categoryId, @PathParam("offset") Long offset, @PathParam("limit") Long limit) {
-        return ResponseFactory.createResponse(productService.findAllByCategoryIdWithOffsetAndLimit(categoryId, offset, limit));
+    public Response getProduct(@PathParam("categoryId") Long categoryId,
+                               @PathParam("offset") Long offset,
+                               @PathParam("limit") Long limit,
+                               @PathParam("sort") String sort) {
+        return ResponseFactory.createResponse(productService.findAllByCategoryIdWithOffsetAndLimit(
+                categoryId, offset, limit, SortOrder.getByString(sort)));
     }
 }

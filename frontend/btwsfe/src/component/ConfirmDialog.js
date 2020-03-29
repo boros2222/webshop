@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Dialog} from "primereact/dialog";
 
-function ConfirmDialog({ headerText, text, onConfirm, children }) {
+function ConfirmDialog({headerText, text, onConfirm, children}) {
 
     const [visible, setVisible] = useState(false);
 

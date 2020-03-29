@@ -7,40 +7,31 @@ import {CURRENT_USER} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import Cart from "./Cart";
 
-function NavBar(props) {
+function NavBar({userStore}) {
 
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [dropdownElement, setDropdownElement] = useState(<></>);
+    const [showDropDown, setShowDropDown] = useState(false);
+    const [dropDownElement, setDropDownElement] = useState(<></>);
 
-    const toggleDropdown = (element) => {
-        if(dropdownElement.type === element.type) {
-            closeDropdown();
+    const toggleDropDown = (element) => {
+        if (dropDownElement.type === element.type) {
+            closeDropDown();
         } else {
-            openDropdown(element);
+            openDropDown(element);
         }
     };
 
-    const openDropdown = (element) => {
-        setShowDropdown(true);
-        setDropdownElement(element);
+    const openDropDown = (element) => {
+        setShowDropDown(true);
+        setDropDownElement(element);
     };
 
-    const closeDropdown = () => {
-        setShowDropdown(false);
-        setDropdownElement(<></>);
+    const closeDropDown = () => {
+        setShowDropDown(false);
+        setDropDownElement(<></>);
     };
-
-    let dropDown;
-    if (showDropdown === true) {
-        dropDown = (
-            <div className="dropdown-element secondary-darker-color">
-                { dropdownElement }
-            </div>
-        );
-    }
 
     let loginLabel = "Bejelentkezés";
-    if (props.userStore.error === undefined && props.userStore.data !== undefined) {
+    if (userStore.isReady()) {
         loginLabel = "Profilom";
     }
 
@@ -49,17 +40,26 @@ function NavBar(props) {
             <div className="secondary-darker-color">
                 <div className="container secondary-darker-color">
                     <div className="row navlinks secondary-darker-color">
-                        <Link className="col-12 col-lg-2 navbar-button" style={{textAlign: "center"}} to={"/"}>Termékek</Link>
-                        <button className="col-12 col-lg-2 navbar-button" onClick={() => toggleDropdown(<Categories closeDropdown = {closeDropdown} />)}>Kategóriák</button>
-                        <button className="col-12 col-lg-2 navbar-button" onClick={() => toggleDropdown(<LoginPanel closeDropdown = {closeDropdown} />)}>{loginLabel}</button>
-                        <button className="col-12 col-lg-2 navbar-button" onClick={() => toggleDropdown(<Cart closeDropdown = {closeDropdown} />)}>Kosár</button>
+                        <Link className="col-12 col-lg-2 navbar-button" style={{textAlign: "center"}}
+                              onClick={closeDropDown} to={"/"}>Termékek</Link>
+                        
+                        <button className="col-12 col-lg-2 navbar-button"
+                                onClick={() => toggleDropDown(<Categories closeDropDown = {closeDropDown} />)}>Kategóriák</button>
+                        
+                        <button className="col-12 col-lg-2 navbar-button"
+                                onClick={() => toggleDropDown(<LoginPanel closeDropDown = {closeDropDown} />)}>{loginLabel}</button>
+                        
+                        <button className="col-12 col-lg-2 navbar-button"
+                                onClick={() => toggleDropDown(<Cart closeDropDown = {closeDropDown} />)}>Kosár</button>
                     </div>
                 </div>
             </div>
-            {showDropdown &&
-                <div className="secondary-darker-color shadows">
+            {showDropDown &&
+                <div className="shadows secondary-darker-color">
                     <div className="container secondary-darker-color">
-                        { dropDown }
+                        <div className="dropdown-element secondary-darker-color">
+                            {dropDownElement}
+                        </div>
                     </div>
                 </div>
             }

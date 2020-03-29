@@ -55,12 +55,17 @@ public class UserAccount extends GenericEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userAccount")
     private Set<UserRole> userRoles = new HashSet<>();
 
+    @JsonIgnore
+    @Column(name = "deleted")
+    private Boolean deleted;
+
     @Transient
     private String password;
 
     @PrePersist
     private void init() {
         setRegistrationDate(LocalDateTime.now());
+        setDeleted(false);
     }
 
 }

@@ -5,26 +5,26 @@ import {fetchToStore} from "../redux/actions/request";
 import ProductScroller from "../component/ProductScroller";
 import {RESET} from "../redux/constants/action-types";
 
-function SearchResult(props) {
+function SearchResult({searchTerm, productsStore, getProducts}) {
 
-    const loadProduct = (offset, limit) => {
-        props.getProducts(props.searchTerm, offset, limit);
+    const loadProduct = (offset, limit, sortOption) => {
+        getProducts(searchTerm, offset, limit, sortOption);
     };
 
     return (
-        <ProductScroller loadProduct = {loadProduct} products = {props.products}
-                         headerText = {`Keresés eredménye: ${props.searchTerm}`}/>
+        <ProductScroller loadProduct = {loadProduct} productsStore = {productsStore}
+                         headerText = {<>Keresés eredménye: <span className="bold">{searchTerm}</span></>} />
     );
 }
 
 const mapDispatchToProps = dispatch => ({
-    getProducts: (searchTerm, offset, limit) => {
-        dispatch(fetchToStore(PRODUCTS, `/product/${searchTerm}/${offset}/${limit}`, false, () => {
+    getProducts: (searchTerm, offset, limit, sortOption) => {
+        dispatch(fetchToStore(PRODUCTS, `/product/${searchTerm}/${offset}/${limit}/${sortOption}`, false, () => {
             dispatch({type: `${PRODUCTS}/${RESET}`})
         }))
     },
 });
 const mapStateToProps = state => ({
-    products: state[PRODUCTS]
+    productsStore: state[PRODUCTS]
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SearchResult);

@@ -7,7 +7,7 @@ import OrderDetails from "../component/OrderDetails";
 function UserOrders({loadOrders, ordersStore, userStore, uploadFile}) {
 
     useEffect(() => {
-        if (userStore.error === undefined && userStore.data !== undefined) {
+        if (userStore.isReady()) {
             loadOrders(userStore.data.id);
         }
     }, [loadOrders, userStore]);

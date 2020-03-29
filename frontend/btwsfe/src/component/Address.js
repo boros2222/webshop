@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Address({ address, addressName, register, errors, disabled = false, required = false }) {
+function Address({address, addressName, register, errors, disabled = false, required = false}) {
     return (
         <div className="row primary-color">
             <p className={"col-12 col-lg-6" + (required ? " required" : "")}>Irányítószám:</p>

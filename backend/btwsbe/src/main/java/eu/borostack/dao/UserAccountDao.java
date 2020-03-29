@@ -18,7 +18,8 @@ public class UserAccountDao extends GenericDao<Long, UserAccount> {
         return new JPAQuery<UserAccount>(entityManager)
                 .select(userAccount)
                 .from(userAccount)
-                .where(userAccount.email.eq(email))
+                .where(userAccount.email.eq(email)
+                        .and(userAccount.deleted.eq(false).or(userAccount.deleted.isNull())))
                 .fetchFirst();
     }
 }

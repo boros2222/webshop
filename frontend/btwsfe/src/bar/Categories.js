@@ -5,7 +5,7 @@ import './Categories.css';
 import {CATEGORY} from "../redux/constants/namespaces";
 import {fetchToStore} from "../redux/actions/request";
 
-function Categories({loadCategories, categoriesStore, closeDropdown}) {
+function Categories({loadCategories, categoriesStore, closeDropDown}) {
 
     useEffect(() => loadCategories(), [loadCategories]);
 
@@ -22,7 +22,7 @@ function Categories({loadCategories, categoriesStore, closeDropdown}) {
                     categoriesStore.data.map(category => {
                         return (
                             <div key={category.id} className="col-12 col-lg-4 category-element secondary-darker-color">
-                                <Link onClick={() => closeDropdown()} to={`/category/${category.id}`}>{category.name}</Link>
+                                <Link onClick={() => closeDropDown()} to={`/category/${category.id}`}>{category.name}</Link>
                             </div>
                         );
                     })

@@ -7,13 +7,13 @@ import "./CartDetails.css";
 import {getFromStorage, saveToStorage} from "../redux/actions/storage";
 import {Link, Redirect} from "react-router-dom";
 
-function CartDetails(props) {
+function CartDetails({userStore, cartStore, setCartStore}) {
 
     const [toOrder, setToOrder] = useState(false);
     const [growl, setGrowl] = useState(undefined);
 
     const getCart = () => {
-        let cart = props.cartStore.data;
+        let cart = cartStore.data;
         if (cart === undefined) {
             cart = [];
         } else {
@@ -27,7 +27,7 @@ function CartDetails(props) {
         const index = cart.indexOf(cartProduct);
         if (index > -1) {
             cart.splice(index, 1);
-            props.setCartStore(cart);
+            setCartStore(cart);
             growl.show({severity: "success", summary: "Kosár", detail: "Termék eltávolítva a kosárból!"});
         }
     };
@@ -37,7 +37,7 @@ function CartDetails(props) {
         const index = cart.indexOf(cartProduct);
         if (index > -1) {
             cart[index].quantity = quantity;
-            props.setCartStore(cart);
+            setCartStore(cart);
         }
     };
 
@@ -54,7 +54,7 @@ function CartDetails(props) {
     };
 
     const goToOrder = () => {
-        if (props.userStore.data.error === true) {
+        if (userStore.data.error === true) {
             growl.show({severity: "error", summary: "Rendelés", detail: "A rendeléshez előbb be kell jelentkezned!"});
         } else {
             setToOrder(true);
@@ -65,7 +65,7 @@ function CartDetails(props) {
         return <Redirect to="/order" />
     }
 
-    let cart = props.cartStore.data;
+    let cart = cartStore.data;
     if (cart === null || cart === undefined || cart.length === 0) {
         return (
             <div>

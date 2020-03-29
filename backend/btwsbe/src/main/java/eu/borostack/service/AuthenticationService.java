@@ -81,7 +81,7 @@ public class AuthenticationService {
                 Integer id = (Integer) jws.getBody().get("id");
                 String email = (String) jws.getBody().get("email");
                 UserAccount userAccount = userAccountDao.findByEmail(email);
-                if(userAccount != null && userAccount.getId().equals(id.longValue())) {
+                if (userAccount != null && userAccount.getId().equals(id.longValue())) {
                     return userAccount;
                 }
             }

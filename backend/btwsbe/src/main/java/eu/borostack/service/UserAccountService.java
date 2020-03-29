@@ -127,13 +127,17 @@ public class UserAccountService {
         return userAccount;
     }
 
-    public Response deleteUser(Long userAccountId, UserAccount userAccount) {
-        if (userAccountId.equals(userAccount.getId())) {
-            userAccountDao.removeById(userAccountId);
-            return ResponseFactory.createMessageResponse("Felhasználó sikeresen törölve!", false);
-        } else {
-            return ResponseFactory.createMessageResponse("Felhasználó törlése sikertelen!", true, 400);
+    public Response deleteUser(final Long userAccountId) {
+        if (userAccountId == null) {
+            return ResponseFactory.createMessageResponse("Nincs megadva felhasználó!", true, 400);
         }
+        final UserAccount userAccount = userAccountDao.findById(userAccountId);
+        if (userAccount == null) {
+            return ResponseFactory.createMessageResponse("A felhasználó nem található!", true, 400);
+        }
+        userAccount.setDeleted(true);
+        userAccountDao.save(userAccount);
+        return ResponseFactory.createMessageResponse("Felhasználó sikeresen törölve!", false);
     }
 
     public Response updateUser(Long userAccountId, UserAccount updatedUserAccount) {

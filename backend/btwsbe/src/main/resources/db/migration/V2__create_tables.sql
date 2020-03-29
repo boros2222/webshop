@@ -12,18 +12,20 @@ create table address (
 create sequence s_user_account;
 create table user_account (
     id integer,
-    email varchar(255) not null unique,
+    email varchar(255) not null,
     hash text not null,
     salt varchar(255) not null,
     name varchar(255) not null,
     registration_date date,
     invoice_address_id integer,
     shipping_address_id integer,
+    deleted boolean default false,
 
     constraint user_account_pk primary key (id),
     constraint user_account_fk_1 foreign key (invoice_address_id) references address(id),
     constraint user_account_fk_2 foreign key (shipping_address_id) references address(id)
 );
+CREATE UNIQUE INDEX user_email_unique ON user_account (email) WHERE (deleted = false or deleted is null);
 
 create sequence s_user_role;
 create table user_role (
@@ -65,6 +67,7 @@ create table product (
     description text,
     price integer not null,
     category_id integer not null,
+    deleted boolean default false,
 
     constraint product_pk primary key (id),
     constraint product_fk foreign key (category_id) references category(id)

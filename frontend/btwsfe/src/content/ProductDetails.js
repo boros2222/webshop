@@ -6,18 +6,19 @@ import {Growl} from 'primereact/growl';
 import {fetchToStore} from "../redux/actions/request";
 import {getFromStorage, saveToStorage} from "../redux/actions/storage";
 
-function ProductDetails(props) {
+function ProductDetails({id, productDetailsStore, cartStore, loadProduct, setCartStore}) {
 
     const [growl, setGrowl] = useState(undefined);
 
-    const { loadProduct } = props;
-    useEffect(() => loadProduct(props.id), [loadProduct, props.id]);
+    useEffect(() => {
+        loadProduct(id);
+    }, [loadProduct, id]);
 
     const addToCart = () => {
-        const product = props.productDetailsStore.data;
+        const product = productDetailsStore.data;
 
         if (product !== undefined) {
-            let cart = props.cartStore.data;
+            let cart = cartStore.data;
             if (cart === null || cart === undefined) {
                 cart = [];
             } else {
@@ -34,7 +35,7 @@ function ProductDetails(props) {
                     quantity: 1
                 };
                 cart.push(cartProduct);
-                props.setCartStore(cart);
+                setCartStore(cart);
                 growl.show({severity: "success", summary: "Kosár", detail: "Termék hozzáadva a kosárhoz!"});
             } else {
                 growl.show({severity: "info", summary: "Kosár", detail: "A termék már szerepel a kosárban!"});
@@ -42,7 +43,6 @@ function ProductDetails(props) {
         }
     };
 
-    const { productDetailsStore } = props;
     if (productDetailsStore.error !== undefined) {
         return <p>{productDetailsStore.data.message}</p>
     } else if (productDetailsStore.isFetching === true || productDetailsStore.data === undefined) {

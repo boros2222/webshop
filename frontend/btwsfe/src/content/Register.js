@@ -15,7 +15,7 @@ function Register({reset, register, userStore, responseStore}) {
         register(user);
     };
 
-    if (userStore.error === undefined && userStore.data !== undefined) {
+    if (userStore.isReady()) {
         return <p>Bejelentkezve nem lehet regisztrálni!</p>
     }
 

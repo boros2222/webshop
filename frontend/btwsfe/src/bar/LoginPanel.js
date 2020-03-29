@@ -9,21 +9,19 @@ import {fetchToStore, sendToBackend} from "../redux/actions/request";
 import {removeCookie} from "../redux/actions/cookie";
 import {useForm} from "react-hook-form";
 
-function LoginPanel(props) {
+function LoginPanel({userStore, responseStore, login, logout, reset}) {
 
     const {register, handleSubmit, errors} = useForm();
 
-    const { reset } = props;
     useEffect(() => {
         reset();
     }, [reset]);
 
     const onSubmit = (user) => {
         user.name = " ";
-        props.login(user);
+        login(user);
     };
 
-    const { responseStore, userStore } = props;
     let message = undefined;
     if (responseStore.error !== undefined) {
         message = responseStore.data.message;
@@ -31,19 +29,27 @@ function LoginPanel(props) {
         message = responseStore.data.message;
     }
 
-    if (userStore.error === undefined && userStore.data !== undefined) {
+    if (userStore.isReady()) {
+        const user = userStore.data;
         return (
             <div className="container-fluid secondary-darker-color">
                 <div className="row">
-                    <div className="col-12">Bejelentkezett felhasználó: {userStore.data.email}</div>
-                    <div className="col-12 col-lg-3 secondary-darker-color">
-                        <Link className="custom-button" style={{textAlign: "center"}} to={"/settings"}>Adataim módosítása</Link>
+                    <div className="col-12 col-lg-6 order-1 order-lg-0 secondary-darker-color">
+                        <div className="secondary-darker-color space-bottom">
+                            <Link className="custom-button" style={{textAlign: "center", display: "inline-block"}} to={"/orders"}>Rendeléseim</Link>
+                        </div>
+                        <div className="secondary-darker-color space-bottom">
+                            <Link className="custom-button" style={{textAlign: "center", display: "inline-block"}} to={"/settings"}>Adataim módosítása</Link>
+                        </div>
+                        <div className="secondary-darker-color space-bottom">
+                            <button className="custom-button" onClick={() => logout()}>Kijelentkezés</button>
+                        </div>
                     </div>
-                    <div className="col-12 col-lg-3 secondary-darker-color">
-                        <Link className="custom-button" style={{textAlign: "center"}} to={"/orders"}>Rendeléseim</Link>
-                    </div>
-                    <div className="col-12 col-lg-3 secondary-darker-color">
-                        <button className="custom-button" onClick={() => props.logout()}>Kijelentkezés</button>
+                    <div className="col-12 col-lg-6 order-0 order-lg-1 secondary-darker-color">
+                        <div className="col-12 col-lg-auto pull-right space-bottom secondary-darker-color" style={{padding: "0"}}>
+                            <p style={{fontSize: "1.1em"}}>Üdv, <span className="bold">{user.name}</span>!</p>
+                            <p>Email cím: {user.email}</p>
+                        </div>
                     </div>
                 </div>
             </div>

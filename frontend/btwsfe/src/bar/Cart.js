@@ -3,9 +3,9 @@ import {CART_STORAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 
-function Cart(props) {
+function Cart({cartStore}) {
 
-    let cart = props.cartStore.data;
+    let cart = cartStore.data;
 
     if (cart === null || cart === undefined || cart.length === 0) {
         return (

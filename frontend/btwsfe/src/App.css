@@ -325,6 +325,7 @@ div.button-row {
 /* Primereact */
 body .p-datascroller .p-datascroller-content {
   border: 0 !important;
+  padding: 0 !important;
 }
 
 div.p-dialog.p-component {
