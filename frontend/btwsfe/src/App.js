@@ -9,7 +9,7 @@ import {BrowserRouter as Router, Route} from "react-router-dom";
 import MainLayout from './layout/MainLayout';
 import Products from './content/Products';
 import ProductDetails from './content/ProductDetails';
-import {CART_STORAGE, CURRENT_USER} from "./redux/constants/namespaces";
+import {CART_STORAGE, CURRENT_USER, THEME_STORAGE} from "./redux/constants/namespaces";
 import {connect} from "react-redux";
 import Register from "./content/Register";
 import constants from "./Constants";
@@ -21,12 +21,14 @@ import SearchResult from "./content/SearchResult";
 import CategoryProducts from "./content/CategoryProducts";
 import UserSettings from "./content/UserSettings";
 import UserOrders from "./content/UserOrders";
+import NewProduct from "./content/NewProduct";
 
 function App(props) {
 
     useEffect(() => {
         props.getCurrentUser();
         props.getCart();
+        props.getTheme();
     }, [props]);
 
     return (
@@ -43,25 +45,25 @@ function App(props) {
                 } {...props} />
             }/>
 
-            <Route exact path = {["/register"]} render = {(props) =>
+            <Route exact path = "/register" render = {(props) =>
                 <MainLayout content = {
                     <Register />
                 } {...props} />
             }/>
 
-            <Route exact path = {["/cart"]} render = {(props) =>
+            <Route exact path = "/cart" render = {(props) =>
                 <MainLayout content = {
                     <CartDetails />
                 } {...props} />
             }/>
 
-            <Route exact path = {["/order"]} render = {(props) =>
+            <Route exact path = "/order" render = {(props) =>
                 <MainLayout content = {
                     <Order />
                 } {...props} />
             }/>
 
-            <Route exact path = "/search/:searchTerm" render = {(props) =>
+            <Route exact path = {["/search/:searchTerm", "/search/"]} render = {(props) =>
                 <MainLayout content = {
                     <SearchResult key = {props.match.params.searchTerm} searchTerm = {props.match.params.searchTerm} />
                 } {...props} />
@@ -84,15 +86,21 @@ function App(props) {
                     <UserOrders />
                 } {...props} />
             }/>
+
+            <Route exact path = {["/new-product"]} render = {(props) =>
+                <MainLayout content = {
+                    <NewProduct />
+                } {...props} />
+            }/>
         </Router>
     )
 }
 
 const mapDispatchToProps = dispatch => ({
     getCurrentUser: () => dispatch(fetchToStore(CURRENT_USER, "/user/current", false)),
-    getCart: () => dispatch(getFromStorage(CART_STORAGE, constants.CART_STORAGE_NAME))
+    getCart: () => dispatch(getFromStorage(CART_STORAGE, constants.CART_STORAGE_NAME)),
+    getTheme: () => dispatch(getFromStorage(THEME_STORAGE, constants.THEME_STORAGE_NAME))
 });
-
 const mapStateToProps = state => ({
 });
 export default connect(mapStateToProps, mapDispatchToProps)(App);

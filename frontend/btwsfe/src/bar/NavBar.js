@@ -11,23 +11,26 @@ function NavBar({userStore}) {
 
     const [showDropDown, setShowDropDown] = useState(false);
     const [dropDownElement, setDropDownElement] = useState(<></>);
+    const [dropDownOrder, setDropDownOrder] = useState("");
 
-    const toggleDropDown = (element) => {
+    const toggleDropDown = (element, order) => {
         if (dropDownElement.type === element.type) {
             closeDropDown();
         } else {
-            openDropDown(element);
+            openDropDown(element, order);
         }
     };
 
-    const openDropDown = (element) => {
+    const openDropDown = (element, order) => {
         setShowDropDown(true);
         setDropDownElement(element);
+        setDropDownOrder(order);
     };
 
     const closeDropDown = () => {
         setShowDropDown(false);
         setDropDownElement(<></>);
+        setDropDownOrder("");
     };
 
     let loginLabel = "Bejelentkezés";
@@ -35,32 +38,45 @@ function NavBar({userStore}) {
         loginLabel = "Profilom";
     }
 
+    let dropDownContainer = undefined;
+    if (showDropDown === true) {
+        dropDownContainer = (
+            <div className="container secondary-darker-color">
+                <div className="py-3 secondary-darker-color">
+                    {dropDownElement}
+                </div>
+            </div>
+        );
+    }
+
     return (
         <>
             <div className="secondary-darker-color">
-                <div className="container secondary-darker-color">
-                    <div className="row navlinks secondary-darker-color">
-                        <Link className="col-12 col-lg-2 navbar-button" style={{textAlign: "center"}}
+                <div className="container-lg secondary-darker-color">
+                    <div className="row nav-container pt-1 secondary-darker-color">
+                        <Link className="order-0 col-12 col-lg-2 text-center nav-button"
                               onClick={closeDropDown} to={"/"}>Termékek</Link>
                         
-                        <button className="col-12 col-lg-2 navbar-button"
-                                onClick={() => toggleDropDown(<Categories closeDropDown = {closeDropDown} />)}>Kategóriák</button>
+                        <button className="order-2 col-12 col-lg-2 nav-button"
+                                onClick={() => toggleDropDown(<Categories closeDropDown = {closeDropDown} />, "order-3")}>Kategóriák</button>
                         
-                        <button className="col-12 col-lg-2 navbar-button"
-                                onClick={() => toggleDropDown(<LoginPanel closeDropDown = {closeDropDown} />)}>{loginLabel}</button>
+                        <button className="order-4 col-12 col-lg-2 nav-button"
+                                onClick={() => toggleDropDown(<LoginPanel closeDropDown = {closeDropDown} />, "order-5")}>{loginLabel}</button>
                         
-                        <button className="col-12 col-lg-2 navbar-button"
-                                onClick={() => toggleDropDown(<Cart closeDropDown = {closeDropDown} />)}>Kosár</button>
+                        <button className="order-6 col-12 col-lg-2 nav-button"
+                                onClick={() => toggleDropDown(<Cart closeDropDown = {closeDropDown} />, "order-last")}>Kosár</button>
+
+                        {showDropDown &&
+                            <div className={`${dropDownOrder} d-block d-lg-none nav-shadows w-100 secondary-darker-color`}>
+                                {dropDownContainer}
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
             {showDropDown &&
-                <div className="shadows secondary-darker-color">
-                    <div className="container secondary-darker-color">
-                        <div className="dropdown-element secondary-darker-color">
-                            {dropDownElement}
-                        </div>
-                    </div>
+                <div className="d-none d-lg-block order-last nav-shadows w-100 secondary-darker-color">
+                    {dropDownContainer}
                 </div>
             }
         </>

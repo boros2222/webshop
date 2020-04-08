@@ -19,13 +19,13 @@ function ConfirmDialog({headerText, text, onConfirm, children}) {
     };
 
     const header = (
-        <p className="bold" style={{fontSize: "1.5em"}}>{headerText}</p>
+        <p className="font-weight-bold font-size-medium">{headerText}</p>
     );
 
     const footer = (
-        <div className="max-width elements-apart">
-            <button className="custom-button bold" onClick={hideDialog}>Nem</button>
-            <button className="custom-button-inverse bold" onClick={doConfirm}>Igen</button>
+        <div className="w-100 elements-apart">
+            <button className="custom-button font-weight-bold" onClick={hideDialog}>Nem</button>
+            <button className="custom-button-inverse font-weight-bold" onClick={doConfirm}>Igen</button>
         </div>
     );
 
@@ -33,7 +33,7 @@ function ConfirmDialog({headerText, text, onConfirm, children}) {
         <>
             {React.cloneElement(children, { onClick: showDialog })}
             <Dialog header={header} footer={footer} visible={visible} className="container" onHide={hideDialog} modal={true} closable={false}>
-                <p style={{fontSize: "1.2em"}}>{text}</p>
+                <p className="font-size-normal">{text}</p>
             </Dialog>
         </>
     )

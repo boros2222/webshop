@@ -31,7 +31,7 @@ function UserSettings({reset, updateUser, deleteUser, userStore, responseStore})
     if (responseStore.error !== undefined) {
         message = responseStore.data.message;
     } else if (responseStore.isFetching === true) {
-        message = <i className="pi pi-spin pi-spinner" style={{fontSize: "2.5em"}}/>;
+        message = <i className="pi pi-spin pi-spinner font-size-large"/>;
     } else if (responseStore.fetchedAlready === true) {
         message = responseStore.data.message;
     }
@@ -39,13 +39,13 @@ function UserSettings({reset, updateUser, deleteUser, userStore, responseStore})
     return (
         <>
             <div className="container-fluid">
-                <p className="bold" style={{fontSize: "1.5em"}}>Adataim módosítása</p>
+                <p className="font-weight-bold font-size-medium">Adataim módosítása</p>
                 <UserForm user={userStore.data} onSubmit={onSubmit} buttonLabel="Módosítás" edit={true}/>
                 <ConfirmDialog headerText="Fiók törlése" text="Biztosan törölni kívánja a fiókját?" onConfirm={onConfirm}>
-                    <button className="custom-button red-button">Fiók törlése</button>
+                    <button className="custom-button red-button mt-3">Fiók törlése</button>
                 </ConfirmDialog>
-                <div className="col-12 space-top primary-color">
-                    <p className="bold">{message}</p>
+                <div className="col-12 mt-2 primary-color">
+                    <p className="font-weight-bold">{message}</p>
                 </div>
             </div>
         </>

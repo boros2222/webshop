@@ -1,29 +1,45 @@
 package eu.borostack.config;
 
-import com.google.common.primitives.Bytes;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import javax.enterprise.context.ApplicationScoped;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
-@ApplicationScoped
+@Startup
+@Singleton
 public class AppConfig {
+
+    private static final Log LOG = LogFactory.getLog(AppConfig.class);
 
     private static byte[] jwtKey = null;
 
-    public static byte[] getJwtKey() {
-        if (jwtKey == null) {
-            String propertyValue = System.getProperty("jwtkey");
-            List<String> keyAsStringList = Arrays.asList(propertyValue.split(","));
-            List<Byte> keyAsByteList = keyAsStringList.stream().map(Byte::parseByte).collect(Collectors.toList());
-            jwtKey = Bytes.toArray(keyAsByteList);
+    @PostConstruct
+    private void loadProperties() {
+        final String fileName = System.getProperty("jboss.server.config.dir") + "/btwsbe.properties";
+        try {
+            final InputStream input = new FileInputStream(fileName);
+            final Properties properties = new Properties();
+            properties.load(input);
+            properties.forEach((key, value) -> System.setProperty((String) key, (String) value));
+            LOG.info("CONFIG LOADED SUCCESSFULLY!");
+        } catch (final IOException exception) {
+            exception.printStackTrace();
+            LOG.error("LOADING CONFIG FAILED!");
         }
-
-        return jwtKey;
     }
 
-    public static String getFrontendUrl() {
-        return System.getProperty("frontendurl");
+    public static byte[] getJwtKey() {
+        if (jwtKey == null) {
+            /*jwtKey = ArrayUtils.toPrimitive(Arrays.stream(System.getProperty("jwtkey").split(","))
+                    .map(Byte::parseByte).toArray(Byte[]::new));*/
+            jwtKey = System.getProperty("jwtkey").getBytes();
+        }
+        return jwtKey;
     }
 }

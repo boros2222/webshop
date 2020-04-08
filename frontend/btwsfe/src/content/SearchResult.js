@@ -13,7 +13,7 @@ function SearchResult({searchTerm, productsStore, getProducts}) {
 
     return (
         <ProductScroller loadProduct = {loadProduct} productsStore = {productsStore}
-                         headerText = {<>Keresés eredménye: <span className="bold">{searchTerm}</span></>} />
+                         headerText = {<>Keresés eredménye: <span className="font-weight-bold">{searchTerm}</span></>} />
     );
 }
 

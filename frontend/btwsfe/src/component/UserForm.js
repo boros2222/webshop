@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from "react";
-import "./UserForm.css";
 import {useForm} from "react-hook-form";
 import Address from "./Address";
 import {Checkbox} from "primereact/checkbox";
@@ -44,16 +43,16 @@ function UserForm({user, onSubmit, buttonLabel, edit = false}) {
     return (
         <form className="user-form" onSubmit={handleSubmit(beforeSubmit)}>
             <div className="row">
-                <div className="col-12 col-lg-6 primary-color">
-                    <p className="col-12 col-lg-6 d-inline-block required" style={{paddingLeft: "0"}}>Teljes név:</p>
+                <div className="col-12 col-lg-6 mb-3 primary-color">
+                    <p className="col-12 col-lg-6 d-inline-block pl-0 required">Teljes név:</p>
                     <input className="col-12 col-lg-6" type="text" name="name"
                            defaultValue={user && user.name ? user.name : ""}
                            ref={register({required: true})}/>
                     {errors.name && errors.name.type === 'required' && <p className="col-12 error-message">Teljes név megadása kötelező</p>}
                 </div>
 
-                <div className="col-12 col-lg-6 primary-color">
-                    <p className={"col-12 col-lg-6 d-inline-block" + (!edit ? " required" : "")} style={{paddingLeft: "0"}}>Email cím:</p>
+                <div className="col-12 col-lg-6 mb-3 primary-color">
+                    <p className={"col-12 col-lg-6 d-inline-block pl-0" + (!edit ? " required" : "")}>Email cím:</p>
                     <input className="col-12 col-lg-6" type="text" name="email"
                            defaultValue={user && user.email ? user.email : ""} disabled={edit}
                            ref={register({required: true, pattern: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/})}/>
@@ -62,7 +61,7 @@ function UserForm({user, onSubmit, buttonLabel, edit = false}) {
                 </div>
 
                 <div className="col-12 col-lg-6 primary-color">
-                    <p className={"col-12 col-lg-6 d-inline-block" + (!edit ? " required" : "")} style={{paddingLeft: "0"}}>Jelszó{edit ? " módosítása" : ""}:</p>
+                    <p className={"col-12 col-lg-6 d-inline-block pl-0" + (!edit ? " required" : "")}>Jelszó{edit ? " módosítása" : ""}:</p>
                     <input className="col-12 col-lg-6" type="password" name="password"
                            ref={register({required: !edit, minLength: 8})}/>
                     {!edit && errors.password && errors.password.type === 'required' && <p className="col-12 error-message">Jelszó megadása kötelező</p>}
@@ -70,7 +69,7 @@ function UserForm({user, onSubmit, buttonLabel, edit = false}) {
                 </div>
 
                 <div className="col-12 col-lg-6 primary-color">
-                    <p className={"col-12 col-lg-6 d-inline-block" + (!edit ? " required" : "")} style={{paddingLeft: "0"}}>Jelszó újra:</p>
+                    <p className={"col-12 col-lg-6 d-inline-block pl-0" + (!edit ? " required" : "")}>Jelszó újra:</p>
                     <input className="col-12 col-lg-6" type="password" name="passwordAgain"
                            ref={register({required: !edit, minLength: 8, validate: (value) => value === watch("password")})}/>
                     {!edit && errors.passwordAgain && errors.passwordAgain.type === 'required' && <p className="col-12 error-message">Jelszó megadása újra kötelező</p>}
@@ -79,27 +78,27 @@ function UserForm({user, onSubmit, buttonLabel, edit = false}) {
                 </div>
             </div>
 
-            <div className="row">
+            <div className="row mt-4">
                 <div className="col-12 col-lg-6 primary-color">
-                    <p className="bold space-top" style={{fontSize: "1.1em"}}>Számlázási cím:</p>
+                    <p className="font-weight-bold mt-2 font-size-normal">Számlázási cím:</p>
                     <Address addressName="invoiceAddress" register={register}
                              address={user && user.invoiceAddress ? user.invoiceAddress : ""}/>
-                    <div style={{marginTop: "1em", fontWeight: "bold"}}>
+                    <div className="font-weight-bold mt-3">
                         Szállítási cím megegyezik a számlázási címmel:
-                        <Checkbox onChange={event => setShippingSame(event.checked)} checked={shippingSame} style={{marginLeft: "1em"}}/>
+                        <Checkbox onChange={event => setShippingSame(event.checked)} checked={shippingSame} className="ml-3"/>
                     </div>
                 </div>
 
                 {!shippingSame &&
                 <div className="col-12 col-lg-6 primary-color">
-                    <p className="bold space-top" style={{fontSize: "1.1em"}}>Szállítási cím:</p>
+                    <p className="font-weight-bold mt-2 font-size-normal">Szállítási cím:</p>
                     <Address addressName="shippingAddress" register={register}
                              address={user && user.shippingAddress ? user.shippingAddress : ""}/>
                 </div>
                 }
             </div>
 
-            <button className="custom-button-inverse flex-center bold pull-right">
+            <button className="custom-button-inverse font-weight-bold mt-3 float-right">
                 {buttonLabel}
             </button>
         </form>

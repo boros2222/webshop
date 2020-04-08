@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {Link} from "react-router-dom";
-import './LoginPanel.css';
 import {CURRENT_USER, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import constants from "../Constants";
@@ -22,12 +21,7 @@ function LoginPanel({userStore, responseStore, login, logout, reset}) {
         login(user);
     };
 
-    let message = undefined;
-    if (responseStore.error !== undefined) {
-        message = responseStore.data.message;
-    } else if (responseStore.fetchedAlready === true) {
-        message = responseStore.data.message;
-    }
+    let message = responseStore.getMessage();
 
     if (userStore.isReady()) {
         const user = userStore.data;
@@ -35,19 +29,24 @@ function LoginPanel({userStore, responseStore, login, logout, reset}) {
             <div className="container-fluid secondary-darker-color">
                 <div className="row">
                     <div className="col-12 col-lg-6 order-1 order-lg-0 secondary-darker-color">
-                        <div className="secondary-darker-color space-bottom">
-                            <Link className="custom-button" style={{textAlign: "center", display: "inline-block"}} to={"/orders"}>Rendeléseim</Link>
+                        <div className="secondary-darker-color mb-2">
+                            <Link className="custom-button text-center d-inline-block" to={"/orders"}>Rendeléseim</Link>
                         </div>
-                        <div className="secondary-darker-color space-bottom">
-                            <Link className="custom-button" style={{textAlign: "center", display: "inline-block"}} to={"/settings"}>Adataim módosítása</Link>
+                        <div className="secondary-darker-color mb-2">
+                            <Link className="custom-button text-center d-inline-block" to={"/settings"}>Adataim módosítása</Link>
                         </div>
-                        <div className="secondary-darker-color space-bottom">
+                        {userStore.isAdmin() &&
+                            <div className="secondary-darker-color mb-2">
+                                <Link className="custom-button text-center d-inline-block" to={"/new-product"}>Új termék</Link>
+                            </div>
+                        }
+                        <div className="secondary-darker-color mb-2">
                             <button className="custom-button" onClick={() => logout()}>Kijelentkezés</button>
                         </div>
                     </div>
                     <div className="col-12 col-lg-6 order-0 order-lg-1 secondary-darker-color">
-                        <div className="col-12 col-lg-auto pull-right space-bottom secondary-darker-color" style={{padding: "0"}}>
-                            <p style={{fontSize: "1.1em"}}>Üdv, <span className="bold">{user.name}</span>!</p>
+                        <div className="col-12 col-lg-auto float-right mb-2 p-0 secondary-darker-color">
+                            <p className="font-size-normal">Üdv, <span className="font-weight-bold">{user.name}</span>!</p>
                             <p>Email cím: {user.email}</p>
                         </div>
                     </div>
@@ -61,7 +60,7 @@ function LoginPanel({userStore, responseStore, login, logout, reset}) {
                     <form className="container-fluid secondary-darker-color" onSubmit={handleSubmit(onSubmit)}>
                         <div className="row secondary-darker-color">
                             <div className="col-12 col-lg-5 secondary-darker-color">
-                                <div className="row secondary-darker-color" style={{marginBottom: "0.5em"}}>
+                                <div className="row secondary-darker-color mb-1">
                                     <p className="col-12 col-lg-4">Email cím:</p>
                                     <input className="col-12 col-lg-8" type="email" name="email"
                                            ref={register({required: "Email cím megadása kötelező"})}/>
@@ -74,21 +73,18 @@ function LoginPanel({userStore, responseStore, login, logout, reset}) {
                                     <p className="col-12 error-message-secondary">{errors.password && errors.password.message}</p>
                                 </div>
                             </div>
-                            <div className="col-12 col-lg-3 secondary-darker-color flex-center">
-                                <button className="login-button custom-button flex-center">
-                                    Belépés <i className="pi pi-chevron-circle-right"/>
+                            <div className="col-12 col-lg-3 secondary-darker-color d-flex align-items-center justify-content-center">
+                                <button className="custom-button mb-2 d-flex align-items-center justify-content-center">
+                                    Belépés <i className="pi pi-chevron-circle-right font-size-normal ml-1"/>
                                 </button>
                             </div>
 
-                            <div className="col-12 col-lg-3 secondary-darker-color">
+                            <div className="col-12 col-lg-3 d-flex flex-column justify-content-center secondary-darker-color">
                                 <Link className="block-link" to={"/register"}>Regisztráció</Link>
                                 <Link className="block-link" to={"/forgot-password"}>Elfelejtett jelszó</Link>
                             </div>
 
-                            <div className="col-12 secondary-darker-color">
-                                { responseStore.isFetching === true ? <i className="pi pi-spin pi-spinner" style={{fontSize: "2.5em"}}/> : null }
-                            </div>
-                            <div className="col-12 space-top secondary-darker-color">
+                            <div className="col-12 mt-2 secondary-darker-color">
                                 <p className="error-message-secondary">{message}</p>
                             </div>
                         </div>
@@ -114,7 +110,6 @@ const mapDispatchToProps = (dispatch) => ({
         type: `${RESPONSE_MESSAGE}/${RESET}`
     })
 });
-
 const mapStateToProps = (state) => ({
     responseStore: state[RESPONSE_MESSAGE],
     userStore: state[CURRENT_USER]

@@ -1,0 +1,18 @@
+
+.theme-button.p-button {
+    border-radius: 1rem 0 0 1rem !important;
+    background-color: #e8e8e8 !important;
+}
+
+.theme-button.p-button, .theme-button.p-button:hover {
+    color: #9f9f9f !important;
+}
+
+.color-button {
+    width: 2rem;
+    height: 2rem;
+}
+
+.color-button-selected {
+    border: 3px solid #5d5d5d;
+}

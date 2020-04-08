@@ -52,10 +52,10 @@ function ProductScroller({productsStore, loadProduct, headerText}) {
         <>
             <div className="row">
                 <div className="col-12 col-lg-8">
-                    <p style={{fontSize: "1.5em"}}>{headerText}</p>
+                    <p className="font-size-medium">{headerText}</p>
                 </div>
                 <div className="col-12 col-lg-4">
-                    <div className="col-12 col-lg-auto pull-right" style={{padding: "0"}}>
+                    <div className="col-12 col-lg-auto float-right p-0">
                         <p>Rendezés</p>
                         <Dropdown value={sortOption} options={sortOptions} onChange={onSort} />
                     </div>

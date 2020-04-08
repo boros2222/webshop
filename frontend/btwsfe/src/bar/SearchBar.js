@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Redirect} from "react-router-dom";
-import './SearchBar.css';
-import "primeicons/primeicons.css";
 
 function SearchBar(props) {
 
@@ -22,27 +20,24 @@ function SearchBar(props) {
         }
     };
 
-    let redirect = null;
-    if (doSearch === true) {
-        const url = `/search/${searchTerm}`;
-        redirect = <Redirect to = {url} />;
-    }
-
     return (
         <>
             <div className="secondary-color">
-                <form className="container-sm secondary-color search-bar" onSubmit={handleSubmit}>
-                    <div className="row search secondary-color">
-                        <input className="col-10 col-lg-11 search-input" type="text" name="search" placeholder="Keresés a termékek között..."
+                <form className="container secondary-color pt-2 pt-lg-1 pl-4 pr-4 pb-4" onSubmit={handleSubmit}>
+                    <div className="row bg-white rounded-lg px-3 py-2 secondary-color">
+                        <input className="col-11 pl-1 p-0 font-size-normal" type="text" name="search" placeholder="Keresés a termékek között..."
                                value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
-                        <button className="col-2 col-lg-1 search-button">
-                            <i className="pi pi-search"/>
-                        </button>
+                        <div className="col-1 p-0 primary-color d-flex justify-content-end">
+                            <button className="p-0">
+                                <i className="pi pi-search font-size-medium"/>
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
-
-            {redirect}
+            {doSearch === true &&
+                <Redirect to = {`/search/${searchTerm}`}/>
+            }
         </>
     )
 }

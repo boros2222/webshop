@@ -1,9 +1,8 @@
 import React from 'react';
-import './Footer.css';
 
 function Footer() {
     return (
-        <div className="footer-bar">
+        <div className="text-center px-2 py-4">
             Az alkalmazás JavaEE és ReactJS technológiákat használ.
         </div>
     )

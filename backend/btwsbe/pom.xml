@@ -23,7 +23,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.8</version>
+            <version>42.2.12</version>
         </dependency>
 
         <dependency>
@@ -104,6 +104,12 @@
             <artifactId>java-uuid-generator</artifactId>
             <version>4.0.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.10</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -115,8 +121,11 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>6.0.3</version>
                 <configuration>
+                    <!--suppress UnresolvedMavenProperty -->
                     <url>${dburl}</url>
+                    <!--suppress UnresolvedMavenProperty -->
                     <user>${dbuser}</user>
+                    <!--suppress UnresolvedMavenProperty -->
                     <password>${dbpassword}</password>
                     <baselineOnMigrate>false</baselineOnMigrate>
                 </configuration>

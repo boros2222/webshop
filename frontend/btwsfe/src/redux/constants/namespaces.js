@@ -6,3 +6,4 @@ export const CURRENT_USER = "CURRENT_USER";
 export const USER_ORDERS = "USER_ORDERS";
 export const UPLOAD_RESPONSE = "UPLOAD_RESPONSE";
 export const CART_STORAGE = "CART_STORAGE";
+export const THEME_STORAGE = "THEME_STORAGE";

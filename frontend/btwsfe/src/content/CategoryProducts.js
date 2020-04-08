@@ -27,7 +27,7 @@ function CategoryProducts({categoryId, categoriesStore, productsStore, loadCateg
 
     return (
         <ProductScroller loadProduct = {loadProduct} productsStore = {productsStore}
-                         headerText = {<>Termékek a kategóriában: <span className="bold">{findCategoryName()}</span></>}/>
+                         headerText = {<>Termékek a kategóriában: <span className="font-weight-bold">{findCategoryName()}</span></>}/>
     );
 }
 

@@ -7,13 +7,15 @@
     <persistence-unit name="postgres" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
+        <jta-data-source>java:jboss/datasources/webshop</jta-data-source>
+
         <properties>
             <property name="hibernate.archive.autodetection" value="class" />
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect" />
-            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
+            <!--<property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
             <property name="hibernate.connection.url" value="${dburl}" />
             <property name="hibernate.connection.username" value="${dbuser}" />
-            <property name="hibernate.connection.password" value="${dbpassword}" />
+            <property name="hibernate.connection.password" value="${dbpassword}" />-->
 
             <property name="hibernate.hbm2ddl.auto" value="none" />
             <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform"/>

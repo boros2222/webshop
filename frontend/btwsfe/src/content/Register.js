@@ -23,17 +23,17 @@ function Register({reset, register, userStore, responseStore}) {
     if (responseStore.error !== undefined) {
         message = responseStore.data.message;
     } else if (responseStore.isFetching === true) {
-        message = <i className="pi pi-spin pi-spinner" style={{fontSize: "2.5em"}}/>;
+        message = <i className="pi pi-spin pi-spinner font-size-large"/>;
     } else if (responseStore.fetchedAlready === true) {
         message = responseStore.data.message;
     }
 
     return (
-        <div className="container-fluid">
-            <p className="bold" style={{fontSize: "1.5em"}}>Regisztráció</p>
+        <div className="container-fluid pb-5">
+            <p className="font-weight-bold font-size-medium">Regisztráció</p>
             <UserForm onSubmit={onSubmit} buttonLabel="Regisztráció"/>
-            <div className="space-top primary-color">
-                <p className="bold">{message}</p>
+            <div className="mt-2 primary-color">
+                <p className="font-weight-bold">{message}</p>
             </div>
         </div>
     )

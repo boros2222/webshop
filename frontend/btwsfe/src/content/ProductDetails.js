@@ -46,7 +46,7 @@ function ProductDetails({id, productDetailsStore, cartStore, loadProduct, setCar
     if (productDetailsStore.error !== undefined) {
         return <p>{productDetailsStore.data.message}</p>
     } else if (productDetailsStore.isFetching === true || productDetailsStore.data === undefined) {
-        return <i className="pi pi-spin pi-spinner" style={{'fontSize': '2.5em'}}/>
+        return <i className="pi pi-spin pi-spinner font-size-large"/>
     }
 
     const product = productDetailsStore.data;

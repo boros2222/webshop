@@ -1,41 +1,34 @@
 
-.navlinks {
-    padding-top: 1.3em;
-}
-
-.navlinks > a, .navlinks > button {
+.nav-container > a, .nav-container > button {
     text-transform: uppercase;
     font-size: 1.3em;
     letter-spacing: 0.1em;
-    padding: 0;
-    padding-bottom: 1em;
+    padding: 1em 0;
     margin-right: 2em;
     margin-bottom: 0.1em;
     border-bottom: 4px solid var(--dark-color);
 }
 
-.navlinks > a:hover, .navlinks > button:hover {
+.nav-container > a:hover, .nav-container > button:hover {
     border-bottom: 4px solid var(--light-color);
 }
 
-.navlinks > :last-child::after {
-    content: '';
+a.nav-button, button.nav-button,
+a.nav-button:hover, button.nav-button:hover {
+    color: white !important;
 }
 
-a.navbar-button, button.navbar-button,
-a.navbar-button:hover, button.navbar-button:hover {
-    color: white;
-}
-
-.dropdown-element {
-    padding-top: 1em;
-    padding-bottom: 1em;
-}
-
-.shadows {
+.nav-shadows {
     padding-top: 1.5em;
+    padding-bottom: 1.5em;
     position: relative;
-    -webkit-box-shadow: inset 0px 21px 15px -10px rgba(0,0,0,0.27);
-    -moz-box-shadow: inset 0px 21px 15px -10px rgba(0,0,0,0.27);
-    box-shadow: inset 0px 21px 15px -10px rgba(0,0,0,0.27);
+    -webkit-box-shadow: inset 0 21px 12px -13px rgba(0,0,0,0.27), inset 0 -21px 12px -13px rgba(0,0,0,0.27);
+    -moz-box-shadow: inset 0 21px 12px -13px rgba(0,0,0,0.27), inset 0 -21px 12px -13px rgba(0,0,0,0.27);
+    box-shadow: inset 0 21px 12px -13px rgba(0,0,0,0.27), inset 0 -21px 12px -13px rgba(0,0,0,0.27);
+}
+
+.nav-shadows.order-last {
+    -webkit-box-shadow: inset 0 21px 12px -13px rgba(0,0,0,0.27);
+    -moz-box-shadow: inset 0 21px 12px -13px rgba(0,0,0,0.27);
+    box-shadow: inset 0 21px 12px -13px rgba(0,0,0,0.27);
 }

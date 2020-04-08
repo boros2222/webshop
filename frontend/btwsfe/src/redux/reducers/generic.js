@@ -1,17 +1,40 @@
 import {REQUEST_FAILURE, REQUEST_IN_PROGRESS, REQUEST_SUCCESS, RESET, SET_DATA} from "../constants/action-types";
+import {CURRENT_USER} from "../constants/namespaces";
+import React from "react";
 
-const INITIAL_STATE = {
-    data: undefined,
-    fetchedAlready: false,
-    isFetching: undefined,
-    error: undefined,
+const getInitialState = (namespace) => {
+    let genericState = {
+        data: undefined,
+        fetchedAlready: false,
+        isFetching: undefined,
+        error: undefined,
 
-    isReady() {
-        return this.error === undefined && this.data !== undefined;
+        isReady: function() {
+            return this.error === undefined && this.data !== undefined;
+        },
+        getMessage: function() {
+            if (this.isFetching === true) {
+                return <i className="pi pi-spin pi-spinner font-size-large"/>;
+            } else if (this.error !== undefined || this.fetchedAlready === true) {
+                return this.data.message;
+            } else {
+                return <></>;
+            }
+        }
+    };
+
+    switch(namespace) {
+        case CURRENT_USER:
+            genericState.isAdmin = function() {
+                return this.isReady() && this.data.userRoles.findIndex(x => x.role === "ADMIN") !== -1;
+            };
+            return genericState;
+        default:
+            return genericState;
     }
 };
 
-const genericReducer = (namespace) => (state = INITIAL_STATE, action) => {
+const genericReducer = (namespace) => (state = getInitialState(namespace), action) => {
     switch (action.type) {
         case `${namespace}/${REQUEST_IN_PROGRESS}`:
             return Object.assign({}, state, {

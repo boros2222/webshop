@@ -8,7 +8,6 @@ import {sendToBackend} from "../redux/actions/request";
 import {Accordion, AccordionTab} from 'primereact/accordion';
 import {useForm} from "react-hook-form";
 import Address from "../component/Address";
-import "./Order.css";
 
 function Order({cartStore, userStore, responseStore, placeOrder}) {
 
@@ -23,7 +22,6 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
         order.userAccount = {id: userStore.data.id};
         order.orderedProducts =  [...cartStore.data];
         placeOrder(order);
-        console.log(order);
     };
 
     const previousTab = () => {
@@ -59,7 +57,7 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
     if (responseStore.error !== undefined) {
         message = responseStore.data.message;
     } else if (responseStore.isFetching === true) {
-        message = <i className="pi pi-spin pi-spinner" style={{fontSize: "2.5em"}}/>;
+        message = <i className="pi pi-spin pi-spinner font-size-large"/>;
     } else if (responseStore.fetchedAlready === true) {
         message = responseStore.data.message;
     }
@@ -68,8 +66,8 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
     if (cart === null || cart === undefined || cart.length === 0) {
         return (
             <div>
-                <div className="space-top primary-color">
-                    <p className="bold">{message}</p>
+                <div className="mt-2 primary-color">
+                    <p className="font-weight-bold">{message}</p>
                 </div>
                 <p>A kosár üres!</p>
             </div>
@@ -84,26 +82,26 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
                        onTabChange={(event) => setActiveIndex(event.index)}>
                 <AccordionTab header="Megrendelendő termékek" disabled={true}>
 
-                    <div className="primary-color max-width">
+                    <div className="primary-color w-100">
                         {cart.map(cartProduct => {
                             let product = cartProduct.product;
                             let quantity = cartProduct.quantity;
                             return (
                                 <div key={product.id} className="row cart-product">
-                                    <Link className="col-12 col-lg-8 space-bottom space-top" to={"/product/" + product.id}>
+                                    <Link className="col-12 col-lg-8 my-2" to={"/product/" + product.id}>
                                         <span>{product.name}</span>
                                     </Link>
-                                    <div className="col-6 col-lg-2 space-bottom space-top">{quantity} db</div>
-                                    <div className="col-6 col-lg-2 space-bottom space-top text-right">
+                                    <div className="col-6 col-lg-2 my-2">{quantity} db</div>
+                                    <div className="col-6 col-lg-2 my-2 text-right">
                                         {(product.price * quantity).toLocaleString()} Ft
                                     </div>
                                 </div>
                             );
                         })}
 
-                        <div className="cart-product elements-apart max-width">
-                            <span className="bold">Összesen</span>
-                            <span className="bold">{priceSum.toLocaleString()} Ft</span>
+                        <div className="cart-product elements-apart w-100">
+                            <span className="font-weight-bold">Összesen</span>
+                            <span className="font-weight-bold">{priceSum.toLocaleString()} Ft</span>
                         </div>
                     </div>
 
@@ -112,7 +110,7 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
 
                     <div className="row">
                         <div className="col-12 col-lg-6 primary-color">
-                            <p className="col-12 col-lg-6 d-inline-block required" style={{paddingLeft: "0"}}>Számlázási név:</p>
+                            <p className="col-12 col-lg-6 d-inline-block pl-0 required">Számlázási név:</p>
                             <input className="col-12 col-lg-6" type="text" name="invoiceName"
                                    defaultValue={user && user.name ? user.name : ""}
                                    ref={register({required: true})}/>
@@ -121,15 +119,15 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
 
 
                         <div className="col-12 col-lg-6 primary-color">
-                            <p className={"col-12 col-lg-6 d-inline-block"} style={{paddingLeft: "0"}}>Email cím:</p>
+                            <p className="col-12 col-lg-6 d-inline-block pl-0">Email cím:</p>
                             <input className="col-12 col-lg-6" type="text" name="email"
                                    defaultValue={user && user.email ? user.email : ""} disabled={true}/>
                         </div>
                     </div>
 
                     <div className="row">
-                        <div className="col-12 col-lg-6 space-left space-right">
-                            <p className="bold space-top" style={{fontSize: "1.1em"}}>Számlázási cím:</p>
+                        <div className="col-12 col-lg-6">
+                            <p className="font-weight-bold mt-2 font-size-normal">Számlázási cím:</p>
                             <Address addressName="invoiceAddress" register={register} errors={errors} required={true}
                                      address={user && user.invoiceAddress ? user.invoiceAddress : ""}/>
                         </div>
@@ -137,33 +135,33 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
                 </AccordionTab>
                 <AccordionTab header="Szállítási cím" disabled={true}>
                     <div className="row">
-                        <div className="col-12 col-lg-6 space-left space-right">
-                            <p className="bold space-top" style={{fontSize: "1.1em"}}>Szállítási cím:</p>
+                        <div className="col-12 col-lg-6">
+                            <p className="font-weight-bold mt-2 font-size-normal">Szállítási cím:</p>
                             <Address addressName="shippingAddress" register={register} errors={errors} required={true}
                                      address={user && user.shippingAddress ? user.shippingAddress : ""}/>
                         </div>
                     </div>
                 </AccordionTab>
             </Accordion>
-            <div className="button-row">
+            <div className="w-100 mt-4">
                 <button type="button" className="custom-button"
                         onClick={previousTab}>
                     Vissza
                 </button>
                 {activeIndex === 2 ?
-                    <button type="submit" className="custom-button-inverse pull-right"
+                    <button type="submit" className="custom-button-inverse float-right"
                             onClick={handleSubmit(submitOrder)}>
                         Megrendelés
                     </button>
                     :
-                    <button type="button" className="custom-button-inverse pull-right"
+                    <button type="button" className="custom-button-inverse float-right"
                             onClick={nextTab}>
                         Tovább
                     </button>
                 }
             </div>
-            <div className="col-12 space-top primary-color">
-                <p className="bold">{message}</p>
+            <div className="col-12 mt-2 primary-color">
+                <p className="font-weight-bold">{message}</p>
             </div>
         </form>
     );

@@ -1,20 +1,8 @@
 
-.elements-apart {
-    display: flex;
-    justify-content: space-between;
-}
-
 .cart-product {
-    font-size: 1.2em;
     border-bottom: 1px solid #a1a1a1;
 }
 
-div.cart-product:nth-last-of-type(2) {
+.cart-product:nth-last-of-type(2) {
     border-bottom: 2px solid var(--light-color);
-}
-
-.sum-product {
-    font-size: 1.2em;
-    margin-bottom: 1em;
-    padding-top: 1em;
 }

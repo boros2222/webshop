@@ -10,7 +10,7 @@ function Cart({cartStore}) {
     if (cart === null || cart === undefined || cart.length === 0) {
         return (
             <div className="secondary-darker-color">
-                <p className="navbar-font-size">A kosár üres!</p>
+                <p className="font-size-normal">A kosár üres!</p>
             </div>
         );
     } else {
@@ -20,16 +20,16 @@ function Cart({cartStore}) {
             <div className="container">
                 <div className="row">
                     <div className="col-12 col-lg-4 secondary-darker-color">
-                        <p className="navbar-font-size" style={{marginBottom: "1.5em"}}>
-                            Kosárban lévő termékek száma: <span className="bold">{quantitySum}</span>
+                        <p className="font-size-normal mb-2">
+                            Kosárban lévő termékek száma: <span className="font-weight-bold">{quantitySum}</span>
                         </p>
-                        <p className="navbar-font-size" style={{marginBottom: "1em"}}>
-                            Összeg: <span className="bold">{priceSum.toLocaleString()} Ft</span>
+                        <p className="font-size-normal mb-2">
+                            Összeg: <span className="font-weight-bold">{priceSum.toLocaleString()} Ft</span>
                         </p>
                     </div>
                     <div className="col-12 col-lg-4 secondary-darker-color flex-center">
                         <Link className="custom-button" to={"/cart"}>
-                            <span className="navbar-font-size">Tovább a kosár tartalmához</span>
+                            <span className="font-size-normal">Tovább a kosár tartalmához</span>
                         </Link>
                     </div>
                 </div>
@@ -40,7 +40,6 @@ function Cart({cartStore}) {
 
 const mapDispatchToProps = (dispatch) => ({
 });
-
 const mapStateToProps = (state) => ({
     cartStore: state[CART_STORAGE],
 });
