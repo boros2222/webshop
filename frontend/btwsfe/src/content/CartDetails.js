@@ -77,6 +77,7 @@ function CartDetails({userStore, cartStore, setCartStore}) {
         return (
             <>
                 <Growl ref={(el) => setGrowl(el)} />
+                <p className="font-weight-bold font-size-medium mb-3">Kosár tartalma</p>
                 <div className="container-fluid pb-5">
                     {cart.map(cartProduct => {
                         let product = cartProduct.product;

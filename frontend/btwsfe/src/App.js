@@ -23,6 +23,7 @@ import UserSettings from "./content/UserSettings";
 import UserOrders from "./content/UserOrders";
 import NewProduct from "./content/NewProduct";
 import EditProduct from "./content/EditProduct";
+import About from "./content/About";
 
 function App(props) {
 
@@ -97,6 +98,12 @@ function App(props) {
             <Route exact path = {["/edit-product/:id"]} render = {(props) =>
                 <MainLayout content = {
                     <EditProduct id = {props.match.params.id} />
+                } {...props} />
+            }/>
+
+            <Route exact path = {["/about"]} render = {(props) =>
+                <MainLayout content = {
+                    <About />
                 } {...props} />
             }/>
         </Router>

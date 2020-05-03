@@ -64,7 +64,10 @@ function NavBar({userStore}) {
                                 onClick={() => toggleDropDown(<LoginPanel closeDropDown = {closeDropDown} />, "order-5")}>{loginLabel}</button>
                         
                         <button className="order-6 col-12 col-lg-2 nav-button"
-                                onClick={() => toggleDropDown(<Cart closeDropDown = {closeDropDown} />, "order-last")}>Kosár</button>
+                                onClick={() => toggleDropDown(<Cart closeDropDown = {closeDropDown} />, "order-7")}>Kosár</button>
+
+                        <Link className="order-8 col-12 col-lg-2 text-center nav-button"
+                              onClick={closeDropDown} to={"/about"}>Ismertető</Link>
 
                         {showDropDown &&
                             <div className={`${dropDownOrder} d-block d-lg-none nav-shadows w-100 secondary-darker-color`}>
