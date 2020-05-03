@@ -22,6 +22,7 @@ import CategoryProducts from "./content/CategoryProducts";
 import UserSettings from "./content/UserSettings";
 import UserOrders from "./content/UserOrders";
 import NewProduct from "./content/NewProduct";
+import EditProduct from "./content/EditProduct";
 
 function App(props) {
 
@@ -90,6 +91,12 @@ function App(props) {
             <Route exact path = {["/new-product"]} render = {(props) =>
                 <MainLayout content = {
                     <NewProduct />
+                } {...props} />
+            }/>
+
+            <Route exact path = {["/edit-product/:id"]} render = {(props) =>
+                <MainLayout content = {
+                    <EditProduct id = {props.match.params.id} />
                 } {...props} />
             }/>
         </Router>

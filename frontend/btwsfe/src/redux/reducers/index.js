@@ -8,7 +8,6 @@ import {
     PRODUCTS,
     RESPONSE_MESSAGE,
     THEME_STORAGE,
-    UPLOAD_RESPONSE,
     USER_ORDERS
 } from "../constants/namespaces";
 
@@ -19,7 +18,6 @@ const rootReducer = combineReducers({
     [RESPONSE_MESSAGE]: genericReducer(RESPONSE_MESSAGE),
     [CURRENT_USER]: genericReducer(CURRENT_USER),
     [USER_ORDERS]: genericReducer(USER_ORDERS),
-    [UPLOAD_RESPONSE]: genericReducer(UPLOAD_RESPONSE),
     [CART_STORAGE]: genericReducer(CART_STORAGE),
     [THEME_STORAGE]: genericReducer(THEME_STORAGE)
 });

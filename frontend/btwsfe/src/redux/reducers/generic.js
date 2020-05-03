@@ -9,13 +9,16 @@ const getInitialState = (namespace) => {
         isFetching: undefined,
         error: undefined,
 
+        isLoading: function() {
+            return this.isFetching === true;
+        },
         isReady: function() {
-            return this.error === undefined && this.data !== undefined;
+            return this.error === undefined && this.data !== undefined && this.data !== "";
         },
         getMessage: function() {
-            if (this.isFetching === true) {
+            if (this.isLoading()) {
                 return <i className="pi pi-spin pi-spinner font-size-large"/>;
-            } else if (this.error !== undefined || this.fetchedAlready === true) {
+            } else if (this.error !== undefined || (this.data !== undefined && this.data !== "")) {
                 return this.data.message;
             } else {
                 return <></>;

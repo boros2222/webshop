@@ -4,7 +4,7 @@ import Cookies from 'universal-cookie';
 export function getCookie(namespace, cookieName) {
     return function (dispatch) {
         const cookies = new Cookies();
-        let data = cookies.get(cookieName);
+        const data = cookies.get(cookieName);
         dispatch({
             type: `${namespace}/${SET_DATA}`,
             data: data,

@@ -1,5 +1,6 @@
 package eu.borostack.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,7 @@ public class Picture extends GenericEntity {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false, referencedColumnName = "id")
+    @JsonIgnore
     private Product product;
 
     @Column(name = "path", nullable = false)

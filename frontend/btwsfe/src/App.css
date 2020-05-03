@@ -5,10 +5,6 @@ html body {
   box-sizing: border-box !important;
 }
 
-*:focus {
-  outline: 0 !important;
-}
-
 /* Variables */
 :root {
   --blue-color: #03a9f4;
@@ -267,6 +263,12 @@ p {
   margin: 0;
 }
 
+.custom-border {
+  border: 2px solid var(--light-color);
+  border-radius: 0.4rem;
+  padding: 0.5rem;
+}
+
 .required::after {
   color: #df0000;
   content: "*";
@@ -354,12 +356,23 @@ div.p-accordion-content {
   border: 0 !important;
 }
 
-body .p-button {
+body .p-fileupload-disabled .p-button {
   border: 0 !important;
   background-color: var(--dark-color) !important;
+  color: #eeeeee !important;
 }
 
-body .p-button:enabled:focus {
+body .p-button {
+  border: 0 !important;
+  background-color: var(--light-color) !important;
+}
+
+body .p-carousel .p-carousel-content .p-carousel-prev:hover, body .p-carousel .p-carousel-content .p-carousel-next:hover {
+  color: white !important;
+}
+
+body .p-button:enabled:focus,
+body .p-link:focus {
   box-shadow: unset !important;
 }
 
@@ -370,8 +383,13 @@ body .p-dropdown-panel .p-dropdown-items .p-dropdown-item-group.p-highlight {
   background-color: var(--light-color) !important;
 }
 
+body .p-inputtext:enabled:focus, body .p-inputtext:enabled:hover,
 body .p-checkbox .p-checkbox-box:not(.p-disabled).p-focus,
 body .p-dropdown:not(.p-disabled).p-focus {
   border: 1px solid #a6a6a6 !important;
   box-shadow: unset !important;
+}
+
+body .p-carousel .p-carousel-dots-container .p-carousel-dot-item.p-highlight .p-carousel-dot-icon {
+  background-color: var(--dark-color) !important;
 }

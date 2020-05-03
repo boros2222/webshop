@@ -15,11 +15,33 @@ public class ProductDao extends GenericDao<Long, Product> {
         super(Product.class);
     }
 
+    @Override
+    public Product findById(Long id) {
+        QProduct product = QProduct.product;
+        return new JPAQuery<Product>(entityManager)
+                .select(product)
+                .from(product)
+                .where(product.id.eq(id)
+                        .and(product.deleted.isFalse().or(product.deleted.isNull())))
+                .fetchOne();
+    }
+
+    @Override
+    public List<Product> findAll() {
+        QProduct product = QProduct.product;
+        return new JPAQuery<Product>(entityManager)
+                .select(product)
+                .from(product)
+                .where(product.deleted.isFalse().or(product.deleted.isNull()))
+                .fetch();
+    }
+
     public List<Product> findAllWithOffsetAndLimit(final Long offset, final Long limit, final SortOrder sortOrder) {
         QProduct product = QProduct.product;
         final JPAQuery<Product> query = new JPAQuery<Product>(entityManager)
                 .select(product)
-                .from(product);
+                .from(product)
+                .where(product.deleted.isFalse().or(product.deleted.isNull()));
         return addSorting(query, sortOrder)
                 .offset(offset)
                 .limit(limit)
@@ -32,9 +54,13 @@ public class ProductDao extends GenericDao<Long, Product> {
         final JPAQuery<Product> query = new JPAQuery<Product>(entityManager)
                 .select(product)
                 .from(product)
-                .where(product.name.containsIgnoreCase(searchTerm)
-                        .or(product.description.containsIgnoreCase(searchTerm))
-                        .or(product.category.name.containsIgnoreCase(searchTerm)));
+                .where((product.deleted.isFalse().or(product.deleted.isNull()))
+                        .and(product.name.containsIgnoreCase(searchTerm)
+                                .or(product.shortDescription.containsIgnoreCase(searchTerm))
+                                .or(product.description.containsIgnoreCase(searchTerm))
+                                .or(product.category.name.containsIgnoreCase(searchTerm))
+                        )
+                );
         return addSorting(query, sortOrder)
                 .offset(offset)
                 .limit(limit)
@@ -47,7 +73,8 @@ public class ProductDao extends GenericDao<Long, Product> {
         final JPAQuery<Product> query = new JPAQuery<Product>(entityManager)
                 .select(product)
                 .from(product)
-                .where(product.category.id.eq(categoryId));
+                .where(product.category.id.eq(categoryId)
+                        .and(product.deleted.isFalse().or(product.deleted.isNull())));
         return addSorting(query, sortOrder)
                 .offset(offset)
                 .limit(limit)

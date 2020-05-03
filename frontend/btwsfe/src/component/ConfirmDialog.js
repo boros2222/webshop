@@ -32,7 +32,7 @@ function ConfirmDialog({headerText, text, onConfirm, children}) {
     return (
         <>
             {React.cloneElement(children, { onClick: showDialog })}
-            <Dialog header={header} footer={footer} visible={visible} className="container" onHide={hideDialog} modal={true} closable={false}>
+            <Dialog header={header} footer={footer} visible={visible} onHide={hideDialog} modal={true} closable={false}>
                 <p className="font-size-normal">{text}</p>
             </Dialog>
         </>

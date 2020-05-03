@@ -42,10 +42,10 @@ public class LoggedInInterceptor {
         Annotation[][] parameterAnnotations = context.getMethod().getParameterAnnotations();
         Object[] parameters = context.getParameters();
         int i = 0;
-        for(Annotation[] annotations : parameterAnnotations) {
+        for (Annotation[] annotations : parameterAnnotations) {
             Object parameter = parameters[i++];
-            for(Annotation annotation : annotations) {
-                if(annotation instanceof CheckUserId && parameter instanceof Long) {
+            for (Annotation annotation : annotations) {
+                if (annotation instanceof CheckUserId && parameter instanceof Long) {
                     return (Long) parameter;
                 }
             }

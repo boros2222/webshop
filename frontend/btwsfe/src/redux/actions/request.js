@@ -2,7 +2,6 @@ import {DO_NOTHING, REQUEST_FAILURE, REQUEST_IN_PROGRESS, REQUEST_SUCCESS} from 
 import axios from "axios";
 import store from "../store";
 import constants from "../../Constants";
-import {UPLOAD_RESPONSE} from "../constants/namespaces";
 
 export function fetchToStore(namespace, path, cacheNeeded, callback = undefined) {
     const currentState = store.getState()[namespace];
@@ -77,36 +76,3 @@ export function sendToBackend(namespace, path, data, callback = undefined) {
     }
 }
 
-export function uploadToBackend(fileData, callback = undefined) {
-    const namespace = UPLOAD_RESPONSE;
-    return function (dispatch) {
-        dispatch({
-            type: `${namespace}/${REQUEST_IN_PROGRESS}`
-        });
-
-        return axios({
-            method: 'POST',
-            url: `${constants.BACKEND_URL}/file/upload`,
-            data: fileData,
-            withCredentials: true
-        }).then(response => {
-            dispatch({
-                type: `${namespace}/${REQUEST_SUCCESS}`,
-                data: response.data
-            });
-            if (callback !== undefined) {
-                callback();
-            }
-        }).catch(error => {
-            let data = { message: "Váratlan hiba történt!" };
-            if (error.response !== undefined) {
-                data = error.response.data;
-            }
-            dispatch({
-                type: `${namespace}/${REQUEST_FAILURE}`,
-                data: data,
-                error: error
-            });
-        });
-    }
-}

@@ -2,7 +2,7 @@ import {SET_DATA} from "../constants/action-types";
 
 export function getFromStorage(namespace, key) {
     return function (dispatch) {
-        let data = JSON.parse(localStorage.getItem(key));
+        const data = JSON.parse(localStorage.getItem(key));
         dispatch({
             type: `${namespace}/${SET_DATA}`,
             data: data,

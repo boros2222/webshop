@@ -20,7 +20,7 @@ function ThemeChooser({themeStore, setThemeStore, deleteThemeStore}) {
         overlayPanel.hide();
     };
 
-    const isChoosen = (theme) => {
+    const isChosen = (theme) => {
         if (theme === "default") {
             return themeStore.data === null ? "color-button-selected" : "";
         } else {
@@ -33,19 +33,19 @@ function ThemeChooser({themeStore, setThemeStore, deleteThemeStore}) {
             <Button className="theme-button mt-2 font-weight-bold font-size-normal" type="button" label="Téma" onClick={(event) => overlayPanel.toggle(event)} />
 
             <OverlayPanel ref={(el) => setOverlayPanel(el)} dismissable={true}>
-                <div className={`color-button rounded-lg mb-2 ${isChoosen("default")}`}
+                <div className={`color-button rounded-lg mb-2 ${isChosen("default")}`}
                      style={{backgroundColor: "var(--blue-color)"}}
                      onClick={() => changeTheme("default")}/>
 
-                <div className={`color-button rounded-lg mb-2 ${isChoosen("red-theme")}`}
+                <div className={`color-button rounded-lg mb-2 ${isChosen("red-theme")}`}
                      style={{backgroundColor: "var(--red-color)"}}
                      onClick={() => changeTheme("red-theme")}/>
 
-                <div className={`color-button rounded-lg mb-2 ${isChoosen("green-theme")}`}
+                <div className={`color-button rounded-lg mb-2 ${isChosen("green-theme")}`}
                      style={{backgroundColor: "var(--green-color)"}}
                      onClick={() => changeTheme("green-theme")}/>
 
-                <div className={`color-button rounded-lg mb-2 ${isChoosen("yellow-theme")}`}
+                <div className={`color-button rounded-lg mb-2 ${isChosen("yellow-theme")}`}
                      style={{backgroundColor: "var(--yellow-color)"}}
                      onClick={() => changeTheme("yellow-theme")}/>
             </OverlayPanel>

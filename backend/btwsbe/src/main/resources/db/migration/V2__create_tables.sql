@@ -64,6 +64,7 @@ create sequence s_product;
 create table product (
     id integer,
     name varchar(255) not null,
+    short_description text,
     description text,
     price integer not null,
     category_id integer not null,

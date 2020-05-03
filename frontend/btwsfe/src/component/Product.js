@@ -8,14 +8,14 @@ function Product({product}) {
                 <Link className="d-block d-lg-none" to={"/product/" + product.id}>
                     <span className="font-size-medium">{product.name}</span>
                 </Link>
-                <img className="w-100" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80" alt=""/>
+                <img className="w-100" src={product.pictures.length ? product.pictures[0].path : "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"} alt=""/>
             </div>
             <div className="col-12 col-lg-7 w-100 h-100 primary-color">
                 <Link className="d-none d-lg-block" to={"/product/" + product.id}>
                     <span className="font-size-medium">{product.name}</span>
                 </Link>
                 <div className="mt-1 primary-color">
-                    Phasellus dignissim eu dui non condimentum. Nunc vitae nisl metus. Suspendisse a mollis diam. Suspendisse sollicitudin, metus vitae semper malesuada, odio nunc bibendum nisl, ac volutpat velit elit vitae erat. Maecenas luctus aliquet lacus, vitae rhoncus diam semper auctor. Integer accumsan massa purus, eu sodales dui sollicitudin non.
+                    {product.shortDescription.split(/\r?\n/g).map((line, index) => <p key={index}>{line}</p>)}
                 </div>
                 <div className="mt-1 primary-color">
                     Kategória:

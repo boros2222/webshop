@@ -19,14 +19,7 @@ function Register({reset, register, userStore, responseStore}) {
         return <p>Bejelentkezve nem lehet regisztrálni!</p>
     }
 
-    let message = undefined;
-    if (responseStore.error !== undefined) {
-        message = responseStore.data.message;
-    } else if (responseStore.isFetching === true) {
-        message = <i className="pi pi-spin pi-spinner font-size-large"/>;
-    } else if (responseStore.fetchedAlready === true) {
-        message = responseStore.data.message;
-    }
+    let message = responseStore.getMessage();
 
     return (
         <div className="container-fluid pb-5">
