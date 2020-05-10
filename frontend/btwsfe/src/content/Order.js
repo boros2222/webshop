@@ -32,7 +32,7 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
 
     const nextTab = () => {
         validateOnNextTab().then(valid => {
-            if (valid && activeIndex < SHIPPING_ADDRESS_TAB) {
+            if (valid && activeIndex < SHIPPING_ADDRESS_TAB + 1) {
                 setActiveIndex(activeIndex + 1);
             }
         })
@@ -40,17 +40,27 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
 
     const validateOnNextTab = async () => {
         if (activeIndex === PERSONAL_INFO_TAB) {
-            return await triggerValidation("invoiceName") &&
-                await triggerValidation("invoiceAddress.postalCode") &&
-                await triggerValidation("invoiceAddress.city") &&
-                await triggerValidation("invoiceAddress.street") &&
-                await triggerValidation("invoiceAddress.houseNumber");
+            let valid = true;
+            if (!await triggerValidation("invoiceName")) valid = false;
+            if (!await triggerValidation("invoiceAddress.postalCode")) valid = false;
+            if (!await triggerValidation("invoiceAddress.city")) valid = false;
+            if (!await triggerValidation("invoiceAddress.street")) valid = false;
+            if (!await triggerValidation("invoiceAddress.houseNumber")) valid = false;
+            return valid;
+        }
+        else if (activeIndex === SHIPPING_ADDRESS_TAB) {
+            let valid = true;
+            if (!await triggerValidation("shippingAddress.postalCode")) valid = false;
+            if (!await triggerValidation("shippingAddress.city")) valid = false;
+            if (!await triggerValidation("shippingAddress.street")) valid = false;
+            if (!await triggerValidation("shippingAddress.houseNumber")) valid = false;
+            return valid;
         }
         return true;
     };
 
     if (userStore.error !== undefined) {
-        return <p>Előbb jelentkezz be!</p>
+        return <p>A megrendeléshez be kell jelentkezni!</p>
     }
 
     let message = undefined;
@@ -80,28 +90,28 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
         <>
             <p className="font-weight-bold font-size-medium mb-3">Megrendelés leadása</p>
             <form className="order-page" onSubmit={(event) => event.preventDefault()}>
-                <Accordion activeIndex={activeIndex}
+                <Accordion activeIndex={[...Array(activeIndex + 1).keys()]} multiple={true}
                            onTabChange={(event) => setActiveIndex(event.index)}>
                     <AccordionTab header="Megrendelendő termékek" disabled={true}>
 
-                        <div className="primary-color w-100">
+                        <div className="primary-color">
                             {cart.map(cartProduct => {
                                 let product = cartProduct.product;
                                 let quantity = cartProduct.quantity;
                                 return (
-                                    <div key={product.id} className="row cart-product">
-                                        <Link className="col-12 col-lg-8 my-2" to={"/product/" + product.id}>
+                                    <div key={product.id} className="row cart-product py-1">
+                                        <Link className="col-12 col-lg-8 p-0 my-2" to={"/product/" + product.id}>
                                             <span>{product.name}</span>
                                         </Link>
-                                        <div className="col-6 col-lg-2 my-2">{quantity} db</div>
-                                        <div className="col-6 col-lg-2 my-2 text-right">
+                                        <div className="col-6 col-lg-2 p-0 my-2">{quantity} db</div>
+                                        <div className="col-6 col-lg-2 p-0 my-2 text-right">
                                             {(product.price * quantity).toLocaleString()} Ft
                                         </div>
                                     </div>
                                 );
                             })}
 
-                            <div className="cart-product elements-apart w-100">
+                            <div className="cart-product elements-apart w-100 py-3">
                                 <span className="font-weight-bold">Összesen</span>
                                 <span className="font-weight-bold">{priceSum.toLocaleString()} Ft</span>
                             </div>
@@ -114,6 +124,7 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
                             <div className="col-12 col-lg-6 primary-color">
                                 <p className="col-12 col-lg-6 d-inline-block pl-0 required">Számlázási név:</p>
                                 <input className="col-12 col-lg-6" type="text" name="invoiceName"
+                                       disabled={activeIndex > PERSONAL_INFO_TAB}
                                        defaultValue={user && user.name ? user.name : ""}
                                        ref={register({required: true})}/>
                                 {errors.invoiceName && errors.invoiceName.type === 'required' && <p className="col-12 error-message">Számlázási név megadása kötelező</p>}
@@ -123,7 +134,8 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
                             <div className="col-12 col-lg-6 primary-color">
                                 <p className="col-12 col-lg-6 d-inline-block pl-0">Email cím:</p>
                                 <input className="col-12 col-lg-6" type="text" name="email"
-                                       defaultValue={user && user.email ? user.email : ""} disabled={true}/>
+                                       disabled={true}
+                                       defaultValue={user && user.email ? user.email : ""}/>
                             </div>
                         </div>
 
@@ -131,6 +143,7 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
                             <div className="col-12 col-lg-6">
                                 <p className="font-weight-bold mt-2 font-size-normal">Számlázási cím:</p>
                                 <Address addressName="invoiceAddress" register={register} errors={errors} required={true}
+                                         disabled={activeIndex > PERSONAL_INFO_TAB}
                                          address={user && user.invoiceAddress ? user.invoiceAddress : ""}/>
                             </div>
                         </div>
@@ -140,6 +153,7 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
                             <div className="col-12 col-lg-6">
                                 <p className="font-weight-bold mt-2 font-size-normal">Szállítási cím:</p>
                                 <Address addressName="shippingAddress" register={register} errors={errors} required={true}
+                                         disabled={activeIndex > SHIPPING_ADDRESS_TAB}
                                          address={user && user.shippingAddress ? user.shippingAddress : ""}/>
                             </div>
                         </div>
@@ -150,7 +164,7 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
                             onClick={previousTab}>
                         Vissza
                     </button>
-                    {activeIndex === 2 ?
+                    {activeIndex === SHIPPING_ADDRESS_TAB + 1 ?
                         <button type="submit" className="custom-button-inverse float-right"
                                 onClick={handleSubmit(submitOrder)}>
                             Megrendelés

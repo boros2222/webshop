@@ -6,3 +6,7 @@
 .cart-product:nth-last-of-type(2) {
     border-bottom: 2px solid var(--light-color);
 }
+
+.cart-product:nth-last-of-type(1) {
+    border-bottom: 0;
+}

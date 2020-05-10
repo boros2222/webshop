@@ -14,13 +14,13 @@ function About() {
                 <p className="col-12 col-lg-3 font-weight-bold pl-4">Backend</p>
                 <p className="col-12 col-lg-9 pl-5">Java Enterprise Edition</p>
                 <p className="col-12 col-lg-3"/>
-                <p className="col-12 col-lg-9 mt-1 pl-5">JAX-RS</p>
+                <p className="col-12 col-lg-9 mt-1 pl-5">JAX-RS (RestEasy)</p>
                 <p className="col-12 col-lg-3"/>
-                <p className="col-12 col-lg-9 mt-1 pl-5">Hibernate</p>
+                <p className="col-12 col-lg-9 mt-1 pl-5">JPA (Hibernate)</p>
                 <p className="col-12 col-lg-3"/>
-                <p className="col-12 col-lg-9 mt-1 pl-5">JSON Web Token (jjwt)</p>
+                <p className="col-12 col-lg-9 mt-1 pl-5">JSON Web Token for Java</p>
                 <p className="col-12 col-lg-3"/>
-                <p className="col-12 col-lg-9 mt-1 pl-5">Wildfly alkalmazásszerver</p>
+                <p className="col-12 col-lg-9 mt-1 pl-5">WildFly alkalmazásszerver</p>
                 <p className="col-12 col-lg-3"/>
                 <p className="col-12 col-lg-9 mt-1 pl-5">PostgreSQL adatbázis</p>
             </div>

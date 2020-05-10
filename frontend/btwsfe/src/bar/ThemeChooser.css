@@ -7,12 +7,3 @@
 .theme-button.p-button, .theme-button.p-button:hover {
     color: #9f9f9f !important;
 }
-
-.color-button {
-    width: 2rem;
-    height: 2rem;
-}
-
-.color-button-selected {
-    border: 3px solid #5d5d5d;
-}

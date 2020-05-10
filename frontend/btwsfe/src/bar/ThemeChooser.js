@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {THEME_STORAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import {getFromStorage, removeFromStorage, saveToStorage} from "../redux/actions/storage";
@@ -6,50 +6,33 @@ import constants from "../Constants";
 import {Button} from "primereact/button";
 import {OverlayPanel} from "primereact/overlaypanel";
 import "./ThemeChooser.css";
+import {InputSwitch} from "primereact/inputswitch";
 
 function ThemeChooser({themeStore, setThemeStore, deleteThemeStore}) {
 
     const [overlayPanel, setOverlayPanel] = useState(undefined);
+    const [darkMode, setDarkMode] = useState(false);
 
-    const changeTheme = (theme) => {
-        if (theme === "default") {
-            deleteThemeStore();
+    useEffect(() => {
+        setDarkMode(themeStore.data === "dark-theme")
+    }, [themeStore]);
+
+    const switchDarkMode = (turnedOn) => {
+        if (turnedOn) {
+            setThemeStore("dark-theme");
         } else {
-            setThemeStore(theme);
+            deleteThemeStore();
         }
         overlayPanel.hide();
     };
 
-    const isChosen = (theme) => {
-        if (theme === "default") {
-            return themeStore.data === null ? "color-button-selected" : "";
-        } else {
-            return themeStore.data === theme ? "color-button-selected" : "";
-        }
-    };
-
     return (
-        <div className="d-flex justify-content-end">
-            <Button className="theme-button mt-2 font-weight-bold font-size-normal" type="button" label="Téma" onClick={(event) => overlayPanel.toggle(event)} />
-
+        <>
+            <Button className="theme-button mt-2 font-weight-bold font-size-normal" type="button" label="Sötét mód" onClick={(event) => overlayPanel.toggle(event)} />
             <OverlayPanel ref={(el) => setOverlayPanel(el)} dismissable={true}>
-                <div className={`color-button rounded-lg mb-2 ${isChosen("default")}`}
-                     style={{backgroundColor: "var(--blue-color)"}}
-                     onClick={() => changeTheme("default")}/>
-
-                <div className={`color-button rounded-lg mb-2 ${isChosen("red-theme")}`}
-                     style={{backgroundColor: "var(--red-color)"}}
-                     onClick={() => changeTheme("red-theme")}/>
-
-                <div className={`color-button rounded-lg mb-2 ${isChosen("green-theme")}`}
-                     style={{backgroundColor: "var(--green-color)"}}
-                     onClick={() => changeTheme("green-theme")}/>
-
-                <div className={`color-button rounded-lg mb-2 ${isChosen("yellow-theme")}`}
-                     style={{backgroundColor: "var(--yellow-color)"}}
-                     onClick={() => changeTheme("yellow-theme")}/>
+                <InputSwitch checked={darkMode} onChange={event => switchDarkMode(event.value)} />
             </OverlayPanel>
-        </div>
+        </>
     )
 }
 

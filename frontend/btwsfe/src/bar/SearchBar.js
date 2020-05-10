@@ -24,7 +24,7 @@ function SearchBar(props) {
         <>
             <div className="secondary-color">
                 <form className="container secondary-color pt-2 pt-lg-1 pl-4 pr-4 pb-4" onSubmit={handleSubmit}>
-                    <div className="row bg-white rounded-lg px-3 py-2 secondary-color">
+                    <div className="row rounded-lg px-3 py-2 secondary-color" style={{backgroundColor: "var(--lightest-color)"}}>
                         <input className="col-11 pl-1 p-0 font-size-normal" type="text" name="search" placeholder="Keresés a termékek között..."
                                value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
                         <div className="col-1 p-0 primary-color d-flex justify-content-end">
