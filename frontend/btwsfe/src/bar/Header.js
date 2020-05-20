@@ -1,11 +1,9 @@
 import React from 'react';
-import '../App.css';
-
 import SearchBar from './SearchBar';
 import NavBar from './NavBar';
 import ThemeChooser from "./ThemeChooser";
 
-function Header({searchTerm}) {
+function Header({searchTerm, setContentHeight}) {
     return (
         <>
             <div className="secondary-color">
@@ -20,7 +18,7 @@ function Header({searchTerm}) {
                 <SearchBar key = {searchTerm} searchTerm = {searchTerm}/>
             </div>
             <div className="secondary-darker-color">
-                <NavBar/>
+                <NavBar setContentHeight={setContentHeight}/>
             </div>
         </>
     )

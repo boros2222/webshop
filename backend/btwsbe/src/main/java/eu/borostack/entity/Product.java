@@ -43,7 +43,6 @@ public class Product extends GenericEntity {
     @OneToMany(mappedBy="product", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Picture> pictures = new ArrayList<>();
 
-    @JsonIgnore
     @Column(name = "deleted")
     private Boolean deleted;
 

@@ -20,6 +20,9 @@ public class OrderDetailsView extends GenericEntity implements Serializable {
     @Column(name = "user_account_id")
     private Long userAccountId;
 
+    @Column(name = "user_account_email")
+    private String userAccountEmail;
+
     @Column(name = "product_count")
     private Long productCount;
 
@@ -39,6 +42,10 @@ public class OrderDetailsView extends GenericEntity implements Serializable {
 
     @Column(name = "order_date")
     private LocalDateTime orderDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private OrderStatus status;
 
     @Override
     public Long getId() {

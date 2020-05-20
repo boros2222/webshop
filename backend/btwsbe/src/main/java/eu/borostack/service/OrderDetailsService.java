@@ -5,6 +5,7 @@ import eu.borostack.dao.OrderedProductDao;
 import eu.borostack.dao.ProductDao;
 import eu.borostack.dao.UserAccountDao;
 import eu.borostack.entity.*;
+import eu.borostack.exception.RestProcessException;
 import eu.borostack.util.ResponseFactory;
 
 import javax.inject.Inject;
@@ -67,6 +68,7 @@ public class OrderDetailsService {
                     final OrderedProduct orderedProduct = new OrderedProduct();
                     orderedProduct.setOrderDetails(savedOrder);
                     orderedProduct.setProduct(product);
+                    orderedProduct.setPrice(product.getPrice());
                     orderedProduct.setQuantity(incomingOrderedProduct.getQuantity());
                     orderedProductDao.save(orderedProduct);
                 }
@@ -78,8 +80,26 @@ public class OrderDetailsService {
         }
     }
 
-    public List<OrderDetailsView> getOrdersByUserAccountId(final Long userAccountId) {
-        return orderDetailsDao.findAllOrderDetailsViewByUserAccountId(userAccountId);
+    public List<OrderDetailsView> getOrdersByUserAccountIdAndStatus(final Long userAccountId, final OrderStatus status) {
+        return orderDetailsDao.findAllOrderDetailsViewsByUserAccountIdAndStatus(userAccountId, status);
+    }
+
+    public List<OrderDetailsView> getOrdersByStatus(final OrderStatus status) {
+        return orderDetailsDao.findAllOrderDetailsViewsByStatus(status);
+    }
+
+    public void editOrderStatus(final Long orderDetailsId, final OrderStatus status) throws RestProcessException {
+        if (status == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "A megadott státusz helytelen!", true, 400));
+        }
+        final OrderDetails orderDetails = orderDetailsDao.findById(orderDetailsId);
+        if (orderDetails == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "A rendelés nem található!", true, 400));
+        }
+        orderDetails.setStatus(status);
+        orderDetailsDao.save(orderDetails);
     }
 
     public OrderDetails save(OrderDetails orderDetails) {

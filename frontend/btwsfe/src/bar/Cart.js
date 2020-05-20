@@ -3,7 +3,7 @@ import {CART_STORAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 
-function Cart({cartStore}) {
+function Cart({closeDropDown, cartStore}) {
 
     let cart = cartStore.data;
 
@@ -28,7 +28,7 @@ function Cart({cartStore}) {
                         </p>
                     </div>
                     <div className="col-12 col-lg-4 secondary-darker-color flex-center">
-                        <Link className="custom-button" to={"/cart"}>
+                        <Link className="custom-button" onClick={() => closeDropDown()} to={"/cart"}>
                             <span className="font-size-normal">Tovább a kosár tartalmához</span>
                         </Link>
                     </div>
@@ -41,6 +41,6 @@ function Cart({cartStore}) {
 const mapDispatchToProps = (dispatch) => ({
 });
 const mapStateToProps = (state) => ({
-    cartStore: state[CART_STORAGE],
+    cartStore: state[CART_STORAGE]
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Cart);

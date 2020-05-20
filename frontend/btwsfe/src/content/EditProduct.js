@@ -44,7 +44,7 @@ function EditProduct({id, reset, userStore, responseStore, editProduct, loadProd
             <ProductForm product={productDetailsStore.data} onSubmit={onSubmit} buttonLabel="Mentés"/>
             <button onClick={() => history.push(`/product/${productDetailsStore.data.id}`)}
                     className="custom-button font-weight-bold">
-                Vissza a termék adatlapra
+                Vissza a termékhez
             </button>
             <div className="mt-2 primary-color">
                 <p className="font-weight-bold">{message}</p>
@@ -58,9 +58,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(fetchToStore(PRODUCT_DETAILS, `/product/${productId}`, false))
     },
     editProduct: (product, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, "/product/edit", product, callback)),
-    reset: () => dispatch({
-        type: `${RESPONSE_MESSAGE}/${RESET}`
-    })
+    reset: () => dispatch({type: `${RESPONSE_MESSAGE}/${RESET}`})
 });
 const mapStateToProps = state => ({
     productDetailsStore: state[PRODUCT_DETAILS],

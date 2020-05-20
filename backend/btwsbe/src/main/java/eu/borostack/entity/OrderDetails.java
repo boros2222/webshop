@@ -37,11 +37,16 @@ public class OrderDetails extends GenericEntity implements Serializable {
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private OrderStatus status;
+
     @Transient
     private List<OrderedProduct> orderedProducts;
 
     @PrePersist
     private void init() {
         setOrderDate(LocalDateTime.now());
+        setStatus(OrderStatus.IN_PROGRESS);
     }
 }

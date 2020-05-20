@@ -4,6 +4,8 @@ import {
     CART_STORAGE,
     CATEGORY,
     CURRENT_USER,
+    ORDER_STATUS,
+    ORDERED_PRODUCTS,
     PRODUCT_DETAILS,
     PRODUCTS,
     RESPONSE_MESSAGE,
@@ -19,7 +21,9 @@ const rootReducer = combineReducers({
     [CURRENT_USER]: genericReducer(CURRENT_USER),
     [USER_ORDERS]: genericReducer(USER_ORDERS),
     [CART_STORAGE]: genericReducer(CART_STORAGE),
-    [THEME_STORAGE]: genericReducer(THEME_STORAGE)
+    [THEME_STORAGE]: genericReducer(THEME_STORAGE),
+    [ORDER_STATUS]: genericReducer(ORDER_STATUS),
+    [ORDERED_PRODUCTS]: genericReducer(ORDERED_PRODUCTS)
 });
 
 export default rootReducer;

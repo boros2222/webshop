@@ -18,6 +18,7 @@ public class OrderedProductDao extends GenericDao<Long, OrderedProduct> {
         QOrderedProduct orderedProduct = QOrderedProduct.orderedProduct;
         return new JPAQuery<OrderedProduct>(entityManager)
                 .select(orderedProduct)
+                .from(orderedProduct)
                 .where(orderedProduct.orderDetails.id.eq(orderDetailsId))
                 .fetch();
     }

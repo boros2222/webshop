@@ -68,4 +68,8 @@ public class UserAccount extends GenericEntity {
         setDeleted(false);
     }
 
+    @Transient
+    public boolean isAdmin() {
+        return userRoles.stream().map(UserRole::getRole).anyMatch(Role.ADMIN::equals);
+    }
 }

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import './NavBar.css';
 import LoginPanel from './LoginPanel';
@@ -7,11 +7,13 @@ import {CURRENT_USER} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import Cart from "./Cart";
 
-function NavBar({userStore}) {
+function NavBar({userStore, setContentHeight}) {
 
     const [showDropDown, setShowDropDown] = useState(false);
     const [dropDownElement, setDropDownElement] = useState(<></>);
     const [dropDownOrder, setDropDownOrder] = useState("");
+
+    useEffect(setContentHeight);
 
     const toggleDropDown = (element, order) => {
         if (dropDownElement.type === element.type) {
@@ -52,7 +54,7 @@ function NavBar({userStore}) {
     return (
         <>
             <div className="secondary-darker-color">
-                <div className="container-lg secondary-darker-color">
+                <div className="container-lg secondary-darker-color p-0">
                     <div className="row nav-container pt-1 secondary-darker-color">
                         <Link className="order-0 col-12 col-lg-2 text-center nav-button"
                               onClick={closeDropDown} to={"/"}>Termékek</Link>
@@ -63,8 +65,10 @@ function NavBar({userStore}) {
                         <button className="order-4 col-12 col-lg-2 nav-button"
                                 onClick={() => toggleDropDown(<LoginPanel closeDropDown = {closeDropDown} />, "order-5")}>{loginLabel}</button>
                         
-                        <button className="order-6 col-12 col-lg-2 nav-button"
-                                onClick={() => toggleDropDown(<Cart closeDropDown = {closeDropDown} />, "order-7")}>Kosár</button>
+                        {!userStore.isAdmin() &&
+                            <button className="order-6 col-12 col-lg-2 nav-button"
+                                    onClick={() => toggleDropDown(<Cart closeDropDown = {closeDropDown} />, "order-7")}>Kosár</button>
+                        }
 
                         <Link className="order-8 col-12 col-lg-2 text-center nav-button"
                               onClick={closeDropDown} to={"/about"}>Ismertető</Link>
@@ -88,7 +92,6 @@ function NavBar({userStore}) {
 
 const mapDispatchToProps = dispatch => ({
 });
-
 const mapStateToProps = state => ({
     userStore: state[CURRENT_USER]
 });

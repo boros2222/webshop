@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -26,9 +27,13 @@ public class OrderedProduct extends GenericEntity {
     @JoinColumn(name = "product_id", nullable = false, referencedColumnName = "id")
     private Product product;
 
+    @Column(name = "price")
+    private Long price;
+
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
+    @JsonIgnore
     @Transient
     public boolean isValid() {
         return product != null && product.getId() != null && quantity != null;

@@ -21,8 +21,7 @@ public class ProductDao extends GenericDao<Long, Product> {
         return new JPAQuery<Product>(entityManager)
                 .select(product)
                 .from(product)
-                .where(product.id.eq(id)
-                        .and(product.deleted.isFalse().or(product.deleted.isNull())))
+                .where(product.id.eq(id))
                 .fetchOne();
     }
 

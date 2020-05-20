@@ -6,18 +6,20 @@ html body {
 
 /* Variables */
 #main-layout.dark-theme {
-  background-color: #595959;
+  --bg-color: #595959;
   --lightest-color: #3d3d3d;
-  --secondary-darker-color-second: white;
+  --darkest-color: #ffffff;
+  --secondary-darker-color-second: #ffffff;
   --secondary-darker-color-placeholder: #ffffff;
   --secondary-color-placeholder: #ffffff;
 }
 
 #main-layout {
-  background-color: #e8e8e8;
+  --bg-color: #f5f5f5;
   --lightest-color: #ffffff;
   --light-color: #03a9f4;
   --dark-color: #007ac1;
+  --darkest-color: #000000;
 
   --primary-color-first: var(--lightest-color);
   --primary-color-second: var(--light-color);
@@ -33,6 +35,8 @@ html body {
   --secondary-darker-color-second: var(--lightest-color);
   --secondary-darker-color-placeholder: #888888;
   --secondary-darker-color-hover: #c4c4c4;
+
+  background-color: var(--bg-color);
 }
 
 /* Primary color */
@@ -265,12 +269,6 @@ p.error-message {
   margin-bottom: 1em;
 }
 
-p.error-message-secondary {
-  color: rgb(235, 230, 0);
-  margin-top: 0.3em;
-  margin-bottom: 0.7em;
-}
-
 button.red-button {
   color: #df0000;
   border-color: #df0000;
@@ -315,75 +313,75 @@ button.red-button:hover {
 }
 
 /* Primereact */
-body .p-datascroller .p-datascroller-content {
+.p-datascroller .p-datascroller-content {
   border: 0 !important;
   padding: 0 !important;
 }
 
 ul.p-datascroller-list > li {
-  border-bottom: 1px solid #e4e4e4 !important;
+  border-bottom: 1px solid var(--bg-color) !important;
 }
 
 ul.p-datascroller-list > li:last-child {
   border-bottom: 0 !important;
 }
 
-div.p-dialog.p-component {
+.p-dialog.p-component {
   border-radius: 2em !important;
 }
 
-div.p-dialog-titlebar {
+.p-dialog-titlebar {
   border-radius: 2em 2em 0 0 !important;
 }
 
-div.p-dialog-footer {
+.p-dialog-footer {
   border-radius: 0 0 2em 2em !important;
 }
 
-div.p-accordion-content {
+.p-accordion-content {
   border: 0 !important;
 }
 
-body .p-fileupload-disabled .p-button {
+.p-fileupload-disabled .p-button {
   border: 0 !important;
   background-color: var(--dark-color) !important;
   color: #eeeeee !important;
 }
 
-body .p-button {
+.p-button {
   border: 0 !important;
   background-color: var(--light-color) !important;
 }
 
-body .p-carousel .p-carousel-content .p-carousel-prev:hover, body .p-carousel .p-carousel-content .p-carousel-next:hover {
+.p-carousel .p-carousel-content .p-carousel-prev:hover, body .p-carousel .p-carousel-content .p-carousel-next:hover {
   color: white !important;
 }
 
-body .p-button:enabled:focus,
-body .p-link:focus {
+.p-button:enabled:focus,
+.p-link:focus {
   box-shadow: unset !important;
 }
 
-body .p-checkbox .p-checkbox-box.p-highlight,
-body .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight,
-body .p-dropdown-panel .p-dropdown-items .p-dropdown-item-group.p-highlight {
+.p-checkbox .p-checkbox-box.p-highlight,
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight,
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item-group.p-highlight {
   border: 1px solid #a6a6a6 !important;
   background-color: var(--light-color) !important;
 }
 
-body .p-inputtext:enabled:focus, body .p-inputtext:enabled:hover,
-body .p-checkbox .p-checkbox-box:not(.p-disabled).p-focus,
-body .p-dropdown:not(.p-disabled).p-focus {
+.p-inputtext:enabled:focus, body .p-inputtext:enabled:hover,
+.p-checkbox .p-checkbox-box:not(.p-disabled).p-focus,
+.p-dropdown:not(.p-disabled).p-focus {
   border: 1px solid #a6a6a6 !important;
   box-shadow: unset !important;
 }
 
-body .p-carousel .p-carousel-dots-container .p-carousel-dot-item.p-highlight .p-carousel-dot-icon {
+.p-carousel .p-carousel-dots-container .p-carousel-dot-item.p-highlight .p-carousel-dot-icon {
   background-color: var(--dark-color) !important;
 }
 
-body .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider,
-body .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:hover {
+.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider,
+.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:hover {
   background-color: var(--dark-color) !important;
 }
 
@@ -392,6 +390,72 @@ body .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:hover {
   padding: 1rem 0.5rem 1rem 0.5rem !important;
 }
 
-.p-accordion-tab, .p-accordion-header.p-disabled {
+.p-accordion-tab, .p-accordion-header.p-disabled,
+.p-datatable .p-sortable-column.p-highlight {
   background-color: var(--dark-color) !important;
+}
+
+.p-tabview.p-tabview-top .p-tabview-nav li.p-highlight a,
+.p-tabview.p-tabview-bottom .p-tabview-nav li.p-highlight a,
+.p-tabview.p-tabview-left .p-tabview-nav li.p-highlight a,
+.p-tabview.p-tabview-right .p-tabview-nav li.p-highlight a {
+  background-color: var(--dark-color) !important;
+  border-color: var(--dark-color) !important;
+}
+
+.p-dialog .p-dialog-content,
+.p-tabview .p-tabview-panels {
+  background-color: var(--lightest-color) !important;
+  border-color: var(--lightest-color) !important;
+}
+
+.p-dialog .p-dialog-titlebar,
+.p-dialog .p-dialog-footer {
+  background-color: var(--bg-color) !important;
+  border-color: var(--bg-color) !important;
+}
+
+.p-tabview .p-tabview-panels {
+  padding: 1rem 0 0 0 !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:nth-child(2n) > td {
+  background-color: var(--bg-color) !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:nth-child(2n+1) > td {
+  background-color: var(--lightest-color) !important;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  color: var(--light-color) !important;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  background-color: var(--bg-color) !important;
+  color: var(--darkest-color) !important;
+}
+
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr > td {
+  border-color: var(--lightest-color) !important;
+}
+
+.p-dialog-title {
+  color: var(--light-color) !important;
+}
+
+.p-tabview.p-tabview-top .p-tabview-nav li:not(.p-tabview-selected) a,
+.p-tabview.p-tabview-bottom .p-tabview-nav li:not(.p-tabview-selected) a,
+.p-tabview.p-tabview-left .p-tabview-nav li:not(.p-tabview-selected) a,
+.p-tabview.p-tabview-right .p-tabview-nav li:not(.p-tabview-selected) a {
+  background-color: var(--bg-color) !important;
+  border-color: var(--bg-color) !important;
+  color: var(--darkest-color) !important;
+}
+
+.p-dropdown, .p-inputtext, .p-dropdown-trigger {
+  background-color: var(--light-color) !important;
+  color: #ffffff !important;
+  border-color: var(--lightest-color) !important;
 }

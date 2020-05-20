@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
 import React, {useEffect} from 'react';
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import MainLayout from './layout/MainLayout';
 import Products from './content/Products';
 import ProductDetails from './content/ProductDetails';
@@ -25,87 +25,95 @@ import NewProduct from "./content/NewProduct";
 import EditProduct from "./content/EditProduct";
 import About from "./content/About";
 
-function App(props) {
+function App({getCurrentUser, getCart, getTheme}) {
 
     useEffect(() => {
-        props.getCurrentUser();
-        props.getCart();
-        props.getTheme();
-    }, [props]);
+        getCurrentUser();
+        getCart();
+        getTheme();
+    }, [getCart, getCurrentUser, getTheme]);
 
     return (
         <Router>
-            <Route exact path = {["/", "/products"]} render = {(props) =>
-                <MainLayout content = {
-                    <Products />
-                } {...props} />
-            }/>
+            <Switch>
+                <Route exact path = {["/", "/products"]} render = {(props) =>
+                    <MainLayout content = {
+                        <Products />
+                    } {...props} />
+                }/>
 
-            <Route exact path = "/product/:id" render = {(props) =>
-                <MainLayout content = {
-                    <ProductDetails id = {props.match.params.id} />
-                } {...props} />
-            }/>
+                <Route exact path = "/product/:id" render = {(props) =>
+                    <MainLayout content = {
+                        <ProductDetails id = {props.match.params.id} />
+                    } {...props} />
+                }/>
 
-            <Route exact path = "/register" render = {(props) =>
-                <MainLayout content = {
-                    <Register />
-                } {...props} />
-            }/>
+                <Route exact path = "/register" render = {(props) =>
+                    <MainLayout content = {
+                        <Register />
+                    } {...props} />
+                }/>
 
-            <Route exact path = "/cart" render = {(props) =>
-                <MainLayout content = {
-                    <CartDetails />
-                } {...props} />
-            }/>
+                <Route exact path = "/cart" render = {(props) =>
+                    <MainLayout content = {
+                        <CartDetails />
+                    } {...props} />
+                }/>
 
-            <Route exact path = "/order" render = {(props) =>
-                <MainLayout content = {
-                    <Order />
-                } {...props} />
-            }/>
+                <Route exact path = "/order" render = {(props) =>
+                    <MainLayout content = {
+                        <Order />
+                    } {...props} />
+                }/>
 
-            <Route exact path = {["/search/:searchTerm", "/search/"]} render = {(props) =>
-                <MainLayout content = {
-                    <SearchResult key = {props.match.params.searchTerm} searchTerm = {props.match.params.searchTerm} />
-                } {...props} />
-            }/>
+                <Route exact path = {["/search/:searchTerm", "/search/"]} render = {(props) =>
+                    <MainLayout content = {
+                        <SearchResult key = {props.match.params.searchTerm} searchTerm = {props.match.params.searchTerm} />
+                    } {...props} />
+                }/>
 
-            <Route exact path = "/category/:id" render = {(props) =>
-                <MainLayout content = {
-                    <CategoryProducts key = {props.match.params.id} categoryId = {props.match.params.id} />
-                } {...props} />
-            }/>
+                <Route exact path = "/category/:id" render = {(props) =>
+                    <MainLayout content = {
+                        <CategoryProducts key = {props.match.params.id} categoryId = {props.match.params.id} />
+                    } {...props} />
+                }/>
 
-            <Route exact path = {["/settings"]} render = {(props) =>
-                <MainLayout content = {
-                    <UserSettings />
-                } {...props} />
-            }/>
+                <Route exact path = "/settings" render = {(props) =>
+                    <MainLayout content = {
+                        <UserSettings />
+                    } {...props} />
+                }/>
 
-            <Route exact path = {["/orders"]} render = {(props) =>
-                <MainLayout content = {
-                    <UserOrders />
-                } {...props} />
-            }/>
+                <Route exact path = "/orders" render = {(props) =>
+                    <MainLayout content = {
+                        <UserOrders />
+                    } {...props} />
+                }/>
 
-            <Route exact path = {["/new-product"]} render = {(props) =>
-                <MainLayout content = {
-                    <NewProduct />
-                } {...props} />
-            }/>
+                <Route exact path = "/new-product" render = {(props) =>
+                    <MainLayout content = {
+                        <NewProduct />
+                    } {...props} />
+                }/>
 
-            <Route exact path = {["/edit-product/:id"]} render = {(props) =>
-                <MainLayout content = {
-                    <EditProduct id = {props.match.params.id} />
-                } {...props} />
-            }/>
+                <Route exact path = "/edit-product/:id" render = {(props) =>
+                    <MainLayout content = {
+                        <EditProduct id = {props.match.params.id} />
+                    } {...props} />
+                }/>
 
-            <Route exact path = {["/about"]} render = {(props) =>
-                <MainLayout content = {
-                    <About />
-                } {...props} />
-            }/>
+                <Route exact path = "/about" render = {(props) =>
+                    <MainLayout content = {
+                        <About />
+                    } {...props} />
+                }/>
+
+                <Route exact path = "*" render = {(props) =>
+                    <MainLayout content = {
+                        <>A keresett oldal nem található!</>
+                    } {...props} />
+                }/>
+            </Switch>
         </Router>
     )
 }

@@ -29,7 +29,7 @@ function MainLayout({themeStore, content, match}) {
     return (
         <div id="main-layout" className={themeStore.data}>
             <div className="w-100" ref={headerRef}>
-                <Header searchTerm = {match.params.searchTerm}/>
+                <Header searchTerm = {match.params.searchTerm} setContentHeight={setContentHeight}/>
             </div>
 
             <div className="container px-0 py-5" ref={contentRef}>

@@ -45,7 +45,7 @@ public class AuthenticationService {
         boolean hasPermission = false;
 
         UserAccount loggedInUser = checkLoggedInUser();
-        if (loggedInUser != null)  {
+        if (loggedInUser != null) {
             hasPermission = true;
             if (roles != null && !roles.isEmpty()) {
                 hasPermission = loggedInUser.getUserRoles().stream()
@@ -54,7 +54,7 @@ public class AuthenticationService {
                         .anyMatch(roles::contains);
             }
             if (userAccountId != null) {
-                hasPermission = hasPermission && loggedInUser.getId().equals(userAccountId);
+                hasPermission = hasPermission && (loggedInUser.getId().equals(userAccountId) || loggedInUser.isAdmin());
             }
         }
 

@@ -8,7 +8,7 @@ import {fetchToStore, sendToBackend} from "../redux/actions/request";
 import {removeCookie} from "../redux/actions/cookie";
 import {useForm} from "react-hook-form";
 
-function LoginPanel({userStore, responseStore, login, logout, reset}) {
+function LoginPanel({closeDropDown, userStore, responseStore, login, logout, reset}) {
 
     const {register, handleSubmit, errors} = useForm();
 
@@ -30,14 +30,18 @@ function LoginPanel({userStore, responseStore, login, logout, reset}) {
                 <div className="row">
                     <div className="col-12 col-lg-6 order-1 order-lg-0 secondary-darker-color">
                         <div className="secondary-darker-color mb-2">
-                            <Link className="custom-button text-center d-inline-block" to={"/orders"}>Rendeléseim</Link>
+                            <Link className="custom-button text-center d-inline-block" onClick={() => closeDropDown()} to={"/orders"}>
+                                {userStore.isAdmin() ? "Rendelések" : "Rendeléseim"}
+                            </Link>
                         </div>
-                        <div className="secondary-darker-color mb-2">
-                            <Link className="custom-button text-center d-inline-block" to={"/settings"}>Adataim módosítása</Link>
-                        </div>
+                        {!userStore.isAdmin() &&
+                            <div className="secondary-darker-color mb-2">
+                                <Link className="custom-button text-center d-inline-block" onClick={() => closeDropDown()} to={"/settings"}>Adataim módosítása</Link>
+                            </div>
+                        }
                         {userStore.isAdmin() &&
                             <div className="secondary-darker-color mb-2">
-                                <Link className="custom-button text-center d-inline-block" to={"/new-product"}>Új termék</Link>
+                                <Link className="custom-button text-center d-inline-block" onClick={() => closeDropDown()} to={"/new-product"}>Új termék hozzáadása</Link>
                             </div>
                         }
                         <div className="secondary-darker-color mb-2">
@@ -64,13 +68,13 @@ function LoginPanel({userStore, responseStore, login, logout, reset}) {
                                     <p className="col-12 col-lg-4">Email cím:</p>
                                     <input className="col-12 col-lg-8" type="email" name="email"
                                            ref={register({required: "Email cím megadása kötelező"})}/>
-                                    <p className="col-12 error-message-secondary">{errors.email && errors.email.message}</p>
+                                    <p className="col-12 pl-5">{errors.email && errors.email.message}</p>
                                 </div>
                                 <div className="row secondary-darker-color">
                                     <p className="col-12 col-lg-4">Jelszó:</p>
                                     <input className="col-12 col-lg-8" type="password" name="password"
                                            ref={register({required: "Jelszó megadása kötelező", minLength: {value: 8, message: "A jelszónak legalább 8 karakternek kell lenni"}})}/>
-                                    <p className="col-12 error-message-secondary">{errors.password && errors.password.message}</p>
+                                    <p className="col-12 pl-5">{errors.password && errors.password.message}</p>
                                 </div>
                             </div>
                             <div className="col-12 col-lg-3 secondary-darker-color d-flex align-items-center justify-content-center">
@@ -85,7 +89,7 @@ function LoginPanel({userStore, responseStore, login, logout, reset}) {
                             </div>
 
                             <div className="col-12 mt-2 secondary-darker-color">
-                                <p className="error-message-secondary">{message}</p>
+                                {message}
                             </div>
                         </div>
                     </form>

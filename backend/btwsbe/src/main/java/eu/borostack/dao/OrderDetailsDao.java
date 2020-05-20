@@ -3,6 +3,7 @@ package eu.borostack.dao;
 import com.querydsl.jpa.impl.JPAQuery;
 import eu.borostack.entity.OrderDetails;
 import eu.borostack.entity.OrderDetailsView;
+import eu.borostack.entity.OrderStatus;
 import eu.borostack.entity.QOrderDetailsView;
 
 import javax.transaction.Transactional;
@@ -15,13 +16,28 @@ public class OrderDetailsDao extends GenericDao<Long, OrderDetails> {
         super(OrderDetails.class);
     }
 
-    public List<OrderDetailsView> findAllOrderDetailsViewByUserAccountId(final Long userAccountId) {
+    public List<OrderDetailsView> findAllOrderDetailsViewsByUserAccountIdAndStatus(final Long userAccountId, final OrderStatus status) {
         final QOrderDetailsView orderDetailsView = QOrderDetailsView.orderDetailsView;
-        return new JPAQuery<OrderDetailsView>(entityManager)
+        JPAQuery<OrderDetailsView> query = new JPAQuery<OrderDetailsView>(entityManager)
                 .select(orderDetailsView)
                 .from(orderDetailsView)
                 .where(orderDetailsView.userAccountId.eq(userAccountId))
-                .orderBy(orderDetailsView.orderDate.desc())
-                .fetch();
+                .orderBy(orderDetailsView.orderDate.desc());
+        if (status != null) {
+            query = query.where(orderDetailsView.status.eq(status));
+        }
+        return query.fetch();
+    }
+
+    public List<OrderDetailsView> findAllOrderDetailsViewsByStatus(final OrderStatus status) {
+        final QOrderDetailsView orderDetailsView = QOrderDetailsView.orderDetailsView;
+        JPAQuery<OrderDetailsView> query = new JPAQuery<OrderDetailsView>(entityManager)
+                .select(orderDetailsView)
+                .from(orderDetailsView)
+                .orderBy(orderDetailsView.orderDate.desc());
+        if (status != null) {
+            query = query.where(orderDetailsView.status.eq(status));
+        }
+        return query.fetch();
     }
 }

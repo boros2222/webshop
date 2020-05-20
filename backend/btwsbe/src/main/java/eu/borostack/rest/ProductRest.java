@@ -99,7 +99,7 @@ public class ProductRest {
     public Response delete(@PathParam("id") Long productId) {
         try {
             productService.deleteProduct(productId);
-            return ResponseFactory.createMessageResponse("Termék sikeresen törölve!", false);
+            return ResponseFactory.createMessageResponse("Termék sikeresen törölve", false);
         } catch (RestProcessException exception) {
             return exception.getResponse();
         }

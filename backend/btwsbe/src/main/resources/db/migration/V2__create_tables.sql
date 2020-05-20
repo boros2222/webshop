@@ -45,6 +45,7 @@ create table order_details (
     invoice_address_id integer not null,
     invoice_name varchar(255) not null,
     order_date date not null,
+    status varchar(255) not null,
 
     constraint order_pk primary key (id),
     constraint order_fk_1 foreign key (user_account_id) references user_account(id),
@@ -90,6 +91,7 @@ create table ordered_product (
     id integer,
     order_details_id integer not null,
     product_id integer not null,
+    price integer not null,
     quantity integer not null,
 
     constraint ordered_product_uq unique (order_details_id, product_id),
