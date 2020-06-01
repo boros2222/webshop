@@ -35,6 +35,27 @@ public class UserAccountDao extends GenericDao<Long, UserAccount> {
                 .fetch();
     }
 
+    public List<UserAccount> findAllWithOffsetAndLimit(final Long offset, final Long limit) {
+        QUserAccount userAccount = QUserAccount.userAccount;
+        return new JPAQuery<UserAccount>(entityManager)
+                .select(userAccount)
+                .from(userAccount)
+                .where(userAccount.deleted.isFalse().or(userAccount.deleted.isNull()))
+                .orderBy(userAccount.registrationDate.desc())
+                .offset(offset)
+                .limit(limit)
+                .fetch();
+    }
+
+    public long countAll() {
+        QUserAccount userAccount = QUserAccount.userAccount;
+        return new JPAQuery<UserAccount>(entityManager)
+                .select(userAccount)
+                .from(userAccount)
+                .where(userAccount.deleted.isFalse().or(userAccount.deleted.isNull()))
+                .fetchCount();
+    }
+
     public UserAccount findByEmail(String email) {
         QUserAccount userAccount = QUserAccount.userAccount;
         return new JPAQuery<UserAccount>(entityManager)

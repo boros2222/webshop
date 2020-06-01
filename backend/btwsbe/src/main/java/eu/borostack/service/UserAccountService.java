@@ -3,7 +3,7 @@ package eu.borostack.service;
 import eu.borostack.dao.UserAccountDao;
 import eu.borostack.entity.Role;
 import eu.borostack.entity.UserAccount;
-import eu.borostack.entity.UserRole;
+import eu.borostack.exception.RestProcessException;
 import eu.borostack.util.ResponseFactory;
 import eu.borostack.util.ValidationUtil;
 import org.mindrot.jbcrypt.BCrypt;
@@ -95,7 +95,6 @@ public class UserAccountService {
 
     private UserAccount createUser(final UserAccount userAccount) {
         createHash(userAccount);
-        createDefaultRole(userAccount);
         createAddresses(userAccount);
         return userAccountDao.create(userAccount);
     }
@@ -106,14 +105,6 @@ public class UserAccountService {
         userAccount.setPassword(" ");
         userAccount.setSalt(salt);
         userAccount.setHash(hashed);
-        return userAccount;
-    }
-
-    private UserAccount createDefaultRole(final UserAccount userAccount) {
-        UserRole userRole = new UserRole();
-        userRole.setUserAccount(userAccount);
-        userRole.setRole(Role.USER);
-        userAccount.getUserRoles().add(userRole);
         return userAccount;
     }
 
@@ -163,6 +154,32 @@ public class UserAccountService {
         } else {
             return ResponseFactory.createMessageResponse("Felhasználó módosítása sikertelen!", true, 400);
         }
+    }
+
+    public void editUserRole(Long userAccoutId, Role role) throws RestProcessException {
+        if (role == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "A megadott jogosultság helytelen", true, 400));
+        }
+        if (role == Role.SUPERADMIN) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Szuper Adminisztrátor jogosultság nem adható", true, 400));
+        }
+        final UserAccount userAccount = userAccountDao.findById(userAccoutId);
+        if (userAccount == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "A felhasználó nem található", true, 400));
+        }
+        userAccount.setRole(role);
+        userAccountDao.save(userAccount);
+    }
+
+    public long countAll() {
+        return userAccountDao.countAll();
+    }
+
+    public List<UserAccount> findAllWithOffsetAndLimit(final Long offset, final Long limit) {
+        return userAccountDao.findAllWithOffsetAndLimit(offset, limit);
     }
 
     public UserAccount update(UserAccount userAccount) {

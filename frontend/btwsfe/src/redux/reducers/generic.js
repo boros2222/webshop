@@ -29,7 +29,10 @@ const getInitialState = (namespace) => {
     switch(namespace) {
         case CURRENT_USER:
             genericState.isAdmin = function() {
-                return this.isReady() && this.data.userRoles.findIndex(x => x.role === "ADMIN") !== -1;
+                return this.isReady() && ["ADMIN", "SUPERADMIN"].includes(this.data.role.code);
+            };
+            genericState.hasRole = function(role) {
+                return this.isReady() && this.data.role.code === role;
             };
             return genericState;
         default:

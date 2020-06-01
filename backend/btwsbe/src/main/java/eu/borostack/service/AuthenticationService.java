@@ -4,7 +4,6 @@ import eu.borostack.config.AppConfig;
 import eu.borostack.dao.UserAccountDao;
 import eu.borostack.entity.Role;
 import eu.borostack.entity.UserAccount;
-import eu.borostack.entity.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -48,10 +47,7 @@ public class AuthenticationService {
         if (loggedInUser != null) {
             hasPermission = true;
             if (roles != null && !roles.isEmpty()) {
-                hasPermission = loggedInUser.getUserRoles().stream()
-                        .map(UserRole::getRole)
-                        .distinct()
-                        .anyMatch(roles::contains);
+                hasPermission = roles.contains(loggedInUser.getRole());
             }
             if (userAccountId != null) {
                 hasPermission = hasPermission && (loggedInUser.getId().equals(userAccountId) || loggedInUser.isAdmin());

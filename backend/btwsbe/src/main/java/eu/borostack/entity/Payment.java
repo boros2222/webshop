@@ -25,7 +25,7 @@ public class Payment extends GenericEntity implements Serializable {
     @Column(name = "service")
     private String service;
 
-    @Column(name = "payment_date")
+    @Column(name = "payment_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime paymentDate;
 
     @Column(name = "is_paid", nullable = false)

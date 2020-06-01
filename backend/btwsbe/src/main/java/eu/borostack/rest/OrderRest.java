@@ -50,7 +50,7 @@ public class OrderRest {
 
     @Path("list/{status}")
     @GET
-    @LoggedIn(roles = { Role.ADMIN })
+    @LoggedIn(roles = { Role.ADMIN, Role.SUPERADMIN })
     public Response getAllOrders(@PathParam("status") String status) {
         return ResponseFactory.createResponse(orderDetailsService.getOrdersByStatus(OrderStatus.getByString(status)));
     }
@@ -68,7 +68,7 @@ public class OrderRest {
 
     @Path("status/edit/{orderDetailsId}/{status}")
     @POST
-    @LoggedIn(roles = { Role.ADMIN })
+    @LoggedIn(roles = { Role.ADMIN, Role.SUPERADMIN })
     public Response editOrderStatus(@PathParam("orderDetailsId") Long orderDetailsId, @PathParam("status") String status) {
         try {
             orderDetailsService.editOrderStatus(orderDetailsId, OrderStatus.getByString(status));

@@ -44,6 +44,11 @@ function LoginPanel({closeDropDown, userStore, responseStore, login, logout, res
                                 <Link className="custom-button text-center d-inline-block" onClick={() => closeDropDown()} to={"/new-product"}>Új termék hozzáadása</Link>
                             </div>
                         }
+                        {userStore.hasRole("SUPERADMIN") &&
+                        <div className="secondary-darker-color mb-2">
+                            <Link className="custom-button text-center d-inline-block" onClick={() => closeDropDown()} to={"/users"}>Felhasználók</Link>
+                        </div>
+                        }
                         <div className="secondary-darker-color mb-2">
                             <button className="custom-button" onClick={() => logout()}>Kijelentkezés</button>
                         </div>
@@ -51,6 +56,7 @@ function LoginPanel({closeDropDown, userStore, responseStore, login, logout, res
                     <div className="col-12 col-lg-6 order-0 order-lg-1 secondary-darker-color">
                         <div className="col-12 col-lg-auto float-right mb-2 p-0 secondary-darker-color">
                             <p className="font-size-normal">Üdv, <span className="font-weight-bold">{user.name}</span>!</p>
+                            <p>{user.role.label}</p>
                             <p>Email cím: {user.email}</p>
                         </div>
                     </div>

@@ -9,8 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
 
 @Getter
 @Setter
@@ -41,7 +40,7 @@ public class UserAccount extends GenericEntity {
     @Email(message = "Email formátumot kell megadni!")
     private String email;
 
-    @Column(name = "registration_date")
+    @Column(name = "registration_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime registrationDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -52,8 +51,9 @@ public class UserAccount extends GenericEntity {
     @JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
     private Address shippingAddress;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userAccount")
-    private Set<UserRole> userRoles = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
 
     @JsonIgnore
     @Column(name = "deleted")
@@ -63,13 +63,14 @@ public class UserAccount extends GenericEntity {
     private String password;
 
     @PrePersist
-    private void init() {
+    private void beforeInsert() {
         setRegistrationDate(LocalDateTime.now());
         setDeleted(false);
+        setRole(Role.USER);
     }
 
     @Transient
     public boolean isAdmin() {
-        return userRoles.stream().map(UserRole::getRole).anyMatch(Role.ADMIN::equals);
+        return Arrays.asList(Role.ADMIN, Role.SUPERADMIN).contains(role);
     }
 }

@@ -70,7 +70,7 @@ public class ProductRest {
     @POST
     @Path("/new")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @LoggedIn(roles = { Role.ADMIN })
+    @LoggedIn(roles = { Role.ADMIN, Role.SUPERADMIN })
     public Response create(MultipartFormDataInput multipartData) {
         try {
             productService.addNewProduct(new ProductDto(multipartData));
@@ -83,7 +83,7 @@ public class ProductRest {
     @POST
     @Path("/edit")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @LoggedIn(roles = { Role.ADMIN })
+    @LoggedIn(roles = { Role.ADMIN, Role.SUPERADMIN })
     public Response edit(MultipartFormDataInput multipartData) {
         try {
             productService.editProduct(new ProductDto(multipartData));
@@ -95,7 +95,7 @@ public class ProductRest {
 
     @POST
     @Path("delete/{id}")
-    @LoggedIn(roles = { Role.ADMIN })
+    @LoggedIn(roles = { Role.ADMIN, Role.SUPERADMIN })
     public Response delete(@PathParam("id") Long productId) {
         try {
             productService.deleteProduct(productId);

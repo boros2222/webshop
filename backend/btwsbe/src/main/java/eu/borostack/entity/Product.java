@@ -47,7 +47,7 @@ public class Product extends GenericEntity {
     private Boolean deleted;
 
     @PrePersist
-    private void init() {
+    private void beforeInsert() {
         setDeleted(false);
     }
 }

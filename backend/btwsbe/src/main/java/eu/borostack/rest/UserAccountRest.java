@@ -3,8 +3,11 @@ package eu.borostack.rest;
 import eu.borostack.annotation.CheckUserId;
 import eu.borostack.annotation.LoggedIn;
 import eu.borostack.annotation.LoggedOut;
+import eu.borostack.entity.Role;
 import eu.borostack.entity.UserAccount;
+import eu.borostack.exception.RestProcessException;
 import eu.borostack.service.UserAccountService;
+import eu.borostack.util.ResponseFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -51,5 +54,38 @@ public class UserAccountRest {
     @GET
     public Response currentUser() {
         return userAccountService.getCurrentUser();
+    }
+
+    @Path("list/{offset}/{limit}")
+    @GET
+    @LoggedIn(roles = { Role.SUPERADMIN })
+    public Response getAllUsers(@PathParam("offset") Long offset,
+                                @PathParam("limit") Long limit) {
+        return ResponseFactory.createResponse(userAccountService.findAllWithOffsetAndLimit(offset, limit));
+    }
+
+    @Path("count")
+    @GET
+    @LoggedIn(roles = { Role.SUPERADMIN })
+    public Response countAllUsers() {
+        return ResponseFactory.createResponse(userAccountService.countAll());
+    }
+
+    @Path("list/role")
+    @GET
+    public Response getAllRoles() {
+        return ResponseFactory.createResponse(Role.values());
+    }
+
+    @Path("role/edit/{id}/{role}")
+    @POST
+    @LoggedIn(roles = { Role.SUPERADMIN })
+    public Response editUserRole(@PathParam("id") Long userAccountId, @PathParam("role") String role) {
+        try {
+            userAccountService.editUserRole(userAccountId, Role.getByString(role));
+            return ResponseFactory.createMessageResponse("A felhasználó jogosultsága sikeresen módosítva", false);
+        } catch (RestProcessException exception) {
+            return exception.getResponse();
+        }
     }
 }

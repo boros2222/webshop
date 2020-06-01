@@ -24,8 +24,10 @@ import UserOrders from "./content/UserOrders";
 import NewProduct from "./content/NewProduct";
 import EditProduct from "./content/EditProduct";
 import About from "./content/About";
+import Users from "./content/Users";
+import NoPermission from "./component/NoPermission";
 
-function App({getCurrentUser, getCart, getTheme}) {
+function App({getCurrentUser, getCart, getTheme, userStore}) {
 
     useEffect(() => {
         getCurrentUser();
@@ -102,6 +104,12 @@ function App({getCurrentUser, getCart, getTheme}) {
                     } {...props} />
                 }/>
 
+                <Route exact path = "/users" render = {(props) =>
+                    <MainLayout content = {
+                        userStore.hasRole("SUPERADMIN") ? <Users /> : <NoPermission/>
+                    } {...props} />
+                }/>
+
                 <Route exact path = "/about" render = {(props) =>
                     <MainLayout content = {
                         <About />
@@ -124,5 +132,6 @@ const mapDispatchToProps = dispatch => ({
     getTheme: () => dispatch(getFromStorage(THEME_STORAGE, constants.THEME_STORAGE_NAME))
 });
 const mapStateToProps = state => ({
+    userStore: state[CURRENT_USER]
 });
 export default connect(mapStateToProps, mapDispatchToProps)(App);

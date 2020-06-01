@@ -40,7 +40,7 @@ public class OrderDetailsView extends GenericEntity implements Serializable {
     @JoinColumn(name = "invoice_address_id")
     private Address invoiceAddress;
 
-    @Column(name = "order_date")
+    @Column(name = "order_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)

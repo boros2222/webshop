@@ -16,9 +16,10 @@ create table user_account (
     hash text not null,
     salt varchar(255) not null,
     name varchar(255) not null,
-    registration_date date,
+    registration_date timestamp,
     invoice_address_id integer,
     shipping_address_id integer,
+    role varchar(255) not null,
     deleted boolean default false,
 
     constraint user_account_pk primary key (id),
@@ -27,16 +28,6 @@ create table user_account (
 );
 CREATE UNIQUE INDEX user_email_unique ON user_account (email) WHERE (deleted = false or deleted is null);
 
-create sequence s_user_role;
-create table user_role (
-    id integer,
-    user_account_id integer not null,
-    role varchar(255) not null,
-
-    constraint user_role_pk primary key (id),
-    constraint user_role_fk foreign key (user_account_id) references user_account(id)
-);
-
 create sequence s_order_details;
 create table order_details (
     id integer,
@@ -44,7 +35,7 @@ create table order_details (
     shipping_address_id integer not null,
     invoice_address_id integer not null,
     invoice_name varchar(255) not null,
-    order_date date not null,
+    order_date timestamp not null,
     status varchar(255) not null,
 
     constraint order_pk primary key (id),
@@ -106,7 +97,7 @@ create table payment (
     id integer,
     order_details_id integer not null,
     service varchar(255),
-    payment_date date,
+    payment_date timestamp,
     is_paid boolean not null,
     total_price integer not null,
 

@@ -34,7 +34,7 @@ public class OrderDetails extends GenericEntity implements Serializable {
     @Column(name = "invoice_name")
     private String invoiceName;
 
-    @Column(name = "order_date")
+    @Column(name = "order_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
@@ -45,7 +45,7 @@ public class OrderDetails extends GenericEntity implements Serializable {
     private List<OrderedProduct> orderedProducts;
 
     @PrePersist
-    private void init() {
+    private void beforeInsert() {
         setOrderDate(LocalDateTime.now());
         setStatus(OrderStatus.IN_PROGRESS);
     }

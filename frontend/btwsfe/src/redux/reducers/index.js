@@ -10,7 +10,10 @@ import {
     PRODUCTS,
     RESPONSE_MESSAGE,
     THEME_STORAGE,
-    USER_ORDERS
+    USER_ORDERS,
+    USER_ROLES,
+    USERS,
+    USERS_COUNT
 } from "../constants/namespaces";
 
 const rootReducer = combineReducers({
@@ -23,7 +26,10 @@ const rootReducer = combineReducers({
     [CART_STORAGE]: genericReducer(CART_STORAGE),
     [THEME_STORAGE]: genericReducer(THEME_STORAGE),
     [ORDER_STATUS]: genericReducer(ORDER_STATUS),
-    [ORDERED_PRODUCTS]: genericReducer(ORDERED_PRODUCTS)
+    [ORDERED_PRODUCTS]: genericReducer(ORDERED_PRODUCTS),
+    [USERS]: genericReducer(USERS),
+    [USERS_COUNT]: genericReducer(USERS_COUNT),
+    [USER_ROLES]: genericReducer(USER_ROLES)
 });
 
 export default rootReducer;

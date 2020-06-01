@@ -8,3 +8,6 @@ export const CART_STORAGE = "CART_STORAGE";
 export const THEME_STORAGE = "THEME_STORAGE";
 export const ORDER_STATUS = "ORDER_STATUS";
 export const ORDERED_PRODUCTS = "ORDERED_PRODUCTS";
+export const USERS = "USERS";
+export const USERS_COUNT = "USERS_COUNT";
+export const USER_ROLES = "USER_ROLES";

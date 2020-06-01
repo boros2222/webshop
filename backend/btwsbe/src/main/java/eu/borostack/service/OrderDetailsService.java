@@ -11,6 +11,7 @@ import eu.borostack.util.ResponseFactory;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -30,6 +31,9 @@ public class OrderDetailsService {
 
     @Inject
     private AddressService addressService;
+
+    @Inject
+    private MailService mailService;
 
     public Response placeOrder(OrderDetails incomingOrder) {
         if (incomingOrder != null) {
@@ -61,7 +65,7 @@ public class OrderDetailsService {
             order.setInvoiceAddress(addressService.save(incomingOrder.getInvoiceAddress()));
             order.setInvoiceName(incomingOrder.getInvoiceName());
             final OrderDetails savedOrder = orderDetailsDao.save(order);
-
+            final List<OrderedProduct> orderedProducts = new ArrayList<>();
             incomingOrder.getOrderedProducts().forEach(incomingOrderedProduct -> {
                 final Product product = productDao.findById(incomingOrderedProduct.getProduct().getId());
                 if (product != null) {
@@ -70,9 +74,11 @@ public class OrderDetailsService {
                     orderedProduct.setProduct(product);
                     orderedProduct.setPrice(product.getPrice());
                     orderedProduct.setQuantity(incomingOrderedProduct.getQuantity());
-                    orderedProductDao.save(orderedProduct);
+                    orderedProducts.add(orderedProductDao.save(orderedProduct));
                 }
             });
+
+            mailService.sendOrderMail(userAccount, orderedProducts);
 
             return ResponseFactory.createMessageResponse("A rendelés sikeresen végbement!", false);
         } else {
@@ -91,12 +97,12 @@ public class OrderDetailsService {
     public void editOrderStatus(final Long orderDetailsId, final OrderStatus status) throws RestProcessException {
         if (status == null) {
             throw new RestProcessException(ResponseFactory.createMessageResponse(
-                    "A megadott státusz helytelen!", true, 400));
+                    "A megadott státusz helytelen", true, 400));
         }
         final OrderDetails orderDetails = orderDetailsDao.findById(orderDetailsId);
         if (orderDetails == null) {
             throw new RestProcessException(ResponseFactory.createMessageResponse(
-                    "A rendelés nem található!", true, 400));
+                    "A rendelés nem található", true, 400));
         }
         orderDetails.setStatus(status);
         orderDetailsDao.save(orderDetails);
