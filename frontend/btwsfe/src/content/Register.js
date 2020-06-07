@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {CURRENT_USER, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import {RESET} from "../redux/constants/action-types";
@@ -7,12 +7,14 @@ import UserForm from "../component/UserForm";
 
 function Register({reset, register, userStore, responseStore}) {
 
+    const [success, setSuccess] = useState(false);
+
     useEffect(() => {
         reset();
     }, [reset]);
 
     const onSubmit = (user) => {
-        register(user);
+        register(user, () => setSuccess(true));
     };
 
     if (userStore.isReady()) {
@@ -20,6 +22,10 @@ function Register({reset, register, userStore, responseStore}) {
     }
 
     let message = responseStore.getMessage();
+
+    if (success) {
+        return <p className="font-weight-bold">{message}</p>;
+    }
 
     return (
         <div className="container-fluid pb-5">
@@ -33,7 +39,7 @@ function Register({reset, register, userStore, responseStore}) {
 }
 
 const mapDispatchToProps = dispatch => ({
-    register: (user) => dispatch(sendToBackend(RESPONSE_MESSAGE, "/user/register", user)),
+    register: (user, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, "/user/register", user, callback)),
     reset: () => dispatch({
         type: `${RESPONSE_MESSAGE}/${RESET}`
     })

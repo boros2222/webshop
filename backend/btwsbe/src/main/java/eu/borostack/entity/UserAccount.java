@@ -59,6 +59,18 @@ public class UserAccount extends GenericEntity {
     @Column(name = "deleted")
     private Boolean deleted;
 
+    @Column(name = "active")
+    private Boolean active;
+
+    @Column(name = "activate_code")
+    private String activateCode;
+
+    @Column(name = "new_password_code")
+    private String newPasswordCode;
+
+    @Column(name = "new_password_code_valid", columnDefinition = "TIMESTAMP")
+    private LocalDateTime newPasswordCodeValid;
+
     @Transient
     private String password;
 
@@ -66,6 +78,7 @@ public class UserAccount extends GenericEntity {
     private void beforeInsert() {
         setRegistrationDate(LocalDateTime.now());
         setDeleted(false);
+        setActive(false);
         setRole(Role.USER);
     }
 

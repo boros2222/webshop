@@ -7,13 +7,14 @@ import {Column} from "primereact/column";
 import {Dropdown} from "primereact/dropdown";
 import ConfirmDialog from "../component/ConfirmDialog";
 
-function Users({loadUsersCount, loadUsers, loadUserRoles, usersCountStore, usersStore, userRolesStore, deleteUser, editUserRole, responseStore}) {
+function Users({loadUsersCount, loadUsers, loadUserRoles, usersCountStore, usersStore, userRolesStore, deleteUser, editUserRole, responseStore, editUserActive}) {
 
     const [rows] = useState(10);
     const [first, setFirst] = useState(0);
     const [users, setUsers] = useState([]);
     const [usersCount, setUsersCount] = useState(undefined);
     const [userRoleOptions, setUserRoleOptions] = useState([]);
+    const [userActiveOptions] = useState([{label: "Aktív", value: true}, {label: "Inaktív", value: false}]);
 
     useEffect(() => {
         loadUsersCount();
@@ -61,8 +62,12 @@ function Users({loadUsersCount, loadUsers, loadUserRoles, usersCountStore, users
         editUserRole(userId, event.value, reload);
     };
 
+    const changeActive = (userId, event) => {
+        editUserActive(userId, event.value, reload);
+    };
+
     const dateToString = (date) => {
-        return `${date.year}.${dateNumberToString(date.monthValue)}.${date.dayOfMonth}. ${dateNumberToString(date.hour)}:${dateNumberToString(date.minute)}`
+        return `${date.year}.${dateNumberToString(date.monthValue)}.${dateNumberToString(date.dayOfMonth)}. ${dateNumberToString(date.hour)}:${dateNumberToString(date.minute)}`
     };
 
     const dateNumberToString = (dateNumber) => {
@@ -85,9 +90,14 @@ function Users({loadUsersCount, loadUsers, loadUserRoles, usersCountStore, users
                 <Column field="email" header="Email" />
                 <Column field="registrationDate" header="Regisztráció dátuma"
                         body={(user) => dateToString(user.registrationDate)} />
+                <Column field="active" header="Aktív"
+                        body={(user) =>
+                            <Dropdown options={userActiveOptions} value={user.active} disabled={user.role.code !== "USER"}
+                                      onChange={(event) => changeActive(user.id, event)}/>
+                        }/>
                 <Column field="role" header="Jogosultság"
                         body={(user) =>
-                            <Dropdown options={userRoleOptions} value={user.role.code} disabled={user.role.code === "SUPERADMIN"}
+                            <Dropdown options={userRoleOptions} value={user.role.code} disabled={user.role.code === "SUPERADMIN" || user.active !== true}
                                       onChange={(event) => changeRole(user.id, event)}/>
                         }/>
                 <Column header="Törlés" style={{width:"10%"}}
@@ -110,6 +120,7 @@ const mapDispatchToProps = dispatch => ({
     loadUserRoles: () => dispatch(fetchToStore(USER_ROLES, `/user/list/role`, true)),
     deleteUser: (userId, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/user/delete/${userId}`, undefined, callback)),
     editUserRole: (userId, role, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/user/role/edit/${userId}/${role}`, undefined, callback)),
+    editUserActive: (userId, isActive, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/user/active/edit/${userId}/${isActive}`, undefined, callback)),
 });
 const mapStateToProps = state => ({
     usersStore: state[USERS],

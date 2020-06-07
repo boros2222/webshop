@@ -1,11 +1,13 @@
 package eu.borostack.service;
 
+import com.fasterxml.uuid.Generators;
 import eu.borostack.dao.UserAccountDao;
 import eu.borostack.entity.Role;
 import eu.borostack.entity.UserAccount;
 import eu.borostack.exception.RestProcessException;
 import eu.borostack.util.ResponseFactory;
 import eu.borostack.util.ValidationUtil;
+import org.apache.commons.lang3.BooleanUtils;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.inject.Inject;
@@ -13,6 +15,7 @@ import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +30,9 @@ public class UserAccountService {
 
     @Inject
     private AuthenticationService authenticationService;
+
+    @Inject
+    private MailService mailService;
 
     public Response getCurrentUser() {
         UserAccount currentUser = authenticationService.checkLoggedInUser();
@@ -43,13 +49,17 @@ public class UserAccountService {
         if (response == null) {
             UserAccount existingUser = userAccountDao.findByEmail(loginUser.getEmail());
             if (existingUser == null) {
-                response = ResponseFactory.createMessageResponse("A felhasználó nem létezik!", true, 400);
+                response = ResponseFactory.createMessageResponse("Hibás email cím vagy jelszó!", true, 400);
             } else {
                 NewCookie authCookie = authenticationService.authenticate(loginUser, existingUser);
                 if (authCookie != null) {
-                    response = ResponseFactory.createMessageResponse("Sikeres bejelentkezés!", false, authCookie);
+                    if (existingUser.getActive()) {
+                        response = ResponseFactory.createMessageResponse("Sikeres bejelentkezés!", false, authCookie);
+                    } else {
+                        response = ResponseFactory.createMessageResponse("A felhasználó nem aktív", true, 400);
+                    }
                 } else {
-                    response = ResponseFactory.createMessageResponse("Hibás jelszó!", true, 400);
+                    response = ResponseFactory.createMessageResponse("Hibás email cím vagy jelszó!", true, 400);
                 }
             }
         }
@@ -67,7 +77,7 @@ public class UserAccountService {
             else {
                 UserAccount savedUser = createUser(userAccount);
                 if (savedUser != null) {
-                    response = ResponseFactory.createMessageResponse("Sikeres regisztráció!", false);
+                    response = ResponseFactory.createMessageResponse("Sikeres regisztráció! A megerősítő üzenetet elküldtük a megadott email címre.", false);
                 } else {
                     response = ResponseFactory.createMessageResponse("Sikertelen regisztráció!", true, 500);
                 }
@@ -96,13 +106,16 @@ public class UserAccountService {
     private UserAccount createUser(final UserAccount userAccount) {
         createHash(userAccount);
         createAddresses(userAccount);
-        return userAccountDao.create(userAccount);
+        userAccount.setActivateCode(Generators.timeBasedGenerator().generate().toString());
+        final UserAccount savedUser = userAccountDao.create(userAccount);
+        mailService.sendActivateMail(savedUser);
+        return savedUser;
     }
 
     private UserAccount createHash(final UserAccount userAccount) {
         String salt = BCrypt.gensalt(12);
         String hashed = BCrypt.hashpw(userAccount.getPassword(), salt);
-        userAccount.setPassword(" ");
+        userAccount.setPassword(null);
         userAccount.setSalt(salt);
         userAccount.setHash(hashed);
         return userAccount;
@@ -172,6 +185,92 @@ public class UserAccountService {
         }
         userAccount.setRole(role);
         userAccountDao.save(userAccount);
+    }
+
+    public void editUserActive(Long userAccoutId, Boolean isActive) throws RestProcessException {
+        if (isActive == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Nincs megadva érték", true, 400));
+        }
+        final UserAccount userAccount = userAccountDao.findById(userAccoutId);
+        if (userAccount == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "A felhasználó nem található", true, 400));
+        }
+        userAccount.setActive(isActive);
+        userAccountDao.save(userAccount);
+    }
+
+    public void activateUser(final String activateCode) throws RestProcessException {
+        if (activateCode == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Nincs megadva aktiváló kód", true, 400));
+        }
+
+        final UserAccount userAccount = userAccountDao.findByActivateCode(activateCode);
+        if (userAccount == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Hibás aktiváló kód", true, 400));
+        }
+        userAccount.setActive(true);
+        userAccount.setActivateCode(null);
+        userAccountDao.save(userAccount);
+    }
+
+    public void forgotPassword(final String email) throws RestProcessException {
+        if (email == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Nincs megadva email cím", true, 400));
+        }
+
+        final UserAccount userAccount = userAccountDao.findByEmail(email);
+        if (userAccount == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Nincs ilyen felhasználó", true, 400));
+        }
+        if (BooleanUtils.isNotTrue(userAccount.getActive())) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "A megadott felhasználó nincs aktiválva", true, 400));
+        }
+        userAccount.setNewPasswordCode(Generators.timeBasedGenerator().generate().toString());
+        userAccount.setNewPasswordCodeValid(LocalDateTime.now().plusHours(24));
+        final UserAccount savedUser = userAccountDao.save(userAccount);
+        mailService.sendNewPasswordMail(savedUser);
+    }
+
+    public UserAccount checkNewPasswordCode(final String newPasswordCode) throws RestProcessException {
+        if (newPasswordCode == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Nincs megadva jelszó-visszaállító kód", true, 400));
+        }
+
+        final UserAccount userAccount = userAccountDao.findByNewPasswordCode(newPasswordCode);
+        if (userAccount == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Hibás jelszó-visszaállító kód", true, 400));
+        }
+        return userAccount;
+    }
+
+    public void setNewPassword(final String newPasswordCode, final UserAccount user) throws RestProcessException {
+        if (newPasswordCode == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Nincs megadva a jelszó-visszaállító kód", true, 400));
+        }
+
+        final UserAccount existingUser = userAccountDao.findByNewPasswordCode(newPasswordCode);
+        if (existingUser == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Hibás a jelszó-visszaállító kód", true, 400));
+        }
+        if (user.getPassword() == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Nincs megadva új jelszó", true, 400));
+        }
+        existingUser.setNewPasswordCode(null);
+        existingUser.setNewPasswordCodeValid(null);
+        existingUser.setPassword(user.getPassword());
+        userAccountDao.save(createHash(existingUser));
     }
 
     public long countAll() {

@@ -257,7 +257,7 @@ p {
 }
 
 .required::after {
-  color: #df0000;
+  color: #ea2b49;
   content: "*";
   font-weight: bold;
   margin-left: 0.3em;
@@ -265,18 +265,23 @@ p {
 }
 
 p.error-message {
-  color: #df0000;
+  color: #ea2b49;
+  margin-bottom: 1em;
+}
+
+p.secondary-error-message {
+  color: #ffd39a;
   margin-bottom: 1em;
 }
 
 button.red-button {
-  color: #df0000;
-  border-color: #df0000;
+  color: #ea2b49;
+  border-color: #ea2b49;
 }
 
 button.red-button:hover {
-  color: #800000;
-  border-color: #800000;
+  color: #992322;
+  border-color: #992322;
 }
 
 /* Custom utilities */

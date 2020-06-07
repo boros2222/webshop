@@ -26,6 +26,8 @@ import EditProduct from "./content/EditProduct";
 import About from "./content/About";
 import Users from "./content/Users";
 import NoPermission from "./component/NoPermission";
+import ActivateUser from "./content/ActivateUser";
+import ForgotPassword from "./content/ForgotPassword";
 
 function App({getCurrentUser, getCart, getTheme, userStore}) {
 
@@ -113,6 +115,18 @@ function App({getCurrentUser, getCart, getTheme, userStore}) {
                 <Route exact path = "/about" render = {(props) =>
                     <MainLayout content = {
                         <About />
+                    } {...props} />
+                }/>
+
+                <Route exact path = {["/forgot-password", "/forgot-password/:newPasswordCode"]} render = {(props) =>
+                    <MainLayout content = {
+                        <ForgotPassword newPasswordCode = {props.match.params.newPasswordCode} />
+                    } {...props} />
+                }/>
+
+                <Route exact path = "/activate/:code" render = {(props) =>
+                    <MainLayout content = {
+                        <ActivateUser code = {props.match.params.code} />
                     } {...props} />
                 }/>
 

@@ -20,6 +20,10 @@ create table user_account (
     invoice_address_id integer,
     shipping_address_id integer,
     role varchar(255) not null,
+    active boolean default false,
+    activate_code varchar(255),
+    new_password_code varchar(255),
+    new_password_code_valid timestamp,
     deleted boolean default false,
 
     constraint user_account_pk primary key (id),

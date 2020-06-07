@@ -40,4 +40,8 @@ public class Address extends GenericEntity {
                 && street != null && !street.isBlank()
                 && houseNumber != null && !houseNumber.isBlank();
     }
+
+    public String getFullAddress() {
+        return String.format("%s %s, %s %s", postalCode, city, street, houseNumber);
+    }
 }

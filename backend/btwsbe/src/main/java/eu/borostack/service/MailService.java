@@ -1,5 +1,6 @@
 package eu.borostack.service;
 
+import eu.borostack.entity.OrderDetails;
 import eu.borostack.entity.OrderedProduct;
 import eu.borostack.entity.UserAccount;
 import org.stringtemplate.v4.ST;
@@ -19,12 +20,41 @@ import java.util.stream.Collectors;
 @Stateless
 public class MailService {
 
-    public void sendOrderMail(final UserAccount userAccount, final List<OrderedProduct> orderedProducts) {
-        ST template = new ST(readTemplate("order.st"), '$', '$');
+    public void sendNewPasswordMail(final UserAccount userAccount) {
+        ST template = new ST(loadMailTemplate("new_password.st"), '$', '$');
         template.add("user", userAccount);
+        template.add("url", System.getProperty("baseurl") + "/forgot-password/" + userAccount.getNewPasswordCode());
+        final String content = template.render();
+        sendMail(userAccount.getEmail(), "Új jelszó igénylése", content);
+    }
+
+    public void sendActivateMail(final UserAccount userAccount) {
+        ST template = new ST(loadMailTemplate("activate_user.st"), '$', '$');
+        template.add("user", userAccount);
+        template.add("url", System.getProperty("baseurl") + "/activate/" + userAccount.getActivateCode());
+        final String content = template.render();
+        sendMail(userAccount.getEmail(), "Regisztráció megerősítése", content);
+    }
+
+    public void sendOrderMail(final UserAccount userAccount, final OrderDetails order, final List<OrderedProduct> orderedProducts) {
+        ST template = new ST(loadMailTemplate("order.st"), '$', '$');
+        final Long priceSum = orderedProducts.stream().map(product -> product.getQuantity() * product.getPrice()).reduce(0L, Long::sum);
+        final Integer quantitySum = orderedProducts.stream().map(OrderedProduct::getQuantity).reduce(0, Integer::sum);
+        template.add("user", userAccount);
+        template.add("order", order);
         template.add("products", orderedProducts);
+        template.add("priceSum", priceSum);
+        template.add("quantitySum", quantitySum);
         final String content = template.render();
         sendMail(userAccount.getEmail(), "Megrendelés visszaigazolása", content);
+    }
+
+    public void sendOrderStatusMail(final UserAccount userAccount, final OrderDetails order) {
+        ST template = new ST(loadMailTemplate("order_status.st"), '$', '$');
+        template.add("user", userAccount);
+        template.add("order", order);
+        final String content = template.render();
+        sendMail(userAccount.getEmail(), "Megrendelésének állapota", content);
     }
 
     private void sendMail(final String toEmail, final String subject, final String content) {
@@ -45,7 +75,7 @@ public class MailService {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(System.getProperty("mail.fromEmail")));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-            message.setSubject(subject);
+            message.setSubject("[Borostack Webshop] " + subject);
             message.setContent(content, "text/html");
             Transport.send(message);
         } catch (MessagingException mex) {
@@ -53,8 +83,8 @@ public class MailService {
         }
     }
 
-    private String readTemplate(final String fileName) {
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("templates/" + fileName);
+    private String loadMailTemplate(final String fileName) {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("templates/mail/" + fileName);
         if (inputStream == null) {
             return null;
         }

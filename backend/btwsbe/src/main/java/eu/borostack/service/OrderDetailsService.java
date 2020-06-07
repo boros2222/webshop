@@ -78,9 +78,8 @@ public class OrderDetailsService {
                 }
             });
 
-            mailService.sendOrderMail(userAccount, orderedProducts);
-
-            return ResponseFactory.createMessageResponse("A rendelés sikeresen végbement!", false);
+            mailService.sendOrderMail(userAccount, savedOrder, orderedProducts);
+            return ResponseFactory.createMessageResponse("Rendelés sikeresen végbement! A visszaigazoló üzenetet elküldtük az email címére.", false);
         } else {
             return ResponseFactory.createMessageResponse("Hiba történt a rendelés során!", true, 500);
         }
@@ -105,7 +104,8 @@ public class OrderDetailsService {
                     "A rendelés nem található", true, 400));
         }
         orderDetails.setStatus(status);
-        orderDetailsDao.save(orderDetails);
+        final OrderDetails savedOrder = orderDetailsDao.save(orderDetails);
+        mailService.sendOrderStatusMail(savedOrder.getUserAccount(), savedOrder);
     }
 
     public OrderDetails save(OrderDetails orderDetails) {

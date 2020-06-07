@@ -70,17 +70,18 @@ function LoginPanel({closeDropDown, userStore, responseStore, login, logout, res
                     <form className="container-fluid secondary-darker-color" onSubmit={handleSubmit(onSubmit)}>
                         <div className="row secondary-darker-color">
                             <div className="col-12 col-lg-5 secondary-darker-color">
-                                <div className="row secondary-darker-color mb-1">
+                                <div className="row secondary-darker-color mb-2">
                                     <p className="col-12 col-lg-4">Email cím:</p>
-                                    <input className="col-12 col-lg-8" type="email" name="email"
-                                           ref={register({required: "Email cím megadása kötelező"})}/>
-                                    <p className="col-12 pl-5">{errors.email && errors.email.message}</p>
+                                    <input className="col-12 col-lg-8" type="text" name="email"
+                                           ref={register({required: true, pattern: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/})}/>
+                                    {errors.email && errors.email.type === 'required' && <p className="col-12 pl-5 secondary-error-message">Email cím megadása kötelező</p>}
+                                    {errors.email && errors.email.type === 'pattern' && <p className="col-12 pl-5 secondary-error-message">Email cím formátuma nem megfelelő</p>}
                                 </div>
                                 <div className="row secondary-darker-color">
                                     <p className="col-12 col-lg-4">Jelszó:</p>
                                     <input className="col-12 col-lg-8" type="password" name="password"
                                            ref={register({required: "Jelszó megadása kötelező", minLength: {value: 8, message: "A jelszónak legalább 8 karakternek kell lenni"}})}/>
-                                    <p className="col-12 pl-5">{errors.password && errors.password.message}</p>
+                                    <p className="col-12 pl-5 secondary-error-message">{errors.password && errors.password.message}</p>
                                 </div>
                             </div>
                             <div className="col-12 col-lg-3 secondary-darker-color d-flex align-items-center justify-content-center">
@@ -90,8 +91,8 @@ function LoginPanel({closeDropDown, userStore, responseStore, login, logout, res
                             </div>
 
                             <div className="col-12 col-lg-3 d-flex flex-column justify-content-center secondary-darker-color">
-                                <Link className="block-link" to={"/register"}>Regisztráció</Link>
-                                <Link className="block-link" to={"/forgot-password"}>Elfelejtett jelszó</Link>
+                                <Link className="block-link" onClick={() => closeDropDown()} to={"/register"}>Regisztráció</Link>
+                                <Link className="block-link" onClick={() => closeDropDown()} to={"/forgot-password"}>Elfelejtett jelszó</Link>
                             </div>
 
                             <div className="col-12 mt-2 secondary-darker-color">

@@ -48,6 +48,9 @@ function OrderDetails({order, loadOrderedProducts, loadOrderStatus, userStore, o
 
     return (
         <div className="primary-color row py-1">
+            <div className="col-12">
+                Rendelés azonosítója: <span className="font-weight-bold">{order.id}</span>
+            </div>
             <div className="col-12 col-lg-4">
                 Rendelés dátuma: <span className="font-weight-bold">{order.orderDate.year}.{order.orderDate.monthValue < 10 ? '0' : ''}{order.orderDate.monthValue}.{order.orderDate.dayOfMonth}.</span>
             </div>
