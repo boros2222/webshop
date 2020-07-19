@@ -13,7 +13,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("category")
+@Path("categories")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class CategoryRest {
@@ -21,7 +21,6 @@ public class CategoryRest {
     @Inject
     private CategoryService categoryService;
 
-    @Path("list")
     @GET
     public Response getAllCategories(@Context HttpHeaders httpHeaders) {
         return ResponseFactory.createResponse(categoryService.findAll());

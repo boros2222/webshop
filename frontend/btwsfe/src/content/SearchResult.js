@@ -1,14 +1,13 @@
 import React from 'react';
 import {PRODUCTS} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import {fetchToStore} from "../redux/actions/request";
 import ProductScroller from "../component/ProductScroller";
-import {RESET} from "../redux/constants/action-types";
+import {loadProductsBySearch} from "../redux/functions/product-functions";
 
-function SearchResult({searchTerm, productsStore, getProducts}) {
+function SearchResult({searchTerm, productsStore, loadProducts}) {
 
     const loadProduct = (offset, limit, sortOption) => {
-        getProducts(searchTerm, offset, limit, sortOption);
+        loadProducts(searchTerm, offset, limit, sortOption);
     };
 
     return (
@@ -18,11 +17,7 @@ function SearchResult({searchTerm, productsStore, getProducts}) {
 }
 
 const mapDispatchToProps = dispatch => ({
-    getProducts: (searchTerm, offset, limit, sortOption) => {
-        dispatch(fetchToStore(PRODUCTS, `/product/${searchTerm}/${offset}/${limit}/${sortOption}`, false, () => {
-            dispatch({type: `${PRODUCTS}/${RESET}`})
-        }))
-    },
+    loadProducts: loadProductsBySearch(dispatch),
 });
 const mapStateToProps = state => ({
     productsStore: state[PRODUCTS]

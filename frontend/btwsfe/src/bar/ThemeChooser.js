@@ -1,14 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {THEME_STORAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import {getFromStorage, removeFromStorage, saveToStorage} from "../redux/actions/storage";
-import constants from "../Constants";
 import {Button} from "primereact/button";
 import {OverlayPanel} from "primereact/overlaypanel";
 import "./ThemeChooser.css";
 import {InputSwitch} from "primereact/inputswitch";
+import {deleteTheme, setTheme} from "../redux/functions/theme-functions";
 
-function ThemeChooser({themeStore, setThemeStore, deleteThemeStore}) {
+function ThemeChooser({themeStore, setTheme, deleteTheme}) {
 
     const [overlayPanel, setOverlayPanel] = useState(undefined);
     const [darkMode, setDarkMode] = useState(false);
@@ -19,9 +18,9 @@ function ThemeChooser({themeStore, setThemeStore, deleteThemeStore}) {
 
     const switchDarkMode = (turnedOn) => {
         if (turnedOn) {
-            setThemeStore("dark-theme");
+            setTheme("dark-theme");
         } else {
-            deleteThemeStore();
+            deleteTheme();
         }
         overlayPanel.hide();
     };
@@ -37,12 +36,8 @@ function ThemeChooser({themeStore, setThemeStore, deleteThemeStore}) {
 }
 
 const mapDispatchToProps = dispatch => ({
-    setThemeStore: (theme) => saveToStorage(constants.THEME_STORAGE_NAME, theme, {
-        callback: () => dispatch(getFromStorage(THEME_STORAGE, constants.THEME_STORAGE_NAME))
-    }),
-    deleteThemeStore: () => removeFromStorage(constants.THEME_STORAGE_NAME, {
-        callback: () => dispatch(getFromStorage(THEME_STORAGE, constants.THEME_STORAGE_NAME))
-    })
+    setTheme: setTheme(dispatch),
+    deleteTheme: deleteTheme(dispatch)
 });
 const mapStateToProps = state => ({
     themeStore: state[THEME_STORAGE]

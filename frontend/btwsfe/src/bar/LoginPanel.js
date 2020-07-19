@@ -2,19 +2,17 @@ import React, {useEffect} from 'react';
 import {Link} from "react-router-dom";
 import {CURRENT_USER, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import constants from "../Constants";
-import {RESET} from "../redux/constants/action-types";
-import {fetchToStore, sendToBackend} from "../redux/actions/request";
-import {removeCookie} from "../redux/actions/cookie";
 import {useForm} from "react-hook-form";
+import {login, logout} from "../redux/functions/user-functions";
+import {resetStore} from "../redux/functions/generic-functions";
 
-function LoginPanel({closeDropDown, userStore, responseStore, login, logout, reset}) {
+function LoginPanel({closeDropDown, userStore, responseStore, login, logout, resetMessage}) {
 
     const {register, handleSubmit, errors} = useForm();
 
     useEffect(() => {
-        reset();
-    }, [reset]);
+        resetMessage();
+    }, [resetMessage]);
 
     const onSubmit = (user) => {
         user.name = " ";
@@ -107,19 +105,9 @@ function LoginPanel({closeDropDown, userStore, responseStore, login, logout, res
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    login: (user) => dispatch(sendToBackend(RESPONSE_MESSAGE, "/user/login", user, () => {
-        dispatch(fetchToStore(CURRENT_USER, "/user/current", false));
-        dispatch({
-            type: `${RESPONSE_MESSAGE}/${RESET}`
-        });
-    })),
-    logout: () => removeCookie(constants.AUTH_COOKIE_NAME, {
-        path: `${constants.API_PATH}/`,
-        callback: () => dispatch(fetchToStore(CURRENT_USER, "/user/current", false))
-    }),
-    reset: () => dispatch({
-        type: `${RESPONSE_MESSAGE}/${RESET}`
-    })
+    login: login(dispatch),
+    logout: logout(dispatch),
+    resetMessage: resetStore(dispatch, RESPONSE_MESSAGE)
 });
 const mapStateToProps = (state) => ({
     responseStore: state[RESPONSE_MESSAGE],

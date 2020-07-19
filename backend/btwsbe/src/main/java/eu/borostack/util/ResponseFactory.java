@@ -3,9 +3,11 @@ package eu.borostack.util;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
+@ApplicationScoped
 public class ResponseFactory {
 
     private ResponseFactory() {

@@ -1,9 +1,14 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {CART_STORAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
+import {loadCart} from "../redux/functions/cart-functions";
 
-function Cart({closeDropDown, cartStore}) {
+function Cart({closeDropDown, cartStore, loadCart}) {
+
+    useEffect(() => {
+        loadCart();
+    }, [loadCart]);
 
     let cart = cartStore.data;
 
@@ -39,6 +44,7 @@ function Cart({closeDropDown, cartStore}) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
+    loadCart: loadCart(dispatch),
 });
 const mapStateToProps = (state) => ({
     cartStore: state[CART_STORAGE]

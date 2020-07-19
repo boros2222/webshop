@@ -1,26 +1,24 @@
 import React, {useEffect, useState} from 'react';
-import { useHistory } from 'react-router-dom';
-import {CART_STORAGE, CURRENT_USER, PRODUCT_DETAILS, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
+import {useHistory} from 'react-router-dom';
+import {CURRENT_USER, PRODUCT_DETAILS, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import constants from "../Constants";
 import {Growl} from 'primereact/growl';
-import {fetchToStore, sendToBackend} from "../redux/actions/request";
-import {getFromStorage, saveToStorage} from "../redux/actions/storage";
 import {Carousel} from "primereact/carousel";
 import {Dialog} from "primereact/dialog";
 import ConfirmDialog from "../component/ConfirmDialog";
-import {RESET} from "../redux/constants/action-types";
+import {loadCart, setCart} from "../redux/functions/cart-functions";
+import {deleteProduct, loadProduct} from "../redux/functions/product-functions";
 
-function ProductDetails({id, productDetailsStore, cartStore, loadProduct, setCartStore, userStore, deleteProduct, responseStore, reset}) {
+function ProductDetails({id, productDetailsStore, loadProduct, setCart, userStore, deleteProduct,
+                            responseStore, loadCart}) {
 
     const history = useHistory();
     const [growl, setGrowl] = useState(undefined);
     const [dialogPicture, setDialogPicture] = useState(undefined);
 
     useEffect(() => {
-        reset();
         loadProduct(id);
-    }, [loadProduct, id, reset]);
+    }, [loadProduct, id]);
 
     if (!productDetailsStore.isReady()) {
         return productDetailsStore.getMessage();
@@ -28,30 +26,31 @@ function ProductDetails({id, productDetailsStore, cartStore, loadProduct, setCar
 
     const addToCart = () => {
         const product = productDetailsStore.data;
-
         if (product !== undefined) {
-            let cart = cartStore.data;
-            if (cart === null || cart === undefined) {
-                cart = [];
-            } else {
-                cart = cart.slice();
-            }
+            loadCart().then(cartData => {
+                let cart = cartData;
+                if (cart === null || cart === undefined) {
+                    cart = [];
+                } else {
+                    cart = cart.slice();
+                }
 
-            if (cart.findIndex(x => x.product.id === product.id) === -1) {
-                const cartProduct = {
-                    product: {
-                        id: product.id,
-                        name: product.name,
-                        price: product.price
-                    },
-                    quantity: 1
-                };
-                cart.push(cartProduct);
-                setCartStore(cart);
-                growl.show({severity: "success", summary: "Kosár", detail: "Termék hozzáadva a kosárhoz!"});
-            } else {
-                growl.show({severity: "info", summary: "Kosár", detail: "A termék már szerepel a kosárban!"});
-            }
+                if (cart.findIndex(x => x.product.id === product.id) === -1) {
+                    const cartProduct = {
+                        product: {
+                            id: product.id,
+                            name: product.name,
+                            price: product.price
+                        },
+                        quantity: 1
+                    };
+                    cart.push(cartProduct);
+                    setCart(cart);
+                    growl.show({severity: "success", summary: "Kosár", detail: "Termék hozzáadva a kosárhoz!"});
+                } else {
+                    growl.show({severity: "info", summary: "Kosár", detail: "A termék már szerepel a kosárban!"});
+                }
+            });
         }
     };
 
@@ -85,7 +84,7 @@ function ProductDetails({id, productDetailsStore, cartStore, loadProduct, setCar
                     {!product.deleted &&
                         <>
                             <button onClick={() => editProduct(product.id)} className="custom-button mr-lg-3 mb-3 mb-lg-0">Termék szerkesztése</button>
-                            <ConfirmDialog headerText="Termék törlése" text="Biztosan törölni kívánja a terméket?" onConfirm={() => deleteProduct(product.id, () => loadProduct(product.id))}>
+                            <ConfirmDialog headerText="Termék törlése" text="Biztosan törölni kívánja a terméket?" onConfirm={() => deleteProduct(product.id).then(() => loadProduct(product.id))}>
                                 <button className="custom-button red-button">Termék törlése</button>
                             </ConfirmDialog>
                         </>
@@ -123,23 +122,16 @@ function ProductDetails({id, productDetailsStore, cartStore, loadProduct, setCar
 
 const mapDispatchToProps = dispatch => {
     return {
-        loadProduct: (productId) => {
-            dispatch(fetchToStore(PRODUCT_DETAILS, `/product/${productId}`, false))
-        },
-        setCartStore: (data) => saveToStorage(constants.CART_STORAGE_NAME, data, {
-            callback: () => dispatch(getFromStorage(CART_STORAGE, constants.CART_STORAGE_NAME))
-        }),
-        deleteProduct: (productId, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/product/delete/${productId}`, undefined, callback)),
-        reset: () => dispatch({
-            type: `${RESPONSE_MESSAGE}/${RESET}`
-        })
+        loadProduct: loadProduct(dispatch),
+        loadCart: loadCart(dispatch),
+        setCart: setCart(dispatch),
+        deleteProduct: deleteProduct(dispatch)
     };
 };
 const mapStateToProps = state => {
     return {
         productDetailsStore: state[PRODUCT_DETAILS],
         userStore: state[CURRENT_USER],
-        cartStore: state[CART_STORAGE],
         responseStore: state[RESPONSE_MESSAGE]
     };
 };

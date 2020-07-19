@@ -3,7 +3,7 @@
     <body>
         <p>Kedves $user.name$!</p>
         <br/>
-        <p>Ahhoz, hogy használhassa a fiókját, előbb aktiválnia kell!</p>
+        <p>Ahhoz, hogy használhassa a fiókját, elöbb aktiválnia kell!</p>
         <br/>
         <p>Az aktiváláshoz kattintson az alábbi linkre:</p>
         <a href="$url$">$url$</a>

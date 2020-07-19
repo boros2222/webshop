@@ -4,10 +4,12 @@ import com.querydsl.jpa.impl.JPAQuery;
 import eu.borostack.entity.OrderedProduct;
 import eu.borostack.entity.QOrderedProduct;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Transactional
+@ApplicationScoped
 public class OrderedProductDao extends GenericDao<Long, OrderedProduct> {
 
     public OrderedProductDao() {

@@ -1,14 +1,13 @@
 import React from 'react';
 import {PRODUCTS} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import {fetchToStore} from "../redux/actions/request";
 import ProductScroller from "../component/ProductScroller";
-import {RESET} from "../redux/constants/action-types";
+import {loadProducts} from "../redux/functions/product-functions";
 
-function Products({productsStore, getProducts}) {
+function Products({productsStore, loadProducts}) {
 
     const loadProduct = (offset, limit, sortOption) => {
-        getProducts(offset, limit, sortOption);
+        loadProducts(offset, limit, sortOption);
     };
 
     return (
@@ -18,11 +17,7 @@ function Products({productsStore, getProducts}) {
 }
 
 const mapDispatchToProps = dispatch => ({
-    getProducts: (offset, limit, sortOption) => {
-        dispatch(fetchToStore(PRODUCTS, `/product/${offset}/${limit}/${sortOption}`, false, () => {
-            dispatch({type: `${PRODUCTS}/${RESET}`})
-        }))
-    }
+    loadProducts: loadProducts(dispatch)
 });
 const mapStateToProps = state => ({
     productsStore: state[PRODUCTS]

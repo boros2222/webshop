@@ -1,11 +1,10 @@
 import React, {useEffect} from 'react';
 import {CATEGORY, PRODUCTS} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import {fetchToStore} from "../redux/actions/request";
 import ProductScroller from "../component/ProductScroller";
-import {RESET} from "../redux/constants/action-types";
+import {loadCategories, loadProductsByCategory} from "../redux/functions/product-functions";
 
-function CategoryProducts({categoryId, categoriesStore, productsStore, loadCategories, getProducts}) {
+function CategoryProducts({categoryId, categoriesStore, productsStore, loadCategories, loadProducts}) {
 
     useEffect(() => {
         loadCategories();
@@ -22,7 +21,7 @@ function CategoryProducts({categoryId, categoriesStore, productsStore, loadCateg
     };
 
     const loadProduct = (offset, limit, sortOption) => {
-        getProducts(categoryId, offset, limit, sortOption);
+        loadProducts(categoryId, offset, limit, sortOption);
     };
 
     return (
@@ -32,14 +31,8 @@ function CategoryProducts({categoryId, categoriesStore, productsStore, loadCateg
 }
 
 const mapDispatchToProps = dispatch => ({
-    loadCategories: () => {
-        dispatch(fetchToStore(CATEGORY, "/category/list", true))
-    },
-    getProducts: (categoryId, offset, limit, sortOption) => {
-        dispatch(fetchToStore(PRODUCTS, `/product/category/${categoryId}/${offset}/${limit}/${sortOption}`, false, () => {
-            dispatch({type: `${PRODUCTS}/${RESET}`})
-        }))
-    }
+    loadCategories: loadCategories(dispatch),
+    loadProducts: loadProductsByCategory(dispatch)
 });
 const mapStateToProps = state => ({
     categoriesStore: state[CATEGORY],

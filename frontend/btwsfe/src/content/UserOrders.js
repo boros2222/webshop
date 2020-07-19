@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {CURRENT_USER, ORDER_STATUS, USER_ORDERS} from "../redux/constants/namespaces";
+import {CURRENT_USER, ORDER_STATUS, RESPONSE_MESSAGE, USER_ORDERS} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import {fetchToStore} from "../redux/actions/request";
 import OrderDetails from "../component/OrderDetails";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {Dialog} from "primereact/dialog";
 import {TabPanel, TabView} from "primereact/tabview";
+import {loadOrders, loadOrderStatusOptions} from "../redux/functions/order-functions";
+import {resetStore} from "../redux/functions/generic-functions";
+import {dateTimeToString} from "../util/date-util";
 
-function UserOrders({loadOrders, ordersStore, userStore, loadOrderStatus, orderStatusStore}) {
+function UserOrders({loadOrders, ordersStore, userStore, loadOrderStatusOptions, orderStatusStore, resetMessage}) {
 
     const [orders, setOrders] = useState(undefined);
     const [currentOrder, setCurrentOrder] = useState(undefined);
@@ -17,11 +19,14 @@ function UserOrders({loadOrders, ordersStore, userStore, loadOrderStatus, orderS
     const [changedActiveIndex, setChangedActiveIndex] = useState(-1);
 
     useEffect(() => {
-        loadOrderStatus();
+        loadOrderStatusOptions();
+    }, [loadOrderStatusOptions]);
+
+    useEffect(() => {
         if (userStore.isReady() && orderStatusStore.isReady()) {
             loadOrders(userStore.data.id, userStore.isAdmin(), orderStatusStore.data[activeIndex].code);
         }
-    }, [activeIndex, loadOrderStatus, loadOrders, orderStatusStore, userStore]);
+    }, [activeIndex, loadOrders, orderStatusStore, userStore]);
 
     useEffect(() => {
         if (ordersStore.isReady()) {
@@ -40,8 +45,8 @@ function UserOrders({loadOrders, ordersStore, userStore, loadOrderStatus, orderS
     const sortByOrderDate = (event) => {
         const sortedOrders = [...orders];
         sortedOrders.sort((x, y) => {
-            const xDateString = `${x.orderDate.year}${x.orderDate.monthValue}${x.orderDate.dayOfMonth}`;
-            const yDateString = `${y.orderDate.year}${y.orderDate.monthValue}${y.orderDate.dayOfMonth}`;
+            const xDateString = dateTimeToString(x.orderDate);
+            const yDateString = dateTimeToString(y.orderDate);
             return (xDateString < yDateString ? -event.order : (xDateString > yDateString ? event.order : 0));
         });
         return sortedOrders;
@@ -57,7 +62,7 @@ function UserOrders({loadOrders, ordersStore, userStore, loadOrderStatus, orderS
 
     return (
         <>
-            <p className="font-weight-bold font-size-medium">{userStore.isAdmin() ? "Rendelések" : "Rendeléseim"}</p>
+            <p className="font-size-medium">{userStore.isAdmin() ? "Rendelések" : "Rendeléseim"}</p>
             <Dialog className="container mh-100 overflow-auto" header="Rendelés részletei" footer={<></>} visible={showDialog} onHide={onHide} modal={true}>
                 {currentOrder &&
                     <OrderDetails order={currentOrder} setChangedActiveIndex={setChangedActiveIndex}/>
@@ -69,15 +74,15 @@ function UserOrders({loadOrders, ordersStore, userStore, loadOrderStatus, orderS
                     <TabPanel key={status.code} header={status.label}>
                         <DataTable value={orders} responsive={true}>
                             <Column sortable={true} field="orderDate" header="Rendelés dátuma" sortFunction={sortByOrderDate}
-                                    body={(order) => `${order.orderDate.year}.${order.orderDate.monthValue < 10 ? '0' : ''}${order.orderDate.monthValue}.${order.orderDate.dayOfMonth}.`} />
+                                    body={(order) => dateTimeToString(order.orderDate)} />
                             <Column sortable={true} field="userAccountEmail" header="Email cím" />
                             <Column sortable={true} field="productCount" header="Termékek száma" />
                             <Column sortable={true} field="priceSum" header="Összeg"
                                     body={(order) => `${order.priceSum.toLocaleString()} Ft`} />
-                            <Column field="status" header="Állapot"
-                                    body={(order) => order.status.label} />
+                            <Column field="status.label" header="Állapot" />
                             <Column field="detailsButton" header="Művelet"
                                     body={(order) => <button className="custom-button-inverse" onClick={() => {
+                                        resetMessage();
                                         setCurrentOrder(order);
                                         setShowDialog(true);
                                     }}>Részletek</button>} />
@@ -90,11 +95,9 @@ function UserOrders({loadOrders, ordersStore, userStore, loadOrderStatus, orderS
 }
 
 const mapDispatchToProps = dispatch => ({
-    loadOrders: (userId, isAdmin, status) => {
-        const path = isAdmin ? `/order/list/${status}` : `/order/list/${userId}/${status}`;
-        dispatch(fetchToStore(USER_ORDERS, path, false));
-    },
-    loadOrderStatus: () => dispatch(fetchToStore(ORDER_STATUS, `/order/list/status`, true))
+    loadOrders: loadOrders(dispatch),
+    loadOrderStatusOptions: loadOrderStatusOptions(dispatch),
+    resetMessage: resetStore(dispatch, RESPONSE_MESSAGE)
 });
 const mapStateToProps = state => ({
     ordersStore: state[USER_ORDERS],

@@ -1,15 +1,10 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {CURRENT_USER, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import {RESET} from "../redux/constants/action-types";
-import {sendToBackend} from "../redux/actions/request";
 import ProductForm from "../component/ProductForm";
+import {newProduct} from "../redux/functions/product-functions";
 
-function NewProduct({reset, userStore, responseStore, newProduct}) {
-
-    useEffect(() => {
-        reset();
-    }, [reset]);
+function NewProduct({userStore, responseStore, newProduct}) {
 
     if (!userStore.isAdmin()) {
         return <p>Csak admin jogosultsággal adható hozzá új termék!</p>
@@ -23,7 +18,7 @@ function NewProduct({reset, userStore, responseStore, newProduct}) {
         formData.set("price", product.price);
         formData.set("category", product.category);
         product.files.forEach(file => formData.append("files", file));
-        newProduct(formData, () => resetForm());
+        newProduct(formData).then(resetForm);
     };
 
     let message = responseStore.getMessage();
@@ -40,10 +35,7 @@ function NewProduct({reset, userStore, responseStore, newProduct}) {
 }
 
 const mapDispatchToProps = dispatch => ({
-    newProduct: (product, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, "/product/new", product, callback)),
-    reset: () => dispatch({
-        type: `${RESPONSE_MESSAGE}/${RESET}`
-    })
+    newProduct: newProduct(dispatch)
 });
 const mapStateToProps = state => ({
     userStore: state[CURRENT_USER],

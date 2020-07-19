@@ -12,6 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.crypto.SecretKey;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+@RequestScoped
 public class AuthenticationService {
     private final String AUTH_COOKIE_NAME = "auth";
     private final SecretKey JWT_KEY = Keys.hmacShaKeyFor(AppConfig.getJwtKey());
@@ -31,6 +33,10 @@ public class AuthenticationService {
 
     @Inject
     private UserAccountDao userAccountDao;
+
+    private boolean loggedInUserChecked = false;
+
+    private UserAccount loggedInUser;
 
     public NewCookie authenticate(UserAccount loginUser, UserAccount existingUser) {
         if (BCrypt.checkpw(loginUser.getPassword(), existingUser.getHash())) {
@@ -43,7 +49,7 @@ public class AuthenticationService {
     public NewCookie authorize(List<Role> roles, Long userAccountId) {
         boolean hasPermission = false;
 
-        UserAccount loggedInUser = checkLoggedInUser();
+        UserAccount loggedInUser = getLoggedInUser();
         if (loggedInUser != null) {
             hasPermission = true;
             if (roles != null && !roles.isEmpty()) {
@@ -61,7 +67,15 @@ public class AuthenticationService {
         }
     }
 
-    public UserAccount checkLoggedInUser() {
+    public UserAccount getLoggedInUser() {
+        if (!loggedInUserChecked) {
+            loggedInUser = checkLoggedInUser();
+            loggedInUserChecked = true;
+        }
+        return loggedInUser;
+    }
+
+    private UserAccount checkLoggedInUser() {
         Cookie[] cookies = request.getCookies();
         Cookie authCookie = null;
         if (cookies != null) {

@@ -7,9 +7,11 @@ import eu.borostack.exception.RestProcessException;
 import eu.borostack.util.ResponseFactory;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.io.InputStream;
 
+@ApplicationScoped
 public class WebdavService {
 
     private Sardine sardine;

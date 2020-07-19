@@ -1,20 +1,15 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {CURRENT_USER, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import {RESET} from "../redux/constants/action-types";
-import {sendToBackend} from "../redux/actions/request";
 import UserForm from "../component/UserForm";
+import {registerUser} from "../redux/functions/user-functions";
 
-function Register({reset, register, userStore, responseStore}) {
+function Register({register, userStore, responseStore}) {
 
     const [success, setSuccess] = useState(false);
 
-    useEffect(() => {
-        reset();
-    }, [reset]);
-
     const onSubmit = (user) => {
-        register(user, () => setSuccess(true));
+        register(user).then(() => setSuccess(true));
     };
 
     if (userStore.isReady()) {
@@ -39,10 +34,7 @@ function Register({reset, register, userStore, responseStore}) {
 }
 
 const mapDispatchToProps = dispatch => ({
-    register: (user, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, "/user/register", user, callback)),
-    reset: () => dispatch({
-        type: `${RESPONSE_MESSAGE}/${RESET}`
-    })
+    register: registerUser(dispatch)
 });
 const mapStateToProps = state => ({
     userStore: state[CURRENT_USER],

@@ -4,11 +4,13 @@ import com.querydsl.jpa.impl.JPAQuery;
 import eu.borostack.entity.QUserAccount;
 import eu.borostack.entity.UserAccount;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Transactional
+@ApplicationScoped
 public class UserAccountDao extends GenericDao<Long, UserAccount> {
 
     public UserAccountDao() {

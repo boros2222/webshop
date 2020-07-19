@@ -1,15 +1,13 @@
 import React, {useState} from 'react';
 import {CART_STORAGE, CURRENT_USER, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import constants from "../Constants";
-import {getFromStorage, removeFromStorage} from "../redux/actions/storage";
 import {Link} from "react-router-dom";
-import {sendToBackend} from "../redux/actions/request";
 import {Accordion, AccordionTab} from 'primereact/accordion';
 import {useForm} from "react-hook-form";
 import Address from "../component/Address";
+import {newOrder} from "../redux/functions/order-functions";
 
-function Order({cartStore, userStore, responseStore, placeOrder}) {
+function Order({cartStore, userStore, responseStore, newOrder}) {
 
     const PRODUCTS_TAB = 0;
     const PERSONAL_INFO_TAB = 1;
@@ -21,7 +19,7 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
     const submitOrder = (order) => {
         order.userAccount = {id: userStore.data.id};
         order.orderedProducts =  [...cartStore.data];
-        placeOrder(order);
+        newOrder(order);
     };
 
     const previousTab = () => {
@@ -63,14 +61,7 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
         return <p>A megrendeléshez be kell jelentkezni!</p>
     }
 
-    let message = undefined;
-    if (responseStore.error !== undefined) {
-        message = responseStore.data.message;
-    } else if (responseStore.isFetching === true) {
-        message = <i className="pi pi-spin pi-spinner font-size-large"/>;
-    } else if (responseStore.fetchedAlready === true) {
-        message = responseStore.data.message;
-    }
+    let message = responseStore.getMessage();
 
     const cart = cartStore.data;
     if (cart === null || cart === undefined || cart.length === 0) {
@@ -88,7 +79,7 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
     const priceSum = cart.map(cartProduct => cartProduct.product.price * cartProduct.quantity).reduce((a, b) => a + b, 0);
     return (
         <>
-            <p className="font-weight-bold font-size-medium mb-3">Megrendelés leadása</p>
+            <p className="font-size-medium mb-3">Megrendelés leadása</p>
             <form className="order-page" onSubmit={(event) => event.preventDefault()}>
                 <Accordion activeIndex={[...Array(activeIndex + 1).keys()]} multiple={true}
                            onTabChange={(event) => setActiveIndex(event.index)}>
@@ -184,14 +175,9 @@ function Order({cartStore, userStore, responseStore, placeOrder}) {
     );
 }
 
-const mapDispatchToProps = dispatch => {
-    const emptyCart = () => removeFromStorage(constants.CART_STORAGE_NAME, {
-        callback: () => dispatch(getFromStorage(CART_STORAGE, constants.CART_STORAGE_NAME))
-    });
-    return {
-        placeOrder: (order) => dispatch(sendToBackend(RESPONSE_MESSAGE, "/order/new", order, emptyCart))
-    }
-};
+const mapDispatchToProps = dispatch => ({
+     newOrder: newOrder(dispatch)
+});
 
 const mapStateToProps = state => ({
     cartStore: state[CART_STORAGE],

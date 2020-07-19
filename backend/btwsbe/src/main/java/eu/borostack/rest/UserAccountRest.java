@@ -12,9 +12,10 @@ import eu.borostack.util.ResponseFactory;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
-@Path("user")
+@Path("users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class UserAccountRest {
@@ -22,41 +23,64 @@ public class UserAccountRest {
     @Inject
     private UserAccountService userAccountService;
 
-    @Path("register")
     @POST
     @LoggedOut
     public Response register(UserAccount userAccount) {
-        return userAccountService.registerUser(userAccount);
+        try {
+            userAccountService.registerUser(userAccount);
+            return ResponseFactory.createMessageResponse("Sikeres regisztráció! A megerősítő üzenetet elküldtük a megadott email címre.", false);
+        } catch (RestProcessException exception) {
+            return exception.getResponse();
+        }
     }
 
-    @Path("login")
+    @Path("session")
     @POST
     @LoggedOut
     public Response login(UserAccount userAccount) {
-        return userAccountService.loginUser(userAccount);
+        try {
+            final NewCookie authCookie = userAccountService.loginUser(userAccount);
+            return ResponseFactory.createMessageResponse("Sikeres bejelentkezés!", false, authCookie);
+        } catch (RestProcessException exception) {
+            return exception.getResponse();
+        }
     }
 
-    @Path("delete/{id}")
-    @POST
+    @Path("{id}")
+    @DELETE
     @LoggedIn
     public Response delete(@CheckUserId @PathParam("id") Long userAccountId) {
-        return userAccountService.deleteUser(userAccountId);
+        try {
+            userAccountService.deleteUser(userAccountId);
+            return ResponseFactory.createMessageResponse("Felhasználó sikeresen törölve!", false);
+        } catch (RestProcessException exception) {
+            return exception.getResponse();
+        }
     }
 
-    @Path("update/{id}")
-    @POST
+    @Path("{id}")
+    @PUT
     @LoggedIn
     public Response update(@CheckUserId @PathParam("id") Long userAccountId, UserAccount userAccount) {
-        return userAccountService.updateUser(userAccountId, userAccount);
+        try {
+            userAccountService.updateUser(userAccountId, userAccount);
+            return ResponseFactory.createMessageResponse("Felhasználó sikeresen módosítva!", false);
+        } catch (RestProcessException exception) {
+            return exception.getResponse();
+        }
     }
 
     @Path("current")
     @GET
     public Response currentUser() {
-        return userAccountService.getCurrentUser();
+        try {
+            return ResponseFactory.createResponse(userAccountService.getCurrentUser());
+        } catch (RestProcessException exception) {
+            return exception.getResponse();
+        }
     }
 
-    @Path("list/{offset}/{limit}")
+    @Path("offset/{offset}/limit/{limit}")
     @GET
     @LoggedIn(roles = { Role.SUPERADMIN })
     public Response getAllUsers(@PathParam("offset") Long offset,
@@ -64,21 +88,22 @@ public class UserAccountRest {
         return ResponseFactory.createResponse(userAccountService.findAllWithOffsetAndLimit(offset, limit));
     }
 
-    @Path("count")
+    @Path("quantity")
     @GET
     @LoggedIn(roles = { Role.SUPERADMIN })
     public Response countAllUsers() {
         return ResponseFactory.createResponse(userAccountService.countAll());
     }
 
-    @Path("list/role")
+    @Path("role-options")
     @GET
+    @LoggedIn(roles = { Role.SUPERADMIN })
     public Response getAllRoles() {
         return ResponseFactory.createResponse(Role.values());
     }
 
-    @Path("role/edit/{id}/{role}")
-    @POST
+    @Path("{id}/role/{role}")
+    @PUT
     @LoggedIn(roles = { Role.SUPERADMIN })
     public Response editUserRole(@PathParam("id") Long userAccountId, @PathParam("role") String role) {
         try {
@@ -89,9 +114,9 @@ public class UserAccountRest {
         }
     }
 
-    @Path("active/edit/{id}/{isActive}")
-    @POST
-    @LoggedIn(roles = { Role.ADMIN, Role.SUPERADMIN })
+    @Path("{id}/active/{isActive}")
+    @PUT
+    @LoggedIn(roles = { Role.SUPERADMIN })
     public Response editUserActive(@PathParam("id") Long userAccountId, @PathParam("isActive") Boolean isActive) {
         try {
             userAccountService.editUserActive(userAccountId, isActive);
@@ -101,10 +126,10 @@ public class UserAccountRest {
         }
     }
 
-    @Path("activate/{code}")
-    @POST
+    @Path("{activate-code}/active")
+    @PUT
     @LoggedOut
-    public Response activateUser(@PathParam("code") String activateCode) {
+    public Response activateUser(@PathParam("activate-code") String activateCode) {
         try {
             userAccountService.activateUser(activateCode);
             return ResponseFactory.createMessageResponse("A felhasználó sikeresen aktiválásra került. Most már bejelentkezhet!", false);
@@ -113,7 +138,7 @@ public class UserAccountRest {
         }
     }
 
-    @Path("forgot-password/{email}")
+    @Path("{email}/new-password-code")
     @POST
     @LoggedOut
     public Response forgotPassword(@PathParam("email") String email) {
@@ -125,24 +150,24 @@ public class UserAccountRest {
         }
     }
 
-    @Path("check-new-password-code/{code}")
-    @POST
+    @Path("new-password-code/{new-password-code}")
+    @GET
     @LoggedOut
-    public Response checkNewPasswordCode(@PathParam("code") String code) {
+    public Response checkNewPasswordCode(@PathParam("new-password-code") String newPasswordCode) {
         try {
-            final UserAccount user = userAccountService.checkNewPasswordCode(code);
+            final UserAccount user = userAccountService.checkNewPasswordCode(newPasswordCode);
             return ResponseFactory.createMessageResponse("Az új jelszót megadhatja! Felhasználó: " + user.getEmail(), false);
         } catch (RestProcessException exception) {
             return exception.getResponse();
         }
     }
 
-    @Path("set-new-password/{code}")
-    @POST
+    @Path("{new-password-code}/password")
+    @PUT
     @LoggedOut
-    public Response setNewPassword(@PathParam("code") String code, UserAccount user) {
+    public Response setNewPassword(@PathParam("new-password-code") String newPasswordCode, UserAccount user) {
         try {
-            userAccountService.setNewPassword(code, user);
+            userAccountService.setNewPassword(newPasswordCode, user);
             return ResponseFactory.createMessageResponse("Az új jelszó sikeresen beállítva!", false);
         } catch (RestProcessException exception) {
             return exception.getResponse();

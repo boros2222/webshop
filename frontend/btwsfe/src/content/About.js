@@ -9,7 +9,7 @@ function About() {
             <p className="font-size-normal">Webáruház készítője:</p>
             <p className="font-size-normal mt-1 pl-2"><span className="font-weight-bold">Boros Tibor</span> (boros2222@gmail.com)</p>
 
-            <p className="font-size-normal mt-4">Néhány felhasznált technológia:</p>
+            <p className="font-size-normal mt-4">Legfőbb felhasznált technológiák:</p>
             <div className="row mt-1">
                 <p className="col-12 col-lg-3 font-weight-bold pl-4">Backend</p>
                 <p className="col-12 col-lg-9 pl-5">Java Enterprise Edition</p>

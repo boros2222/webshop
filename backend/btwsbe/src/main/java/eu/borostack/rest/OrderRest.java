@@ -15,7 +15,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("order")
+@Path("orders")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class OrderRest {
@@ -26,20 +26,24 @@ public class OrderRest {
     @Inject
     private OrderedProductService orderedProductService;
 
-    @Path("list/status")
+    @Path("status-options")
     @GET
-    public Response getAllOrderStatus() {
+    public Response getAllOrderStatusOptions() {
         return ResponseFactory.createResponse(OrderStatus.values());
     }
 
-    @Path("new")
     @POST
     @LoggedIn(roles = { Role.USER })
-    public Response placeOrder(OrderDetails order) {
-        return orderDetailsService.placeOrder(order);
+    public Response newOrder(OrderDetails order) {
+        try {
+            orderDetailsService.newOrder(order);
+            return ResponseFactory.createMessageResponse("Rendelés sikeresen végbement! A visszaigazoló üzenetet elküldtük az email címére.", false);
+        } catch (RestProcessException exception) {
+            return exception.getResponse();
+        }
     }
 
-    @Path("list/{userAccountId}/{status}")
+    @Path("user/{userAccountId}/status/{status}")
     @GET
     @LoggedIn
     public Response getAllOrdersByUserAccount(@CheckUserId @PathParam("userAccountId") Long userAccountId,
@@ -48,14 +52,14 @@ public class OrderRest {
                 orderDetailsService.getOrdersByUserAccountIdAndStatus(userAccountId, OrderStatus.getByString(status)));
     }
 
-    @Path("list/{status}")
+    @Path("status/{status}")
     @GET
     @LoggedIn(roles = { Role.ADMIN, Role.SUPERADMIN })
     public Response getAllOrders(@PathParam("status") String status) {
         return ResponseFactory.createResponse(orderDetailsService.getOrdersByStatus(OrderStatus.getByString(status)));
     }
 
-    @Path("product/list/{orderDetailsId}")
+    @Path("{orderDetailsId}/products")
     @GET
     @LoggedIn
     public Response getAllOrderedProducts(@PathParam("orderDetailsId") Long orderDetailsId) {
@@ -66,8 +70,8 @@ public class OrderRest {
         }
     }
 
-    @Path("status/edit/{orderDetailsId}/{status}")
-    @POST
+    @Path("{orderDetailsId}/status/{status}")
+    @PUT
     @LoggedIn(roles = { Role.ADMIN, Role.SUPERADMIN })
     public Response editOrderStatus(@PathParam("orderDetailsId") Long orderDetailsId, @PathParam("status") String status) {
         try {

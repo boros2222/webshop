@@ -1,23 +1,25 @@
 import React, {useEffect, useState} from 'react';
-import {fetchToStore, sendToBackend} from "../redux/actions/request";
 import {CURRENT_USER, ORDER_STATUS, ORDERED_PRODUCTS, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
-import {RESET} from "../redux/constants/action-types";
 import {Link} from "react-router-dom";
 import {Dropdown} from "primereact/dropdown";
+import {editOrderStatus, loadOrderedProducts, loadOrderStatusOptions} from "../redux/functions/order-functions";
+import {resetStore} from "../redux/functions/generic-functions";
+import {dateTimeToString} from "../util/date-util";
 
-function OrderDetails({order, loadOrderedProducts, loadOrderStatus, userStore, orderStatusStore, orderedProductsStore, reset, editOrderStatus, responseStore, setChangedActiveIndex}) {
+function OrderDetails({order, loadOrderedProducts, loadOrderStatusOptions, userStore, orderStatusStore, orderedProductsStore,
+                          resetOrderedProducts, editOrderStatus, responseStore, setChangedActiveIndex}) {
 
     const [orderStatus, setOrderStatus] = useState(undefined);
     const [orderedProducts, setOrderedProducts] = useState(undefined);
     const [orderStatusOptions, setOrderStatusOptions] = useState([]);
 
     useEffect(() => {
-        loadOrderStatus();
+        loadOrderStatusOptions();
         setOrderStatus(order.status.code);
-    }, [loadOrderStatus, order]);
+    }, [loadOrderStatusOptions, order]);
 
     useEffect(() => {
         if (orderStatusStore.isReady()) {
@@ -28,10 +30,10 @@ function OrderDetails({order, loadOrderedProducts, loadOrderStatus, userStore, o
     }, [orderStatusStore]);
 
     useEffect(() => {
-        reset();
+        resetOrderedProducts();
         setOrderedProducts(undefined);
         loadOrderedProducts(order.id);
-    }, [loadOrderedProducts, order, reset]);
+    }, [loadOrderedProducts, order, resetOrderedProducts]);
 
     useEffect(() => {
         if (orderedProductsStore.isReady()) {
@@ -40,7 +42,7 @@ function OrderDetails({order, loadOrderedProducts, loadOrderStatus, userStore, o
     }, [orderedProductsStore]);
 
     const changeStatus = (event) => {
-        editOrderStatus(order.id, event.value, () => {
+        editOrderStatus(order.id, event.value).then(() => {
             setOrderStatus(event.value);
             setChangedActiveIndex(orderStatusStore.data.findIndex(status => status.code === event.value));
         });
@@ -52,7 +54,7 @@ function OrderDetails({order, loadOrderedProducts, loadOrderStatus, userStore, o
                 Rendelés azonosítója: <span className="font-weight-bold">{order.id}</span>
             </div>
             <div className="col-12 col-lg-4">
-                Rendelés dátuma: <span className="font-weight-bold">{order.orderDate.year}.{order.orderDate.monthValue < 10 ? '0' : ''}{order.orderDate.monthValue}.{order.orderDate.dayOfMonth}.</span>
+                Rendelés dátuma: <span className="font-weight-bold">{dateTimeToString(order.orderDate)}</span>
             </div>
             <div className="col-12 col-lg-4">
                 Termékek száma: <span className="font-weight-bold">{order.productCount}</span>
@@ -105,10 +107,10 @@ function OrderDetails({order, loadOrderedProducts, loadOrderStatus, userStore, o
 }
 
 const mapDispatchToProps = dispatch => ({
-    loadOrderedProducts: (orderId) => dispatch(fetchToStore(ORDERED_PRODUCTS, `/order/product/list/${orderId}`, false)),
-    loadOrderStatus: () => dispatch(fetchToStore(ORDER_STATUS, "/order/list/status", true)),
-    editOrderStatus: (orderId, status, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/order/status/edit/${orderId}/${status}`, undefined, callback)),
-    reset: () => dispatch({type: `${ORDERED_PRODUCTS}/${RESET}`})
+    loadOrderedProducts: loadOrderedProducts(dispatch),
+    loadOrderStatusOptions: loadOrderStatusOptions(dispatch),
+    editOrderStatus: editOrderStatus(dispatch),
+    resetOrderedProducts: resetStore(dispatch, ORDERED_PRODUCTS)
 });
 const mapStateToProps = state => ({
     userStore: state[CURRENT_USER],

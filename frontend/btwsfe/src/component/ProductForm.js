@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {CATEGORY, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import {fetchToStore} from "../redux/actions/request";
 import {useForm} from "react-hook-form";
 import {Dropdown} from "primereact/dropdown";
 import {InputText} from "primereact/inputtext";
 import ImageInput from "../component/ImageInput";
+import {loadCategories} from "../redux/functions/product-functions";
 
 function ProductForm({product, responseStore, categoriesStore, loadCategories, buttonLabel, onSubmit}) {
 
@@ -122,9 +122,7 @@ function ProductForm({product, responseStore, categoriesStore, loadCategories, b
 }
 
 const mapDispatchToProps = dispatch => ({
-    loadCategories: () => {
-        dispatch(fetchToStore(CATEGORY, "/category/list", true))
-    }
+    loadCategories: loadCategories(dispatch)
 });
 const mapStateToProps = state => ({
     categoriesStore: state[CATEGORY],

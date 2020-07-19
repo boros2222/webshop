@@ -2,11 +2,13 @@ import React, {useEffect} from 'react';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {CATEGORY} from "../redux/constants/namespaces";
-import {fetchToStore} from "../redux/actions/request";
+import {loadCategories} from "../redux/functions/product-functions";
 
 function Categories({loadCategories, categoriesStore, closeDropDown}) {
 
-    useEffect(() => loadCategories(), [loadCategories]);
+    useEffect(() => {
+        loadCategories();
+    }, [loadCategories]);
 
     if (!categoriesStore.isReady()) {
         return categoriesStore.getMessage();
@@ -24,9 +26,7 @@ function Categories({loadCategories, categoriesStore, closeDropDown}) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    loadCategories: () => {
-        dispatch(fetchToStore(CATEGORY, "/category/list", true))
-    }
+    loadCategories: loadCategories(dispatch)
 });
 const mapStateToProps = (state) => ({
     categoriesStore: state[CATEGORY]

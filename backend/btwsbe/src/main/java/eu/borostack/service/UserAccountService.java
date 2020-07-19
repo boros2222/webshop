@@ -10,16 +10,17 @@ import eu.borostack.util.ValidationUtil;
 import org.apache.commons.lang3.BooleanUtils;
 import org.mindrot.jbcrypt.BCrypt;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
 @Transactional
+@ApplicationScoped
 public class UserAccountService {
 
     @Inject
@@ -34,73 +35,64 @@ public class UserAccountService {
     @Inject
     private MailService mailService;
 
-    public Response getCurrentUser() {
-        UserAccount currentUser = authenticationService.checkLoggedInUser();
+    public UserAccount getCurrentUser() throws RestProcessException {
+        UserAccount currentUser = authenticationService.getLoggedInUser();
         if (currentUser != null) {
-            return ResponseFactory.createResponse(currentUser);
+            return currentUser;
         } else {
-            return ResponseFactory.createMessageResponse("Nincs felhasználó bejelentkezve!", true, 401);
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Nincs felhasználó bejelentkezve!", true, 401));
         }
     }
 
-    public Response loginUser(final UserAccount loginUser) {
-        Response response = validateUser(loginUser);
-
-        if (response == null) {
-            UserAccount existingUser = userAccountDao.findByEmail(loginUser.getEmail());
-            if (existingUser == null) {
-                response = ResponseFactory.createMessageResponse("Hibás email cím vagy jelszó!", true, 400);
-            } else {
-                NewCookie authCookie = authenticationService.authenticate(loginUser, existingUser);
-                if (authCookie != null) {
-                    if (existingUser.getActive()) {
-                        response = ResponseFactory.createMessageResponse("Sikeres bejelentkezés!", false, authCookie);
-                    } else {
-                        response = ResponseFactory.createMessageResponse("A felhasználó nem aktív", true, 400);
-                    }
-                } else {
-                    response = ResponseFactory.createMessageResponse("Hibás email cím vagy jelszó!", true, 400);
-                }
-            }
+    public NewCookie loginUser(final UserAccount loginUser) throws RestProcessException {
+        validateUser(loginUser);
+        UserAccount existingUser = userAccountDao.findByEmail(loginUser.getEmail());
+        if (existingUser == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Hibás email cím vagy jelszó!", true, 400));
         }
-        return response;
+        NewCookie authCookie = authenticationService.authenticate(loginUser, existingUser);
+        if (authCookie == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Hibás email cím vagy jelszó!", true, 400));
+        }
+        if (!existingUser.getActive()) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "A felhasználó nem aktív", true, 400));
+        }
+        return authCookie;
     }
 
-    public Response registerUser(final UserAccount userAccount) {
-        Response response = validateUser(userAccount);
-
-        if (response == null) {
-            UserAccount existingUser = userAccountDao.findByEmail(userAccount.getEmail());
-            if (existingUser != null) {
-                response = ResponseFactory.createMessageResponse("A felhasználó már létezik!", true, 400);
-            }
-            else {
-                UserAccount savedUser = createUser(userAccount);
-                if (savedUser != null) {
-                    response = ResponseFactory.createMessageResponse("Sikeres regisztráció! A megerősítő üzenetet elküldtük a megadott email címre.", false);
-                } else {
-                    response = ResponseFactory.createMessageResponse("Sikertelen regisztráció!", true, 500);
-                }
-            }
+    public void registerUser(final UserAccount userAccount) throws RestProcessException {
+        validateUser(userAccount);
+        UserAccount existingUser = userAccountDao.findByEmail(userAccount.getEmail());
+        if (existingUser != null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "A felhasználó már létezik!", true, 400));
         }
-        return response;
+        UserAccount savedUser = createUser(userAccount);
+        if (savedUser == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Sikertelen regisztráció!", true, 500));
+        }
     }
 
-    private Response validateUser(final UserAccount userAccount) {
-        Response response = null;
-        if (userAccount != null) {
-            Set<ConstraintViolation<UserAccount>> fails = ValidationUtil.validate(userAccount);
-            if(!fails.isEmpty()) {
-                String message = fails.iterator().next().getMessage();
-                response = ResponseFactory.createMessageResponse(message, true, 400);
-            }
-            if (userAccount.getPassword() == null || userAccount.getPassword().isBlank()) {
-                response = ResponseFactory.createMessageResponse("Jelszót kötelező megadni!", true, 400);
-            }
-        } else {
-            response = ResponseFactory.createMessageResponse("Nincs felhasználó megadva!", true, 400);
+    private void validateUser(final UserAccount userAccount) throws RestProcessException {
+        if (userAccount == null) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Nincs felhasználó megadva!", true, 400));
         }
-        return response;
+        Set<ConstraintViolation<UserAccount>> fails = ValidationUtil.validate(userAccount);
+        if(!fails.isEmpty()) {
+            String message = fails.iterator().next().getMessage();
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    message, true, 400));
+        }
+        if (userAccount.getPassword() == null || userAccount.getPassword().isBlank()) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Jelszót kötelező megadni!", true, 400));
+        }
     }
 
     private UserAccount createUser(final UserAccount userAccount) {
@@ -121,52 +113,63 @@ public class UserAccountService {
         return userAccount;
     }
 
-    private UserAccount createAddresses(final UserAccount userAccount) {
-        return updateAddresses(userAccount, userAccount);
+    private void createAddresses(final UserAccount userAccount) {
+        updateAddresses(userAccount, userAccount);
     }
 
-    private UserAccount updateAddresses(final UserAccount updatedUserAccount, final UserAccount userAccount) {
+    private void updateAddresses(final UserAccount updatedUserAccount, final UserAccount userAccount) {
         userAccount.setInvoiceAddress(addressService.save(updatedUserAccount.getInvoiceAddress()));
         userAccount.setShippingAddress(addressService.save(updatedUserAccount.getShippingAddress()));
-        return userAccount;
     }
 
-    public Response deleteUser(final Long userAccountId) {
+    public void deleteUser(final Long userAccountId) throws RestProcessException {
+        if (Role.ADMIN.equals(authenticationService.getLoggedInUser().getRole())) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse("Nincs jogosultság a megtekintéshez!", true, 400));
+        }
         if (userAccountId == null) {
-            return ResponseFactory.createMessageResponse("Nincs megadva felhasználó!", true, 400);
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Nincs megadva felhasználó!", true, 400));
         }
         final UserAccount userAccount = userAccountDao.findById(userAccountId);
         if (userAccount == null) {
-            return ResponseFactory.createMessageResponse("A felhasználó nem található!", true, 400);
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "A felhasználó nem található!", true, 400));
+        }
+        if (userAccount.isAdmin()) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "A felhasználó nem törölhető!", true, 400));
         }
         userAccount.setDeleted(true);
         userAccountDao.save(userAccount);
-        return ResponseFactory.createMessageResponse("Felhasználó sikeresen törölve!", false);
     }
 
-    public Response updateUser(Long userAccountId, UserAccount updatedUserAccount) {
-        if (userAccountId.equals(updatedUserAccount.getId())) {
-            if (updatedUserAccount.getInvoiceAddress() != null && !updatedUserAccount.getInvoiceAddress().isValid()) {
-                return ResponseFactory.createMessageResponse("Számlázási cím nem teljes!", true, 400);
-            }
-            if (updatedUserAccount.getShippingAddress() != null && !updatedUserAccount.getShippingAddress().isValid()) {
-                return ResponseFactory.createMessageResponse("Szállítási cím nem teljes!", true, 400);
-            }
-
-            final UserAccount userAccount = userAccountDao.findById(userAccountId);
-            if (updatedUserAccount.getPassword() != null && !updatedUserAccount.getPassword().isBlank()) {
-                userAccount.setPassword(updatedUserAccount.getPassword());
-                createHash(userAccount);
-            }
-            updateAddresses(updatedUserAccount, userAccount);
-            if (updatedUserAccount.getName() != null) {
-                userAccount.setName(updatedUserAccount.getName());
-            }
-            userAccountDao.save(userAccount);
-            return ResponseFactory.createMessageResponse("Felhasználó sikeresen módosítva!", false);
-        } else {
-            return ResponseFactory.createMessageResponse("Felhasználó módosítása sikertelen!", true, 400);
+    public void updateUser(Long userAccountId, UserAccount updatedUserAccount) throws RestProcessException {
+        if (Role.ADMIN.equals(authenticationService.getLoggedInUser().getRole())) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse("Nincs jogosultság a megtekintéshez!", true, 400));
         }
+        if (!userAccountId.equals(updatedUserAccount.getId())) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Felhasználó módosítása sikertelen!", true, 400));
+        }
+        if (updatedUserAccount.getInvoiceAddress() != null && !updatedUserAccount.getInvoiceAddress().isValid()) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Számlázási cím nem teljes!", true, 400));
+        }
+        if (updatedUserAccount.getShippingAddress() != null && !updatedUserAccount.getShippingAddress().isValid()) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "Szállítási cím nem teljes!", true, 400));
+        }
+
+        final UserAccount userAccount = userAccountDao.findById(userAccountId);
+        if (updatedUserAccount.getPassword() != null && !updatedUserAccount.getPassword().isBlank()) {
+            userAccount.setPassword(updatedUserAccount.getPassword());
+            createHash(userAccount);
+        }
+        updateAddresses(updatedUserAccount, userAccount);
+        if (updatedUserAccount.getName() != null) {
+            userAccount.setName(updatedUserAccount.getName());
+        }
+        userAccountDao.save(userAccount);
     }
 
     public void editUserRole(Long userAccoutId, Role role) throws RestProcessException {
@@ -182,6 +185,10 @@ public class UserAccountService {
         if (userAccount == null) {
             throw new RestProcessException(ResponseFactory.createMessageResponse(
                     "A felhasználó nem található", true, 400));
+        }
+        if (Role.SUPERADMIN.equals(userAccount.getRole())) {
+            throw new RestProcessException(ResponseFactory.createMessageResponse(
+                    "A felhasználó jogosultsága nem módosítható", true, 400));
         }
         userAccount.setRole(role);
         userAccountDao.save(userAccount);
@@ -279,17 +286,5 @@ public class UserAccountService {
 
     public List<UserAccount> findAllWithOffsetAndLimit(final Long offset, final Long limit) {
         return userAccountDao.findAllWithOffsetAndLimit(offset, limit);
-    }
-
-    public UserAccount update(UserAccount userAccount) {
-        return userAccountDao.update(userAccount);
-    }
-
-    public UserAccount findById(Long id) {
-        return userAccountDao.findById(id);
-    }
-
-    public List<UserAccount> findAll() {
-        return userAccountDao.findAll();
     }
 }

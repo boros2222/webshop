@@ -1,19 +1,17 @@
 import React, {useEffect} from 'react';
-import { useHistory } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import {CURRENT_USER, PRODUCT_DETAILS, RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import {RESET} from "../redux/constants/action-types";
-import {fetchToStore, sendToBackend} from "../redux/actions/request";
 import ProductForm from "../component/ProductForm";
+import {editProduct, loadProduct} from "../redux/functions/product-functions";
 
-function EditProduct({id, reset, userStore, responseStore, editProduct, loadProduct, productDetailsStore}) {
+function EditProduct({id, userStore, responseStore, editProduct, loadProduct, productDetailsStore}) {
 
     const history = useHistory();
 
     useEffect(() => {
-        reset();
         loadProduct(id);
-    }, [loadProduct, id, reset]);
+    }, [loadProduct, id]);
 
     if (!userStore.isAdmin()) {
         return <p>Csak admin jogosultsággal szerkeszthető egy termék!</p>
@@ -33,7 +31,7 @@ function EditProduct({id, reset, userStore, responseStore, editProduct, loadProd
         formData.set("category", product.category);
         product.files.filter(file => file.id == null).forEach(file => formData.append("files", file));
         product.files.filter(file => file.id != null).map(file => file.path).forEach(file => formData.append("existingFiles", file));
-        editProduct(formData, () => history.push(`/product/${productDetailsStore.data.id}`));
+        editProduct(formData).then(() => history.push(`/product/${productDetailsStore.data.id}`));
     };
 
     let message = responseStore.getMessage();
@@ -54,11 +52,8 @@ function EditProduct({id, reset, userStore, responseStore, editProduct, loadProd
 }
 
 const mapDispatchToProps = dispatch => ({
-    loadProduct: (productId) => {
-        dispatch(fetchToStore(PRODUCT_DETAILS, `/product/${productId}`, false))
-    },
-    editProduct: (product, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, "/product/edit", product, callback)),
-    reset: () => dispatch({type: `${RESPONSE_MESSAGE}/${RESET}`})
+    loadProduct: loadProduct(dispatch),
+    editProduct: editProduct(dispatch)
 });
 const mapStateToProps = state => ({
     productDetailsStore: state[PRODUCT_DETAILS],

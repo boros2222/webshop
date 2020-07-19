@@ -14,7 +14,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("product")
+@Path("products")
 @Produces(MediaType.APPLICATION_JSON)
 public class ProductRest {
 
@@ -22,7 +22,6 @@ public class ProductRest {
     private ProductService productService;
 
     @GET
-    @Path("list")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getAllProducts() {
         return ResponseFactory.createResponse(productService.findAll());
@@ -36,7 +35,7 @@ public class ProductRest {
     }
 
     @GET
-    @Path("{offset}/{limit}/{sort}")
+    @Path("offset/{offset}/limit/{limit}/sort/{sort}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getProduct(@PathParam("offset") Long offset,
                                @PathParam("limit") Long limit,
@@ -46,7 +45,7 @@ public class ProductRest {
     }
 
     @GET
-    @Path("{search}/{offset}/{limit}/{sort}")
+    @Path("search/{search}/offset/{offset}/limit/{limit}/sort/{sort}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getProduct(@PathParam("search") String searchTerm,
                                @PathParam("offset") Long offset,
@@ -57,7 +56,7 @@ public class ProductRest {
     }
 
     @GET
-    @Path("/category/{categoryId}/{offset}/{limit}/{sort}")
+    @Path("/category/{categoryId}/offset/{offset}/limit/{limit}/sort/{sort}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getProduct(@PathParam("categoryId") Long categoryId,
                                @PathParam("offset") Long offset,
@@ -68,7 +67,6 @@ public class ProductRest {
     }
 
     @POST
-    @Path("/new")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @LoggedIn(roles = { Role.ADMIN, Role.SUPERADMIN })
     public Response create(MultipartFormDataInput multipartData) {
@@ -80,8 +78,7 @@ public class ProductRest {
         }
     }
 
-    @POST
-    @Path("/edit")
+    @PUT
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @LoggedIn(roles = { Role.ADMIN, Role.SUPERADMIN })
     public Response edit(MultipartFormDataInput multipartData) {
@@ -93,8 +90,8 @@ public class ProductRest {
         }
     }
 
-    @POST
-    @Path("delete/{id}")
+    @DELETE
+    @Path("{id}")
     @LoggedIn(roles = { Role.ADMIN, Role.SUPERADMIN })
     public Response delete(@PathParam("id") Long productId) {
         try {

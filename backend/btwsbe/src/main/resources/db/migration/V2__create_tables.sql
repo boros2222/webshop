@@ -95,17 +95,3 @@ create table ordered_product (
     constraint ordered_product_fk_2 foreign key (product_id) references product (id),
     constraint ordered_product_check check (quantity > 0)
 );
-
-create sequence s_payment;
-create table payment (
-    id integer,
-    order_details_id integer not null,
-    service varchar(255),
-    payment_date timestamp,
-    is_paid boolean not null,
-    total_price integer not null,
-
-    constraint payment_uq unique (order_details_id),
-    constraint payment_pk primary key (id),
-    constraint payment_fk foreign key (order_details_id) references order_details (id)
-);

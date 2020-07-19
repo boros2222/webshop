@@ -1,55 +1,56 @@
 import React, {useState} from 'react';
 import {CART_STORAGE, CURRENT_USER} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import constants from "../Constants";
 import {Growl} from "primereact/growl";
 import "./CartDetails.css";
-import {getFromStorage, saveToStorage} from "../redux/actions/storage";
 import {Link, Redirect} from "react-router-dom";
+import {loadCart, setCart} from "../redux/functions/cart-functions";
 
-function CartDetails({userStore, cartStore, setCartStore}) {
+function CartDetails({userStore, cartStore, setCart, loadCart}) {
 
     const [toOrder, setToOrder] = useState(false);
     const [growl, setGrowl] = useState(undefined);
 
-    const getCart = () => {
-        let cart = cartStore.data;
-        if (cart === undefined) {
-            cart = [];
-        } else {
-            cart = cart.slice();
-        }
-        return cart;
+    const getCart = (action) => {
+        loadCart().then(cartData => {
+            let cart;
+            if (cartData === undefined) {
+                cart = [];
+            } else {
+                cart = cartData.slice();
+            }
+            action(cart);
+        });
     };
 
     const removeFromCart = (cartProduct) => {
-        const cart = getCart();
-        const index = cart.indexOf(cartProduct);
-        if (index > -1) {
-            cart.splice(index, 1);
-            setCartStore(cart);
-            growl.show({severity: "success", summary: "Kosár", detail: "Termék eltávolítva a kosárból!"});
-        }
+        getCart((cart) => {
+            const index = cart.findIndex(x => x.id === cartProduct.id);
+            if (index > -1) {
+                cart.splice(index, 1);
+                setCart(cart);
+                growl.show({severity: "success", summary: "Kosár", detail: "Termék eltávolítva a kosárból!"});
+            }
+        });
     };
 
-    const setQuantity = (cartProduct, quantity) => {
-        const cart = getCart();
-        const index = cart.indexOf(cartProduct);
-        if (index > -1) {
-            cart[index].quantity = quantity;
-            setCartStore(cart);
-        }
+    const addQuantity = (cartProduct, quantity) => {
+        getCart((cart) => {
+            const foundProduct = cart.find(x => x.product.id === cartProduct.product.id);
+            if (foundProduct !== undefined) {
+                foundProduct.quantity += quantity;
+                setCart(cart);
+            }
+        });
     };
 
     const increaseQuantity = (cartProduct) => {
-        const currentQuantity = cartProduct.quantity;
-        setQuantity(cartProduct, currentQuantity + 1);
+        addQuantity(cartProduct, +1);
     };
 
     const decreaseQuantity = (cartProduct) => {
-        const currentQuantity = cartProduct.quantity;
-        if (currentQuantity > 1) {
-            setQuantity(cartProduct, currentQuantity - 1);
+        if (cartProduct.quantity > 1) {
+            addQuantity(cartProduct, -1);
         }
     };
 
@@ -68,16 +69,18 @@ function CartDetails({userStore, cartStore, setCartStore}) {
     let cart = cartStore.data;
     if (cart === null || cart === undefined || cart.length === 0) {
         return (
-            <div>
+            <>
+                <Growl ref={(el) => setGrowl(el)} />
+                <p className="font-size-medium mb-3">Kosár tartalma</p>
                 <p>A kosár üres!</p>
-            </div>
+            </>
         );
     } else {
         const priceSum = cart.map(cartProduct => cartProduct.product.price * cartProduct.quantity).reduce((a, b) => a + b, 0);
         return (
             <>
                 <Growl ref={(el) => setGrowl(el)} />
-                <p className="font-weight-bold font-size-medium mb-3">Kosár tartalma</p>
+                <p className="font-size-medium mb-3">Kosár tartalma</p>
                 <div className="container-fluid pb-5">
                     {cart.map(cartProduct => {
                         let product = cartProduct.product;
@@ -134,9 +137,8 @@ function CartDetails({userStore, cartStore, setCartStore}) {
 }
 
 const mapDispatchToProps = dispatch => ({
-    setCartStore: (data) => saveToStorage(constants.CART_STORAGE_NAME, data, {
-        callback: () => dispatch(getFromStorage(CART_STORAGE, constants.CART_STORAGE_NAME))
-    }),
+    loadCart: loadCart(dispatch),
+    setCart: setCart(dispatch),
 });
 
 const mapStateToProps = state => ({

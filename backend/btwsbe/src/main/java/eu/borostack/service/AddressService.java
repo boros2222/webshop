@@ -3,11 +3,12 @@ package eu.borostack.service;
 import eu.borostack.dao.AddressDao;
 import eu.borostack.entity.Address;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import java.util.List;
 
 @Transactional
+@ApplicationScoped
 public class AddressService {
 
     @Inject
@@ -22,17 +23,5 @@ public class AddressService {
             }
         }
         return savedAddress;
-    }
-
-    public Address update(Address address) {
-        return addressDao.update(address);
-    }
-
-    public Address findById(Long id) {
-        return addressDao.findById(id);
-    }
-
-    public List<Address> findAll() {
-        return addressDao.findAll();
     }
 }

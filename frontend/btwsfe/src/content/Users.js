@@ -1,13 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {RESPONSE_MESSAGE, USER_ROLES, USERS, USERS_COUNT} from "../redux/constants/namespaces";
+import {CURRENT_USER, RESPONSE_MESSAGE, USER_ROLES, USERS, USERS_COUNT} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import {fetchToStore, sendToBackend} from "../redux/actions/request";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {Dropdown} from "primereact/dropdown";
 import ConfirmDialog from "../component/ConfirmDialog";
+import {
+    deleteUser,
+    editUserActive,
+    editUserRole,
+    loadUserRoleOptions,
+    loadUsers,
+    loadUsersCount
+} from "../redux/functions/user-functions";
+import {dateTimeToString} from "../util/date-util";
 
-function Users({loadUsersCount, loadUsers, loadUserRoles, usersCountStore, usersStore, userRolesStore, deleteUser, editUserRole, responseStore, editUserActive}) {
+function Users({loadUsersCount, loadUsers, loadUserRoleOptions, usersCountStore, usersStore, userRolesStore, deleteUser,
+                   editUserRole, responseStore, editUserActive, userStore}) {
 
     const [rows] = useState(10);
     const [first, setFirst] = useState(0);
@@ -18,8 +27,8 @@ function Users({loadUsersCount, loadUsers, loadUserRoles, usersCountStore, users
 
     useEffect(() => {
         loadUsersCount();
-        loadUserRoles();
-    }, [loadUserRoles, loadUsersCount]);
+        loadUserRoleOptions();
+    }, [loadUserRoleOptions, loadUsersCount]);
 
     useEffect(() => {
         loadUsers(first, rows);
@@ -45,8 +54,12 @@ function Users({loadUsersCount, loadUsers, loadUserRoles, usersCountStore, users
         }
     }, [usersStore]);
 
+    if (!userStore.hasRole("SUPERADMIN")) {
+        return <p className="font-size-normal font-weight-bold">Nincs jogosultság a megtekintéshez!</p>;
+    }
+
     if (!usersCountStore.isReady()) {
-        return <i className="pi pi-spin pi-spinner font-size-large"/>
+        return usersCountStore.getMessage();
     }
 
     const reload = () => {
@@ -55,23 +68,15 @@ function Users({loadUsersCount, loadUsers, loadUserRoles, usersCountStore, users
     };
 
     const deleteUserById = (userId) => {
-        deleteUser(userId, reload);
+        deleteUser(userId).then(reload);
     };
 
     const changeRole = (userId, event) => {
-        editUserRole(userId, event.value, reload);
+        editUserRole(userId, event.value).then(reload);
     };
 
     const changeActive = (userId, event) => {
-        editUserActive(userId, event.value, reload);
-    };
-
-    const dateToString = (date) => {
-        return `${date.year}.${dateNumberToString(date.monthValue)}.${dateNumberToString(date.dayOfMonth)}. ${dateNumberToString(date.hour)}:${dateNumberToString(date.minute)}`
-    };
-
-    const dateNumberToString = (dateNumber) => {
-        return `${dateNumber < 10 ? '0' : ''}${dateNumber}`;
+        editUserActive(userId, event.value).then(reload);
     };
 
     const onPage = (event) => {
@@ -89,7 +94,7 @@ function Users({loadUsersCount, loadUsers, loadUserRoles, usersCountStore, users
                 <Column field="name" header="Név" />
                 <Column field="email" header="Email" />
                 <Column field="registrationDate" header="Regisztráció dátuma"
-                        body={(user) => dateToString(user.registrationDate)} />
+                        body={(user) => dateTimeToString(user.registrationDate)} />
                 <Column field="active" header="Aktív"
                         body={(user) =>
                             <Dropdown options={userActiveOptions} value={user.active} disabled={user.role.code !== "USER"}
@@ -101,7 +106,7 @@ function Users({loadUsersCount, loadUsers, loadUserRoles, usersCountStore, users
                                       onChange={(event) => changeRole(user.id, event)}/>
                         }/>
                 <Column header="Törlés" style={{width:"10%"}}
-                        body={(user) => user.role.code !== "SUPERADMIN" &&
+                        body={(user) => !["ADMIN","SUPERADMIN"].includes(user.role.code) &&
                             <ConfirmDialog headerText="Felhasználó törlése" text={`Biztosan törölni kívánja a felhasználót (${user.email}) ?`}
                                            onConfirm={() => deleteUserById(user.id)}>
                                 <button type="button" className="d-inline-flex custom-button red-button font-size-normal flex-center">
@@ -115,17 +120,18 @@ function Users({loadUsersCount, loadUsers, loadUserRoles, usersCountStore, users
 }
 
 const mapDispatchToProps = dispatch => ({
-    loadUsers: (offset, limit) => dispatch(fetchToStore(USERS, `/user/list/${offset}/${limit}`, false)),
-    loadUsersCount: () => dispatch(fetchToStore(USERS_COUNT, `/user/count`, false)),
-    loadUserRoles: () => dispatch(fetchToStore(USER_ROLES, `/user/list/role`, true)),
-    deleteUser: (userId, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/user/delete/${userId}`, undefined, callback)),
-    editUserRole: (userId, role, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/user/role/edit/${userId}/${role}`, undefined, callback)),
-    editUserActive: (userId, isActive, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/user/active/edit/${userId}/${isActive}`, undefined, callback)),
+    loadUsers: loadUsers(dispatch),
+    loadUsersCount: loadUsersCount(dispatch),
+    loadUserRoleOptions: loadUserRoleOptions(dispatch),
+    deleteUser: deleteUser(dispatch),
+    editUserRole: editUserRole(dispatch),
+    editUserActive: editUserActive(dispatch),
 });
 const mapStateToProps = state => ({
     usersStore: state[USERS],
     usersCountStore: state[USERS_COUNT],
     userRolesStore: state[USER_ROLES],
     responseStore: state[RESPONSE_MESSAGE],
+    userStore: state[CURRENT_USER]
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Users);

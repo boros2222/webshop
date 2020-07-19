@@ -9,13 +9,9 @@ import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import MainLayout from './layout/MainLayout';
 import Products from './content/Products';
 import ProductDetails from './content/ProductDetails';
-import {CART_STORAGE, CURRENT_USER, THEME_STORAGE} from "./redux/constants/namespaces";
 import {connect} from "react-redux";
 import Register from "./content/Register";
-import constants from "./Constants";
 import CartDetails from "./content/CartDetails";
-import {fetchToStore} from "./redux/actions/request";
-import {getFromStorage} from "./redux/actions/storage";
 import Order from "./content/Order";
 import SearchResult from "./content/SearchResult";
 import CategoryProducts from "./content/CategoryProducts";
@@ -25,20 +21,28 @@ import NewProduct from "./content/NewProduct";
 import EditProduct from "./content/EditProduct";
 import About from "./content/About";
 import Users from "./content/Users";
-import NoPermission from "./component/NoPermission";
 import ActivateUser from "./content/ActivateUser";
 import ForgotPassword from "./content/ForgotPassword";
+import {loadTheme} from "./redux/functions/theme-functions";
+import {loadCart} from "./redux/functions/cart-functions";
+import {loadCurrentUser} from "./redux/functions/user-functions";
+import {resetStore} from "./redux/functions/generic-functions";
+import {RESPONSE_MESSAGE} from "./redux/constants/namespaces";
 
-function App({getCurrentUser, getCart, getTheme, userStore}) {
+function App({loadCurrentUser, loadCart, loadTheme, resetMessage}) {
 
     useEffect(() => {
-        getCurrentUser();
-        getCart();
-        getTheme();
-    }, [getCart, getCurrentUser, getTheme]);
+        loadTheme();
+    }, [loadTheme]);
 
     return (
         <Router>
+            <Route exact path = "*" render = {() => {
+                resetMessage();
+                loadCurrentUser();
+                loadCart();
+            }}/>
+
             <Switch>
                 <Route exact path = {["/", "/products"]} render = {(props) =>
                     <MainLayout content = {
@@ -108,7 +112,7 @@ function App({getCurrentUser, getCart, getTheme, userStore}) {
 
                 <Route exact path = "/users" render = {(props) =>
                     <MainLayout content = {
-                        userStore.hasRole("SUPERADMIN") ? <Users /> : <NoPermission/>
+                        <Users />
                     } {...props} />
                 }/>
 
@@ -141,11 +145,11 @@ function App({getCurrentUser, getCart, getTheme, userStore}) {
 }
 
 const mapDispatchToProps = dispatch => ({
-    getCurrentUser: () => dispatch(fetchToStore(CURRENT_USER, "/user/current", false)),
-    getCart: () => dispatch(getFromStorage(CART_STORAGE, constants.CART_STORAGE_NAME)),
-    getTheme: () => dispatch(getFromStorage(THEME_STORAGE, constants.THEME_STORAGE_NAME))
+    loadCurrentUser: loadCurrentUser(dispatch),
+    loadCart: loadCart(dispatch),
+    loadTheme: loadTheme(dispatch),
+    resetMessage: resetStore(dispatch, RESPONSE_MESSAGE)
 });
 const mapStateToProps = state => ({
-    userStore: state[CURRENT_USER]
 });
 export default connect(mapStateToProps, mapDispatchToProps)(App);

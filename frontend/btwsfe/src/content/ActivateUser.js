@@ -1,14 +1,9 @@
 import React, {useEffect} from 'react';
 import {RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import {RESET} from "../redux/constants/action-types";
-import {sendToBackend} from "../redux/actions/request";
+import {activateUser} from "../redux/functions/user-functions";
 
-function ActivateUser({code, reset, activate, responseStore}) {
-
-    useEffect(() => {
-        reset();
-    }, [reset]);
+function ActivateUser({code, activate, responseStore}) {
 
     useEffect(() => {
         activate(code);
@@ -25,10 +20,7 @@ function ActivateUser({code, reset, activate, responseStore}) {
 }
 
 const mapDispatchToProps = dispatch => ({
-    activate: (code) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/user/activate/${code}`, undefined)),
-    reset: () => dispatch({
-        type: `${RESPONSE_MESSAGE}/${RESET}`
-    })
+    activate: activateUser(dispatch),
 });
 const mapStateToProps = state => ({
     responseStore: state[RESPONSE_MESSAGE]

@@ -1,20 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {RESPONSE_MESSAGE} from "../redux/constants/namespaces";
 import {connect} from "react-redux";
-import {RESET} from "../redux/constants/action-types";
 import {useForm} from "react-hook-form";
-import {sendToBackend} from "../redux/actions/request";
+import {checkNewPasswordCode, forgotPassword, setNewPassword} from "../redux/functions/user-functions";
 
-function ForgotPassword({newPasswordCode, reset, responseStore, forgotPassword, checkNewPasswordCode, setNewPassword}) {
+function ForgotPassword({newPasswordCode, responseStore, forgotPassword, checkNewPasswordCode, setNewPassword}) {
 
     const {register, handleSubmit, watch, errors} = useForm();
     const [checkSuccess, setCheckSuccess] = useState(false);
     const [triedCheck, setTriedCheck] = useState(false);
     const [newPasswordSuccess, setNewPasswordSuccess] = useState(false);
-
-    useEffect(() => {
-        reset();
-    }, [reset]);
 
     if (newPasswordCode == null) {
         return (
@@ -56,7 +51,7 @@ function ForgotPassword({newPasswordCode, reset, responseStore, forgotPassword, 
     } else {
         if (checkSuccess === false) {
             if (triedCheck === false) {
-                checkNewPasswordCode(newPasswordCode, () => setCheckSuccess(true));
+                checkNewPasswordCode(newPasswordCode).then(() => setCheckSuccess(true));
                 setTriedCheck(true);
             }
             return (
@@ -68,7 +63,7 @@ function ForgotPassword({newPasswordCode, reset, responseStore, forgotPassword, 
         } else {
             const onSubmit = (user) => {
                 user.passwordAgain = undefined;
-                setNewPassword(newPasswordCode, user, () => setNewPasswordSuccess(true));
+                setNewPassword(newPasswordCode, user).then(() => setNewPasswordSuccess(true));
             };
 
             return (
@@ -125,12 +120,9 @@ function ForgotPassword({newPasswordCode, reset, responseStore, forgotPassword, 
 }
 
 const mapDispatchToProps = dispatch => ({
-    forgotPassword: (email) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/user/forgot-password/${email}`, undefined)),
-    checkNewPasswordCode: (code, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/user/check-new-password-code/${code}`, undefined, callback)),
-    setNewPassword: (code, user, callback) => dispatch(sendToBackend(RESPONSE_MESSAGE, `/user/set-new-password/${code}`, user, callback)),
-    reset: () => dispatch({
-        type: `${RESPONSE_MESSAGE}/${RESET}`
-    })
+    forgotPassword: forgotPassword(dispatch),
+    checkNewPasswordCode: checkNewPasswordCode(dispatch),
+    setNewPassword: setNewPassword(dispatch)
 });
 const mapStateToProps = state => ({
     responseStore: state[RESPONSE_MESSAGE]
