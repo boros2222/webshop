@@ -8,7 +8,7 @@ function Product({product}) {
                 <Link className="d-block d-lg-none" to={"/product/" + product.id}>
                     <span className="font-size-medium">{product.name}</span>
                 </Link>
-                <img className="w-100" src={product.pictures.length ? product.pictures[0].path : "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"} alt=""/>
+                {product.pictures.length ? <img className="w-100" src={product.pictures[0].path} alt=""/> : <div className="w-100"/>}
             </div>
             <div className="col-12 col-lg-7 w-100 h-100 primary-color">
                 <Link className="d-none d-lg-block" to={"/product/" + product.id}>

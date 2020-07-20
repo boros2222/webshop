@@ -125,7 +125,7 @@ public class AuthenticationService {
                 .signWith(JWT_KEY)
                 .compact();
 
-        return new NewCookie(AUTH_COOKIE_NAME, newToken, "/btwsbe/api/", null, 1,
-                null, -1, expiration, false, false);
+        return new NewCookie(AUTH_COOKIE_NAME, newToken, "/btwsbe/api/", System.getProperty("frontend.domain"),
+                1, null, -1, expiration, false, false);
     }
 }

@@ -1,5 +1,6 @@
 import {SET_DATA} from "../constants/action-types";
 import Cookies from 'universal-cookie';
+import constants from "../../Constants";
 
 export function getCookie(namespace, cookieName) {
     return (dispatch) => new Promise((resolve, reject) => {
@@ -18,7 +19,7 @@ export function setCookie(cookieName, cookieValue, path = "/") {
         const cookies = new Cookies();
         cookies.set(cookieName, cookieValue, {
             path: path,
-            domain: "localhost"
+            domain: constants.FRONTEND_DOMAIN
         });
         resolve();
     });
@@ -29,7 +30,7 @@ export function removeCookie(cookieName, path) {
         const cookies = new Cookies();
         cookies.remove(cookieName, {
             path: path,
-            domain: "localhost"
+            domain: constants.FRONTEND_DOMAIN
         });
         resolve();
     });

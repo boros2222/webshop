@@ -93,7 +93,7 @@ function ProductDetails({id, productDetailsStore, loadProduct, setCart, userStor
                 </div>
             }
             <div className="row">
-                <h1 className="col-12">{product.name}</h1>
+                <p className="col-12 font-size-medium">{product.name}</p>
                 <div className="col-12 col-lg-7 my-3">
                     <Carousel value={product.pictures} itemTemplate={pictureTemplate} orientation="horizontal" style={{width: "100%"}}
                               numVisible={1} numScroll={1} responsive={[{numVisible: 1, numScroll: 1}]}/>

@@ -18,7 +18,7 @@ public class WebdavService {
 
     @PostConstruct
     private void init() {
-        sardine = SardineFactory.begin(System.getProperty("davuser"), System.getProperty("davpassword"));
+        sardine = SardineFactory.begin(System.getProperty("webdav.user"), System.getProperty("webdav.password"));
     }
 
     public String uploadFile(final InputStream inputStream) throws RestProcessException {
@@ -26,7 +26,7 @@ public class WebdavService {
             throw new RestProcessException(ResponseFactory.createMessageResponse("Nincs fájl!", true, 400));
         }
         final String fileName = Generators.timeBasedGenerator().generate().toString();
-        final String url = System.getProperty("davurl") + fileName;
+        final String url = System.getProperty("webdav.url") + fileName;
         try {
             sardine.put(url, inputStream);
             return url;

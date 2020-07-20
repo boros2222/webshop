@@ -23,7 +23,7 @@ public class MailService {
     public void sendNewPasswordMail(final UserAccount userAccount) {
         ST template = new ST(loadMailTemplate("new_password.st"), '$', '$');
         template.add("user", userAccount);
-        template.add("url", System.getProperty("baseurl") + "/forgot-password/" + userAccount.getNewPasswordCode());
+        template.add("url", System.getProperty("frontend.url") + "/forgot-password/" + userAccount.getNewPasswordCode());
         final String content = template.render();
         sendMail(userAccount.getEmail(), "Új jelszó igénylése", content);
     }
@@ -31,7 +31,7 @@ public class MailService {
     public void sendActivateMail(final UserAccount userAccount) {
         ST template = new ST(loadMailTemplate("activate_user.st"), '$', '$');
         template.add("user", userAccount);
-        template.add("url", System.getProperty("baseurl") + "/activate/" + userAccount.getActivateCode());
+        template.add("url", System.getProperty("frontend.url") + "/activate/" + userAccount.getActivateCode());
         final String content = template.render();
         sendMail(userAccount.getEmail(), "Regisztráció megerősítése", content);
     }
