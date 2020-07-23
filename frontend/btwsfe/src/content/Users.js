@@ -87,7 +87,7 @@ function Users({loadUsersCount, loadUsers, loadUserRoleOptions, usersCountStore,
         <>
             <p className="font-weight-bold font-size-medium mb-3">Felhasználók</p>
             <p className="mb-2">{responseStore.getMessage()}</p>
-            <DataTable value={users} paginator={true} rows={rows} totalRecords={usersCount} responsive={true}
+            <DataTable value={users} paginator={true} rows={rows} totalRecords={usersCount} responsive={true} autoLayout={true}
                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
                        currentPageReportTemplate={`Összesen: ${usersCount}`}
                        lazy={true} first={first} onPage={onPage} loading={!usersStore.isReady()}>

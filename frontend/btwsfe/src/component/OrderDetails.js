@@ -92,7 +92,7 @@ function OrderDetails({order, loadOrderedProducts, loadOrderStatusOptions, userS
                     <i className="pi pi-spin pi-spinner font-size-large"/>
                     :
                     <>
-                        <DataTable value={orderedProducts} responsive={true} rowHover={true}>
+                        <DataTable value={orderedProducts} responsive={true} rowHover={true} autoLayout={true}>
                             <Column field="product.name" header="Termék neve"
                                     body={orderedProduct => <Link to={"/product/" + orderedProduct.product.id}>{orderedProduct.product.name}</Link>}/>
                             <Column field="quantity" header="Mennyiség" />
