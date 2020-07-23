@@ -93,7 +93,7 @@ function ProductDetails({id, productDetailsStore, loadProduct, setCart, userStor
                 </div>
             }
             <div className="row">
-                <p className="col-12 font-size-medium">{product.name}</p>
+                <p className="col-12 font-weight-bold font-size-medium">{product.name}</p>
                 <div className="col-12 col-lg-7 my-3">
                     <Carousel value={product.pictures} itemTemplate={pictureTemplate} orientation="horizontal" style={{width: "100%"}}
                               numVisible={1} numScroll={1} responsive={[{numVisible: 1, numScroll: 1}]}/>
@@ -103,7 +103,7 @@ function ProductDetails({id, productDetailsStore, loadProduct, setCart, userStor
                     {product.shortDescription.split(/\r?\n/g).map((line, index) => <p key={index}>{line}</p>)}
                     <div className="d-flex justify-content-center align-items-center flex-column mt-3">
                         {product.deleted &&
-                            <p style={{color: "#df0000"}}>A termék már nem elérhető!</p>
+                            <p className="error-message">A termék már nem elérhető!</p>
                         }
                         <p className="font-size-medium font-weight-bold">{product.price.toLocaleString()} Ft</p>
                         {!product.deleted && !userStore.isAdmin() &&

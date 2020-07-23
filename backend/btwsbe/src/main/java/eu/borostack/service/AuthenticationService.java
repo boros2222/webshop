@@ -12,10 +12,12 @@ import io.jsonwebtoken.security.Keys;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.crypto.SecretKey;
+import javax.ejb.Stateful;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.ws.rs.core.NewCookie;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -23,7 +25,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+@Stateful
 @RequestScoped
+@Transactional
 public class AuthenticationService {
     private final String AUTH_COOKIE_NAME = "auth";
     private final SecretKey JWT_KEY = Keys.hmacShaKeyFor(AppConfig.getJwtKey());
@@ -125,7 +129,7 @@ public class AuthenticationService {
                 .signWith(JWT_KEY)
                 .compact();
 
-        return new NewCookie(AUTH_COOKIE_NAME, newToken, "/btwsbe/api/", System.getProperty("frontend.domain"),
+        return new NewCookie(AUTH_COOKIE_NAME, newToken, "/btwsbe/api/", System.getProperty("cookie.domain"),
                 1, null, -1, expiration, false, false);
     }
 }

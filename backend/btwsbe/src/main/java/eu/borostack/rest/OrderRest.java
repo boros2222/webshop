@@ -10,6 +10,7 @@ import eu.borostack.service.OrderDetailsService;
 import eu.borostack.service.OrderedProductService;
 import eu.borostack.util.ResponseFactory;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.Response;
 @Path("orders")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Stateless
 public class OrderRest {
 
     @Inject

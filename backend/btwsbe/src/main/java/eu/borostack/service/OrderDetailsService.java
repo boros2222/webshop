@@ -7,14 +7,14 @@ import eu.borostack.entity.*;
 import eu.borostack.exception.RestProcessException;
 import eu.borostack.util.ResponseFactory;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Stateless
 @Transactional
-@ApplicationScoped
 public class OrderDetailsService {
 
     @Inject

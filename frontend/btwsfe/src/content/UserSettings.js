@@ -25,7 +25,7 @@ function UserSettings({updateUser, deleteUser, userStore, responseStore, logout}
     return (
         <>
             <div className="container-fluid">
-                <p className="font-size-medium">Adataim módosítása</p>
+                <p className="font-weight-bold font-size-medium">Adataim módosítása</p>
                 <UserForm user={userStore.data} onSubmit={onSubmit} buttonLabel="Módosítás" edit={true}/>
                 <ConfirmDialog headerText="Fiók törlése" text="Biztosan törölni kívánja a fiókját?" onConfirm={onConfirm}>
                     <button className="custom-button red-button mt-3">Fiók törlése</button>

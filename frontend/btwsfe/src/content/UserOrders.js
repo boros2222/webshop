@@ -62,7 +62,7 @@ function UserOrders({loadOrders, ordersStore, userStore, loadOrderStatusOptions,
 
     return (
         <>
-            <p className="font-size-medium">{userStore.isAdmin() ? "Rendelések" : "Rendeléseim"}</p>
+            <p className="font-weight-bold font-size-medium">{userStore.isAdmin() ? "Rendelések" : "Rendeléseim"}</p>
             <Dialog className="container mh-100 overflow-auto" header="Rendelés részletei" footer={<></>} visible={showDialog} onHide={onHide} modal={true}>
                 {currentOrder &&
                     <OrderDetails order={currentOrder} setChangedActiveIndex={setChangedActiveIndex}/>

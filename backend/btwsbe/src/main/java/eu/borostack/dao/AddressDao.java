@@ -4,11 +4,11 @@ import com.querydsl.jpa.impl.JPAQuery;
 import eu.borostack.entity.Address;
 import eu.borostack.entity.QAddress;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 
+@Stateless
 @Transactional
-@ApplicationScoped
 public class AddressDao extends GenericDao<Long, Address> {
 
     public AddressDao() {

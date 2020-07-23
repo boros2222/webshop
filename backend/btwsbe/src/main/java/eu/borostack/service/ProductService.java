@@ -11,15 +11,15 @@ import eu.borostack.entity.SortOrder;
 import eu.borostack.exception.RestProcessException;
 import eu.borostack.util.ResponseFactory;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Stateless
 @Transactional
-@ApplicationScoped
 public class ProductService {
 
     @Inject

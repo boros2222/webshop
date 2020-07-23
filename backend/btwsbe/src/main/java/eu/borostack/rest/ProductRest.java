@@ -9,6 +9,7 @@ import eu.borostack.service.ProductService;
 import eu.borostack.util.ResponseFactory;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.Response;
 
 @Path("products")
 @Produces(MediaType.APPLICATION_JSON)
+@Stateless
 public class ProductRest {
 
     @Inject

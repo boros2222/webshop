@@ -7,12 +7,12 @@ import {loadProductsBySearch} from "../redux/functions/product-functions";
 function SearchResult({searchTerm, productsStore, loadProducts}) {
 
     const loadProduct = (offset, limit, sortOption) => {
-        loadProducts(searchTerm, offset, limit, sortOption);
+        return loadProducts(searchTerm, offset, limit, sortOption);
     };
 
     return (
         <ProductScroller loadProduct = {loadProduct} productsStore = {productsStore}
-                         headerText = {<>Keresés eredménye: <span className="font-weight-bold">{searchTerm}</span></>} />
+                         headerText = {<>Keresés eredménye: <span className="font-weight-normal">{searchTerm}</span></>} />
     );
 }
 

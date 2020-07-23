@@ -10,7 +10,7 @@ import eu.borostack.util.ValidationUtil;
 import org.apache.commons.lang3.BooleanUtils;
 import org.mindrot.jbcrypt.BCrypt;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+@Stateless
 @Transactional
-@ApplicationScoped
 public class UserAccountService {
 
     @Inject

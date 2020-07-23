@@ -36,8 +36,6 @@ public class AppConfig {
 
     public static byte[] getJwtKey() {
         if (jwtKey == null) {
-            /*jwtKey = ArrayUtils.toPrimitive(Arrays.stream(System.getProperty("jwtkey").split(","))
-                    .map(Byte::parseByte).toArray(Byte[]::new));*/
             jwtKey = System.getProperty("jwtkey").getBytes();
         }
         return jwtKey;

@@ -19,7 +19,7 @@ export function setCookie(cookieName, cookieValue, path = "/") {
         const cookies = new Cookies();
         cookies.set(cookieName, cookieValue, {
             path: path,
-            domain: constants.FRONTEND_DOMAIN
+            domain: constants.COOKIE_DOMAIN
         });
         resolve();
     });
@@ -30,7 +30,7 @@ export function removeCookie(cookieName, path) {
         const cookies = new Cookies();
         cookies.remove(cookieName, {
             path: path,
-            domain: constants.FRONTEND_DOMAIN
+            domain: constants.COOKIE_DOMAIN
         });
         resolve();
     });

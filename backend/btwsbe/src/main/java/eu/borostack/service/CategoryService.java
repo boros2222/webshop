@@ -3,13 +3,13 @@ package eu.borostack.service;
 import eu.borostack.dao.CategoryDao;
 import eu.borostack.entity.Category;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@Stateless
 @Transactional
-@ApplicationScoped
 public class CategoryService {
 
     @Inject

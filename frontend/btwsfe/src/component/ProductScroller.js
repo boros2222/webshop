@@ -1,13 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import Product from "../component/Product";
-import {DataScroller} from 'primereact/datascroller';
 import {Dropdown} from "primereact/dropdown";
 
 function ProductScroller({productsStore, loadProduct, headerText}) {
 
     const [rows] = useState(10);
+    const [first, setFirst] = useState(0);
     const [sortOption, setSortOption] = useState(undefined);
     const [products, setProducts] = useState([]);
+    const [needLoading, setNeedLoading] = useState(true);
+
+    useEffect(() => {
+        if (needLoading) {
+            loadProduct(first, rows, sortOption)
+                .then(products => setProducts(prevProducts => [...prevProducts, ...products]));
+            setNeedLoading(false);
+        }
+    }, [loadProduct, first, rows, sortOption, needLoading]);
 
     const sortOptions = [
         {label: '-', value: undefined},
@@ -15,44 +24,35 @@ function ProductScroller({productsStore, loadProduct, headerText}) {
         {label: 'Ár szerint csökkenő', value: 'PRICE_DESC'},
     ];
 
-    useEffect(() => {
-        if (productsStore.isReady()) {
-            setProducts(prevProduct => ([...prevProduct, ...productsStore.data]));
-        }
-    }, [productsStore]);
-
-    useEffect(() => {
-        setProducts([]);
-    }, [sortOption]);
-
-    const onLazyLoad = async (event) => {
-        await loadProductsLazily(event.first, event.rows);
-    };
-
-    const loadProductsLazily = (offset, limit) => {
-        loadProduct(offset, limit, sortOption)
-    };
-
-    const productTemplate = (product) => {
-        if (!product) {
-            return null;
-        }
-        return (
-            <div className="primary-color">
-                <Product key={product.id} product={product} />
-            </div>
-        )
-    };
-
     const onSort = (event) => {
         setSortOption(event.value);
+        setProducts([]);
+        setFirst(0);
+        setNeedLoading(true);
     };
+
+    const onLoadMore = () => {
+        setFirst(first + rows);
+        setNeedLoading(true);
+    };
+
+    let footer = undefined;
+    if (!productsStore.isReady()) {
+        footer = productsStore.getMessage()
+    } else if (productsStore.data.length === rows) {
+        footer = (
+            <button className="custom-button-inverse font-size-normal font-weight-bold mt-5"
+                    onClick={onLoadMore}>
+                Több
+            </button>
+        );
+    }
 
     return (
         <>
             <div className="row">
                 <div className="col-12 col-lg-8">
-                    <p className="font-size-medium">{headerText}</p>
+                    <p className="font-weight-bold font-size-medium">{headerText}</p>
                 </div>
                 <div className="col-12 col-lg-4">
                     <div className="col-12 col-lg-auto float-right p-0">
@@ -61,8 +61,16 @@ function ProductScroller({productsStore, loadProduct, headerText}) {
                     </div>
                 </div>
             </div>
-            <DataScroller key={sortOption} value={products} itemTemplate={productTemplate}
-                          rows={rows} lazy={true} onLazyLoad={onLazyLoad} />
+
+            {products.map(product => (
+                <div key={product.id} className="primary-color">
+                    <Product product={product} />
+                </div>
+            ))}
+
+            <div className="flex-center mt-3">
+                {footer}
+            </div>
         </>
     );
 }

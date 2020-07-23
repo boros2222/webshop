@@ -7,7 +7,7 @@ import {loadProducts} from "../redux/functions/product-functions";
 function Products({productsStore, loadProducts}) {
 
     const loadProduct = (offset, limit, sortOption) => {
-        loadProducts(offset, limit, sortOption);
+        return loadProducts(offset, limit, sortOption);
     };
 
     return (

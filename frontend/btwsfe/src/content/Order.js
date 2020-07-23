@@ -79,7 +79,7 @@ function Order({cartStore, userStore, responseStore, newOrder}) {
     const priceSum = cart.map(cartProduct => cartProduct.product.price * cartProduct.quantity).reduce((a, b) => a + b, 0);
     return (
         <>
-            <p className="font-size-medium mb-3">Megrendelés leadása</p>
+            <p className="font-weight-bold font-size-medium mb-3">Megrendelés leadása</p>
             <form className="order-page" onSubmit={(event) => event.preventDefault()}>
                 <Accordion activeIndex={[...Array(activeIndex + 1).keys()]} multiple={true}
                            onTabChange={(event) => setActiveIndex(event.index)}>

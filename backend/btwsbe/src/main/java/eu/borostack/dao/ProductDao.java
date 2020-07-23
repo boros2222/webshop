@@ -5,12 +5,12 @@ import eu.borostack.entity.Product;
 import eu.borostack.entity.QProduct;
 import eu.borostack.entity.SortOrder;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@Stateless
 @Transactional
-@ApplicationScoped
 public class ProductDao extends GenericDao<Long, Product> {
 
     public ProductDao() {

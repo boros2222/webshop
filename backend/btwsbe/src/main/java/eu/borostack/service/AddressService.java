@@ -3,12 +3,12 @@ package eu.borostack.service;
 import eu.borostack.dao.AddressDao;
 import eu.borostack.entity.Address;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+@Stateless
 @Transactional
-@ApplicationScoped
 public class AddressService {
 
     @Inject

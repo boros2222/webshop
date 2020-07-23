@@ -2,11 +2,11 @@ package eu.borostack.dao;
 
 import eu.borostack.entity.Picture;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 
+@Stateless
 @Transactional
-@ApplicationScoped
 public class PictureDao extends GenericDao<Long, Picture> {
 
     public PictureDao() {

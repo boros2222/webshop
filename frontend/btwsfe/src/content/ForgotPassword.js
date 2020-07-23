@@ -44,7 +44,7 @@ function ForgotPassword({newPasswordCode, responseStore, forgotPassword, checkNe
                             </div>
                         </div>
                     </form>
-                    <p className="font-weight-bold mt-3">{responseStore.getMessage()}</p>
+                    <p className="mt-3">{responseStore.getMessage()}</p>
                 </div>
             </div>
         )
@@ -57,7 +57,7 @@ function ForgotPassword({newPasswordCode, responseStore, forgotPassword, checkNe
             return (
                 <div className="container-fluid pb-2">
                     <p className="font-weight-bold font-size-medium">Jelszó visszaállítása</p>
-                    <p className="font-weight-bold mt-3">{responseStore.getMessage()}</p>
+                    <p className="mt-3">{responseStore.getMessage()}</p>
                 </div>
             )
         } else {
@@ -111,7 +111,7 @@ function ForgotPassword({newPasswordCode, responseStore, forgotPassword, checkNe
                                 </div>
                             </form>
                         }
-                        <p className="font-weight-bold mt-3">{responseStore.getMessage()}</p>
+                        <p className="mt-3">{responseStore.getMessage()}</p>
                     </div>
                 </div>
             )

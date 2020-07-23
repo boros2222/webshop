@@ -5,7 +5,7 @@ import eu.borostack.entity.OrderedProduct;
 import eu.borostack.entity.UserAccount;
 import org.stringtemplate.v4.ST;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-@ApplicationScoped
+@Stateless
 public class MailService {
 
     public void sendNewPasswordMail(final UserAccount userAccount) {

@@ -21,12 +21,12 @@ function CategoryProducts({categoryId, categoriesStore, productsStore, loadCateg
     };
 
     const loadProduct = (offset, limit, sortOption) => {
-        loadProducts(categoryId, offset, limit, sortOption);
+        return loadProducts(categoryId, offset, limit, sortOption);
     };
 
     return (
         <ProductScroller loadProduct = {loadProduct} productsStore = {productsStore}
-                         headerText = {<>Termékek a kategóriában: <span className="font-weight-bold">{findCategoryName()}</span></>}/>
+                         headerText = {<>Termékek a kategóriában: <span className="font-weight-normal">{findCategoryName()}</span></>}/>
     );
 }
 
