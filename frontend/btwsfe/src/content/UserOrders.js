@@ -72,7 +72,7 @@ function UserOrders({loadOrders, ordersStore, userStore, loadOrderStatusOptions,
             <TabView activeIndex={activeIndex} onTabChange={(event) => setActiveIndex(event.index)}>
                 {orderStatusStore.data.map(status => (
                     <TabPanel key={status.code} header={status.label}>
-                        <DataTable value={orders} responsive={true}>
+                        <DataTable value={orders} responsive={true} autoLayout={true}>
                             <Column sortable={true} field="orderDate" header="Rendelés dátuma" sortFunction={sortByOrderDate}
                                     body={(order) => dateTimeToString(order.orderDate)} />
                             <Column sortable={true} field="userAccountEmail" header="Email cím" />
