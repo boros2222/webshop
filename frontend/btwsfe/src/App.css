@@ -481,3 +481,7 @@ ul.p-datascroller-list > li:last-child {
 .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover {
   background-color: var(--light-color) !important;
 }
+
+.p-datatable-auto-layout > .p-datatable-wrapper {
+  overflow: initial !important;
+}
